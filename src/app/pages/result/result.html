@@ -1,0 +1,33 @@
+@let deck = quiz.deck();
+@let s = summary();
+@if (deck) {
+  <app-topbar
+    [step]="quiz.pillar()?.pillarTitle + ' · ' + deck.deckId"
+    [title]="deck.title"
+    [score]="s.correct"
+  />
+
+  <div class="result">
+    <div class="stars">{{ s.stars }}</div>
+    <div class="big">
+      {{ s.correct }}<span>/{{ s.total }}</span>
+    </div>
+    <div class="of">rätt{{ quiz.hasRepeats() ? ' · inkl. repetitioner' : '' }}</div>
+    <h2>{{ s.msg }}</h2>
+    <p>{{ s.sub }}</p>
+
+    <div class="result-btns">
+      <button class="cta gold" type="button" [routerLink]="['/deck', deckId()]">
+        Öva igen — nya exempel
+      </button>
+      @let next = nextDeck();
+      @if (next) {
+        <button class="cta" type="button" [routerLink]="['/deck', next.deckId]">
+          Nästa: {{ next.title }} →
+        </button>
+      }
+      <button class="cta ghost" type="button" routerLink="/stats">Se statistik</button>
+      <button class="cta ghost" type="button" routerLink="/">Alla mazzi</button>
+    </div>
+  </div>
+}

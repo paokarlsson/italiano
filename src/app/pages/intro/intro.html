@@ -1,0 +1,39 @@
+@let d = deck();
+@let ex = example();
+@if (d) {
+  <app-topbar [step]="quiz.pillar()?.pillarTitle ?? ''" [title]="d.title" />
+
+  <div class="stage">
+    <div class="intro-card">
+      <div class="eyebrow">{{ quiz.pillar()?.pillarTitle }} · {{ d.deckId }}</div>
+      <h2>{{ d.title }}</h2>
+
+      @if (ex) {
+        <div class="example-box">
+          <div class="example-label">{{ ex.kind }} · exempel</div>
+          <div class="example-q" [innerHTML]="bold(ex.question)"></div>
+          <div class="example-a">
+            <span class="example-a-tag">Svar</span>
+            <span class="example-a-text" [innerHTML]="bold(ex.answer)"></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="len-label">Hur många frågor?</div>
+    <div class="seg">
+      @for (len of lengths(); track $index) {
+        <button
+          type="button"
+          [disabled]="len.disabled"
+          [class.on]="!len.disabled && quiz.desiredCount() === len.value"
+          (click)="choose(len.value)"
+        >
+          {{ len.value }}<span class="u">{{ len.label }}</span>
+        </button>
+      }
+    </div>
+
+    <button class="cta gold push-bottom" type="button" (click)="start()">Börja öva →</button>
+  </div>
+}

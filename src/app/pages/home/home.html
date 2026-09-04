@@ -1,0 +1,70 @@
+<div class="home-head">
+  <div class="eyebrow">L'impalcatura</div>
+  <h1 class="home-title">Italiano<br /><em>companion</em></h1>
+
+  <div class="progress-line">
+    <span>{{ progress().done }}/{{ progress().total }}</span>
+    <span class="pl-track">
+      <span class="pl-fill" [style.width.%]="progress().pct"></span>
+    </span>
+    <span>{{ progress().pct }}%</span>
+  </div>
+
+  @if (!hints.dismissed()) {
+    <div class="hint-box">
+      <span class="hint-icon">💡</span>
+      <span class="hint-text" title="Tryck för ett nytt tips" (click)="hints.cycle()">
+        {{ hints.phrase() }}
+      </span>
+      <span class="hint-actions">
+        <button
+          class="hint-next"
+          type="button"
+          aria-label="Visa nästa tips"
+          (click)="hints.cycle()"
+        >
+          ↻
+        </button>
+        <button class="hint-close" type="button" aria-label="Stäng" (click)="hints.dismiss()">
+          ✕
+        </button>
+      </span>
+    </div>
+  }
+
+  <div class="home-actions">
+    <button type="button" routerLink="/stats">📊 Statistik</button>
+    <button type="button" (click)="confirmReset()">Nollställ allt</button>
+  </div>
+</div>
+
+<div>
+  @for (pillar of pillars(); track pillar.pillarId; let pIdx = $index) {
+    <div class="pillar-block">
+      <div class="pillar-head">
+        <span class="pillar-num">0{{ pIdx + 1 }}</span>
+        <span class="pillar-title">{{ pillar.pillarTitle }}</span>
+        <span class="pillar-meta">{{ doneInPillar(pIdx) }}/{{ pillar.decks.length }}</span>
+      </div>
+      <div class="grid">
+        @for (deck of pillar.decks; track deck.deckId) {
+          @let done = stats.isDeckDone(deck.deckId);
+          <button
+            class="tile"
+            type="button"
+            [class.done]="done"
+            [routerLink]="['/deck', deck.deckId]"
+          >
+            <span class="tile-check">✓</span>
+            @if (!done && stats.deckHasWeakTag(deck)) {
+              <span class="tile-weak" title="Svag punkt här"></span>
+            }
+            <span class="tile-num">{{ deck.deckId }}</span>
+            <span class="tile-title">{{ deck.title }}</span>
+            <span class="tile-hint mono">{{ deck.pool.length }} questions</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

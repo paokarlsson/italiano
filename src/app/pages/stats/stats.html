@@ -1,0 +1,59 @@
+<app-topbar step="Companion" title="Statistik" />
+
+<div class="stage">
+  @let note = storageNote();
+  @if (note) {
+    <div class="storage-note">{{ note }}</div>
+  }
+
+  <div>
+    @if (!rows().length) {
+      <div class="stat-empty">
+        Ingen data än — öva ett mazzo, så dyker dina svaga punkter upp här.
+      </div>
+    } @else {
+      @for (section of sections(); track section.title) {
+        <div class="stat-section-title">{{ section.title }} ({{ section.rows.length }})</div>
+        @for (row of section.rows; track row.key) {
+          <div class="stat-row">
+            <div class="stat-top">
+              <span class="stat-name">
+                {{ row.tag }}
+                <span style="color: var(--ink-soft); font-weight: 400">· {{ row.deckId }}</span>
+              </span>
+              <span
+                class="stat-pct"
+                [class.weak]="pctClass(row.acc) === 'weak'"
+                [class.mid]="pctClass(row.acc) === 'mid'"
+                [class.strong]="pctClass(row.acc) === 'strong'"
+              >
+                {{ pct(row.acc) }}%
+              </span>
+            </div>
+            <div class="stat-meta">
+              {{ row.correct }}/{{ row.attempts }} rätt · {{ trend(row.last5) }} ·
+              {{ seen(row.lastSeen) }}
+            </div>
+            <div class="stat-bar">
+              <div
+                class="stat-bar-fill"
+                [style.width.%]="pct(row.acc)"
+                [style.background]="barColor(row.acc)"
+              ></div>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+
+  <button class="cta ghost" type="button" (click)="copyForAI()">
+    Kopiera sammanfattning till AI →
+  </button>
+
+  @if (exportText(); as text) {
+    <textarea class="export-box" #exportBox readonly>{{ text }}</textarea>
+  }
+
+  <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka till mazzin</button>
+</div>

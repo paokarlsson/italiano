@@ -1,0 +1,69 @@
+@let q = quiz.current();
+@let deck = quiz.deck();
+@if (q && deck) {
+  <app-topbar
+    [step]="quiz.pillar()?.pillarTitle + ' · ' + deck.deckId"
+    [title]="deck.title"
+    [score]="quiz.correct()"
+  />
+
+  <div class="dots">
+    @for (item of quiz.queue(); track $index) {
+      <span
+        class="dot"
+        [class.past]="$index < quiz.pos()"
+        [class.active]="$index === quiz.pos()"
+        [class.retry]="item._retry"
+      ></span>
+    }
+  </div>
+
+  <div class="stage">
+    <div class="qwrap">
+      <div class="qkind">
+        {{ kindLabel() }}
+        @if (quiz.isRetry()) {
+          <span class="rtag">samma sak igen</span>
+        }
+      </div>
+
+      @switch (q.type) {
+        @case ('mc') {
+          <div class="qtext" [innerHTML]="asMc(q).q"></div>
+          <app-mc-question
+            [question]="asMc(q)"
+            [answered]="!!feedback()"
+            (answer)="onAnswer($event)"
+          />
+        }
+        @case ('tf') {
+          <div class="qtext" [innerHTML]="asTf(q).q"></div>
+          <app-tf-question
+            [question]="asTf(q)"
+            [answered]="!!feedback()"
+            (answer)="onAnswer($event)"
+          />
+        }
+        @case ('match') {
+          <div class="match-instr" [innerHTML]="asMatch(q).instr"></div>
+          <app-match-question [question]="asMatch(q)" (answer)="onAnswer($event)" />
+        }
+      }
+
+      @let fb = feedback();
+      @if (fb) {
+        <div class="feedback show" [class.ok]="fb.correct" [class.no]="!fb.correct">
+          <strong>{{ fb.headline }}</strong>
+          <span [innerHTML]="' ' + fb.body"></span>
+          @if (fb.retried) {
+            <span class="again">→ En till på samma sak strax.</span>
+          }
+        </div>
+
+        <button class="cta" type="button" (click)="next()">
+          {{ quiz.isLast() ? 'Se resultat →' : 'Nästa →' }}
+        </button>
+      }
+    </div>
+  </div>
+}
