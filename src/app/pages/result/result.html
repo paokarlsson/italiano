@@ -1,11 +1,7 @@
 @let deck = quiz.deck();
 @let s = summary();
 @if (deck) {
-  <app-topbar
-    [step]="quiz.pillar()?.pillarTitle + ' · ' + deck.deckId"
-    [title]="deck.title"
-    [score]="s.correct"
-  />
+  <app-topbar [step]="quiz.stepLabel()" [title]="deck.title" [score]="s.correct" />
 
   <div class="result">
     <div class="stars">{{ s.stars }}</div>

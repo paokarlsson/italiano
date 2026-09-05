@@ -6,10 +6,13 @@ på det du just missade. Framsteg och träffsäkerhet sparas lokalt och kan expo
 som en färdig prompt till valfri AI.
 
 Appen är en port av den ursprungliga enfilade HTML-prototypen
-(`italianocompanion.html`) till en Angular-app med standalone-komponenter, signaler
-och zoneless change detection. Formspråk, texter och övningslogik är desamma.
+(`italianocompanion.html`) till en Angular 22-app med standalone-komponenter,
+signaler och zoneless change detection. Formspråk, texter och övningslogik är desamma.
 
 ## Kom igång
+
+Kräver Node ^22.22.3, ^24.15.0 eller >=26 — Angular 22:s golv, alltså en aktuell
+patch av nuvarande LTS.
 
 ```bash
 npm install
@@ -18,15 +21,20 @@ npm run build      # produktionsbygge till dist/italiano
 npm test           # enhetstester (vitest)
 ```
 
+Lockfilen är låst med npm 12 och installeras lika bra med npm 10 och 11. Ska du
+_generera om_ den: npm 10.9.7 kraschar med `Cannot read properties of null
+(reading 'edgesOut')` när den löser vitests peer-graf — använd npm 11 eller
+senare (`npx npm@12 install`).
+
 ## Så hänger det ihop
 
-| Vy | Route | Vad som händer |
-| --- | --- | --- |
-| Hem | `/` | Alla pelare och mazzi, framstegsmätare, tips och nollställning |
-| Intro | `/deck/:deckId` | Exempelfråga ur mazzot och val av rundans längd (6/8/12) |
-| Runda | `/deck/:deckId/quiz` | Flerval, sant/falskt och para ihop, med direkt facit |
-| Resultat | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare |
-| Statistik | `/stats` | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export |
+| Vy        | Route                  | Vad som händer                                                 |
+| --------- | ---------------------- | -------------------------------------------------------------- |
+| Hem       | `/`                    | Alla pelare och mazzi, framstegsmätare, tips och nollställning |
+| Intro     | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
+| Runda     | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
+| Resultat  | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
+| Statistik | `/stats`               | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export |
 
 Runda och resultat kräver en påbörjad runda — annars leder `activeRoundGuard`
 tillbaka till introt. Okända mazzo-id:n fångas av `deckExistsGuard`.
@@ -44,7 +52,7 @@ public/data/     app-data.json — allt innehåll
 
 - **`QuizService`** är övningsmotorn: bygger rundans kö ur mazzots pool, räknar poäng
   och skjuter in högst två repetitioner per tagg och runda. En repetition är alltid en
-  *ny* fråga på samma punkt — aldrig samma fråga igen.
+  _ny_ fråga på samma punkt — aldrig samma fråga igen.
 - **`StatsService`** för statistik per `statKey` (`<deckId>::<tag>`): försök, rätt, de
   senaste fem svaren och när taggen senast övades. Ett mazzo räknas som klarat vid
   minst 60 % rätt.

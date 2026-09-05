@@ -1,11 +1,7 @@
 @let q = quiz.current();
 @let deck = quiz.deck();
 @if (q && deck) {
-  <app-topbar
-    [step]="quiz.pillar()?.pillarTitle + ' · ' + deck.deckId"
-    [title]="deck.title"
-    [score]="quiz.correct()"
-  />
+  <app-topbar [step]="quiz.stepLabel()" [title]="deck.title" [score]="quiz.correct()" />
 
   <div class="dots">
     @for (item of quiz.queue(); track $index) {

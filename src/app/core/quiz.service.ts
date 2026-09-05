@@ -48,6 +48,12 @@ export class QuizService {
     const id = this._deckId();
     return id ? (this.data.pillarOf(id) ?? null) : null;
   });
+  /** «Pelare · mazzo» till rubrikraden. */
+  readonly stepLabel = computed(() => {
+    const pillar = this.pillar();
+    const deck = this.deck();
+    return pillar && deck ? `${pillar.pillarTitle} · ${deck.deckId}` : '';
+  });
   /** Sant när en runda har körts klart och resultatet kan visas. */
   readonly roundOver = computed(
     () => this._queue().length > 0 && this._pos() >= this._queue().length,
