@@ -1,0 +1,60 @@
+name: Deploy till GitHub Pages
+
+on:
+  push:
+    branches: ['master']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Bara en deploy i taget, men avbryt inte en pågående publicering.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Hämta koden
+        uses: actions/checkout@v5
+
+      - name: Installera Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Installera beroenden
+        run: npm ci
+
+      # Sidan ligger på /italiano/, så alla länkar måste utgå därifrån.
+      - name: Bygg produktionsbygget
+        run: npm run build -- --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Förbered för Pages
+        run: |
+          # Pages serverar statiska filer — okända rutter måste falla
+          # tillbaka på index.html så Angulars router kan ta över.
+          cp dist/italiano/browser/index.html dist/italiano/browser/404.html
+          touch dist/italiano/browser/.nojekyll
+
+      - name: Ladda upp sidan
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/italiano/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicera
+        id: deployment
+        uses: actions/deploy-pages@v4
