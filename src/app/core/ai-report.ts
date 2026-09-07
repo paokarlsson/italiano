@@ -38,7 +38,7 @@ export function buildAIReport(rows: readonly StatRow[]): string {
     }
     const pct = Math.round(r.acc * 100);
     lines.push(
-      `    - ${r.tag}: ${pct}% (${r.correct}/${r.attempts}), senaste 5: ${trendStr(r.last5)}, ` +
+      `    - ${r.tagLabel}: ${pct}% (${r.correct}/${r.attempts}), senaste 5: ${trendStr(r.last5)}, ` +
         `senast övat ${relTime(r.lastSeen)}`,
     );
   }

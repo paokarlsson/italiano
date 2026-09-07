@@ -53,4 +53,11 @@ export class HintService {
     this.dismissed.set(true);
     void this.storage.set(HINT_KEY, '1');
   }
+
+  /** Tar tillbaka tipsrutan — annars är den borta för gott när den stängts. */
+  restore(): void {
+    this.dismissed.set(false);
+    this.phrase.set(pickRandom(HINT_PHRASES));
+    void this.storage.set(HINT_KEY, '0');
+  }
 }

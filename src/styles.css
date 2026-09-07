@@ -871,6 +871,7 @@ body {
   font-family: 'Space Mono', monospace;
   font-weight: 700;
   font-size: 14px;
+  flex-shrink: 0;
 }
 .stat-pct.weak {
   color: var(--brick);

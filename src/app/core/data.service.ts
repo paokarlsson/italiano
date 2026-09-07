@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Deck, Pillar, Question, StatMeta } from '../models/quiz.models';
+import { tagLabel } from './tag-labels';
 
 interface DeckEntry {
   deck: Deck;
@@ -36,6 +37,7 @@ export class DataService {
               pillarId: pillar.pillarId,
               pillarTitle: pillar.pillarTitle,
               tag: q.tag,
+              tagLabel: tagLabel(q.tag),
             });
           }
         }

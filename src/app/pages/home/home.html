@@ -61,7 +61,7 @@
             }
             <span class="tile-num">{{ deck.deckId }}</span>
             <span class="tile-title">{{ deck.title }}</span>
-            <span class="tile-hint mono">{{ deck.pool.length }} questions</span>
+            <span class="tile-hint mono">{{ deck.hint || deck.pool.length + ' questions' }}</span>
           </button>
         }
       </div>

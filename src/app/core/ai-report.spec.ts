@@ -6,6 +6,7 @@ function row(over: Partial<StatRow> = {}): StatRow {
   return {
     key: 'D1.1::mean',
     tag: 'mean',
+    tagLabel: 'ordbetydelse',
     deckId: 'D1.1',
     deckTitle: 'De minsta',
     pillarId: 'D1',
@@ -30,6 +31,7 @@ describe('buildAIReport', () => {
       row({
         key: 'D1.2::verb',
         tag: 'verb',
+        tagLabel: 'vilket verb formen kommer från',
         deckId: 'D1.2',
         deckTitle: 'Motorn',
         acc: 0.9,
@@ -40,15 +42,30 @@ describe('buildAIReport', () => {
     expect(text).toContain('## Il collante');
     expect(text).toContain('  D1.1 — De minsta');
     expect(text).toContain('  D1.2 — Motorn');
-    expect(text).toContain('- mean: 20% (1/5), senaste 5: ✗ ✓ ✗ ✗ ✗, senast övat nyss');
+    expect(text).toContain('- ordbetydelse: 20% (1/5), senaste 5: ✗ ✓ ✗ ✗ ✗, senast övat nyss');
     expect(text.indexOf('D1.1')).toBeLessThan(text.indexOf('D1.2'));
   });
 
   it('sorterar svagaste taggen först inom ett mazzo', () => {
     const text = buildAIReport([
-      row({ key: 'D1.1::form', tag: 'form', acc: 0.8, correct: 8, attempts: 10 }),
+      row({
+        key: 'D1.1::form',
+        tag: 'form',
+        tagLabel: 'hitta rätt form',
+        acc: 0.8,
+        correct: 8,
+        attempts: 10,
+      }),
       row({ key: 'D1.1::mean', tag: 'mean', acc: 0.2 }),
     ]);
-    expect(text.indexOf('- mean:')).toBeLessThan(text.indexOf('- form:'));
+    expect(text.indexOf('- ordbetydelse:')).toBeLessThan(text.indexOf('- hitta rätt form:'));
+  });
+
+  it('skickar taggens läsbara namn, inte den interna nyckeln', () => {
+    const text = buildAIReport([
+      row({ key: 'D4.13::sap-con', tag: 'sap-con', tagLabel: 'sapere eller conoscere' }),
+    ]);
+    expect(text).toContain('- sapere eller conoscere:');
+    expect(text).not.toContain('sap-con');
   });
 });
