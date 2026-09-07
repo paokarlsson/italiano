@@ -19,12 +19,21 @@ npm install
 npm start          # dev-server på http://localhost:4200
 npm run build      # produktionsbygge till dist/italiano
 npm test           # enhetstester (vitest)
+npm run format     # prettier över hela repot
 ```
 
 Lockfilen är låst med npm 12 och installeras lika bra med npm 10 och 11. Ska du
 _generera om_ den: npm 10.9.7 kraschar med `Cannot read properties of null
 (reading 'edgesOut')` när den löser vitests peer-graf — använd npm 11 eller
 senare (`npx npm@12 install`).
+
+## CI
+
+`.github/workflows/ci.yml` kör vid varje push och manuellt via *Run workflow*:
+formatkontroll (`prettier --check`), enhetstester och produktionsbygge, på Node
+22.22.3 och 24 — engines-golvet och nuvarande LTS. Bygget från Node 24 sparas som
+artefakten `dist`. Pull requests byggs bara när de kommer från ett annat repo, så
+samma commit inte körs två gånger.
 
 ## Så hänger det ihop
 

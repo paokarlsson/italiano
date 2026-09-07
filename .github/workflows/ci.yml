@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Nyare körning på samma gren avbryter den föregående.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Node ${{ matrix.node }}
+    # Push-eventet täcker redan grenar i det här repot — pull_request körs
+    # bara för PR:er som kommer utifrån, så samma commit inte byggs två gånger.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # Lägsta stödda version enligt engines, och nuvarande LTS.
+        node: ['22.22.3', '24']
+
+    steps:
+      - name: Hämta koden
+        uses: actions/checkout@v5
+
+      - name: Installera Node ${{ matrix.node }}
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Installera beroenden
+        run: npm ci
+
+      - name: Kontrollera formatering
+        run: npm run format:check
+
+      - name: Kör tester
+        run: npm test -- --no-watch
+
+      - name: Bygg produktionsbygget
+        run: npm run build
+
+      - name: Spara bygget
+        if: matrix.node == '24'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/italiano
+          if-no-files-found: error
+          retention-days: 7
