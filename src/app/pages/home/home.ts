@@ -38,6 +38,7 @@ export class Home {
   protected confirmReset(): void {
     if (confirm('Radera alla sparade framsteg och all statistik? Det går inte att ångra.')) {
       this.stats.reset();
+      this.hints.restore();
     }
   }
 }

@@ -43,7 +43,7 @@ tillbaka till introt. Okända mazzo-id:n fångas av `deckExistsGuard`.
 
 ```
 src/app/
-  core/          storage, data, stats, quiz (motorn), hint, toast, ai-report, guards
+  core/          storage, data, stats, quiz (motorn), hint, toast, ai-report, tag-labels, guards
   models/        typerna bakom app-data.json
   pages/         home, intro, quiz (+ mc/tf/match), result, stats
   shared/        topbar
@@ -56,6 +56,9 @@ public/data/     app-data.json — allt innehåll
 - **`StatsService`** för statistik per `statKey` (`<deckId>::<tag>`): försök, rätt, de
   senaste fem svaren och när taggen senast övades. Ett mazzo räknas som klarat vid
   minst 60 % rätt.
+- **`tagLabel()`** översätter den interna taggnyckeln till det övningspunkten heter —
+  `sap-con` blir «sapere eller conoscere». Statistikvyn och AI-exporten visar namnet,
+  aldrig nyckeln.
 - **`StorageService`** väljer lagring i tur och ordning: `window.storage` om appen körs
   i en värd som erbjuder det, annars `localStorage`, annars minnet. Statistikvyn
   berättar vilken som används när det inte är den beständiga.
@@ -71,4 +74,8 @@ public/data/     app-data.json — allt innehåll
 ```
 
 Varje fråga har dessutom `tag`, `_k` (unik i mazzot) och `statKey`. Lägger du till
-frågor räcker det att fylla på JSON-filen — inget i koden behöver ändras.
+frågor räcker det att fylla på JSON-filen — inget i koden behöver ändras. En helt ny
+`tag` visas som den är i statistiken tills den får en rad i `core/tag-labels.ts`.
+
+Varje mazzo har också ett `hint` — minnesregeln, `"-tion → -zione"` — som står under
+titeln på startsidans bricka. Är det tomt visas antalet frågor i stället.
