@@ -2,3 +2,6 @@ package-lock.json
 /dist
 /coverage
 /.angular
+
+# Prototypen ligger kvar precis som den skrevs — den ska inte formateras om
+/docs/original-prototype.html

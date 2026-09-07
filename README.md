@@ -29,7 +29,7 @@ senare (`npx npm@12 install`).
 
 ## CI
 
-`.github/workflows/ci.yml` kör vid varje push och manuellt via *Run workflow*:
+`.github/workflows/ci.yml` kör vid varje push och manuellt via _Run workflow_:
 formatkontroll (`prettier --check`), enhetstester och produktionsbygge, på Node
 22.22.3 och 24 — engines-golvet och nuvarande LTS. Bygget från Node 24 sparas som
 artefakten `dist`. Pull requests byggs bara när de kommer från ett annat repo, så
