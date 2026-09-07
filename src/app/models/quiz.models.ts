@@ -56,7 +56,10 @@ export interface StatMeta {
   deckTitle: string;
   pillarId: string;
   pillarTitle: string;
+  /** Den interna taggnyckeln, t.ex. «sap-con». */
   tag: string;
+  /** Taggen i läsbar form, t.ex. «sapere eller conoscere». */
+  tagLabel: string;
 }
 
 export interface TagStat {
