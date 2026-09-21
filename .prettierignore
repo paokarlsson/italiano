@@ -6,5 +6,5 @@ package-lock.json
 # Prototypen ligger kvar precis som den skrevs — den ska inte formateras om
 /docs/original-prototype.html
 
-# Regelbanken skrivs av build.mjs — generat ska inte formateras om
-/scripts/regelbank/out
+# Rapporten skrivs av build.mjs — generat ska inte formateras om
+/scripts/regelbank/report.md

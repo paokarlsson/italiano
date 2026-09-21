@@ -24,7 +24,13 @@ function hash(s) {
   return (h >>> 0) / 4294967296;
 }
 
-const words = JSON.parse(readFileSync(resolve(here, 'words.json'), 'utf8'));
+const words = readFileSync(resolve(here, 'words.tsv'), 'utf8')
+  .split('\n')
+  .filter((l) => l.trim() && !l.startsWith('#'))
+  .map((l) => {
+    const [en, it] = l.split('\t');
+    return { en, it };
+  });
 const entries = [];
 const orphans = [];
 
@@ -107,8 +113,10 @@ const lines = [
 ];
 
 mkdirSync(resolve(here, 'out'), { recursive: true });
-writeFileSync(resolve(here, 'out/report.md'), lines.join('\n'));
-writeFileSync(resolve(here, 'out/bank.json'), JSON.stringify(entries, null, 1) + '\n');
+// Rapporten är granskningsytan och följer med i repot. Banken är ren maskin-
+// utdata och byggs om vid behov — den hör inte hemma i en diff.
+writeFileSync(resolve(here, 'report.md'), lines.join('\n'));
+writeFileSync(resolve(here, 'out/bank.json'), JSON.stringify(entries) + '\n');
 console.log(lines.slice(0, 22).join('\n'));
 console.log(`\nUndantag: ${orphans.length}`);
-console.log(`\nSkrev out/report.md och out/bank.json`);
+console.log(`\nSkrev report.md och out/bank.json`);
