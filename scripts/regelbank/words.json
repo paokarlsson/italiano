@@ -1,0 +1,1194 @@
+[
+  {
+    "en": "nation",
+    "it": "nazione"
+  },
+  {
+    "en": "information",
+    "it": "informazione"
+  },
+  {
+    "en": "station",
+    "it": "stazione"
+  },
+  {
+    "en": "attention",
+    "it": "attenzione"
+  },
+  {
+    "en": "education",
+    "it": "educazione"
+  },
+  {
+    "en": "situation",
+    "it": "situazione"
+  },
+  {
+    "en": "condition",
+    "it": "condizione"
+  },
+  {
+    "en": "action",
+    "it": "azione"
+  },
+  {
+    "en": "invitation",
+    "it": "invitazione"
+  },
+  {
+    "en": "relation",
+    "it": "relazione"
+  },
+  {
+    "en": "tradition",
+    "it": "tradizione"
+  },
+  {
+    "en": "position",
+    "it": "posizione"
+  },
+  {
+    "en": "operation",
+    "it": "operazione"
+  },
+  {
+    "en": "generation",
+    "it": "generazione"
+  },
+  {
+    "en": "solution",
+    "it": "soluzione"
+  },
+  {
+    "en": "direction",
+    "it": "direzione"
+  },
+  {
+    "en": "production",
+    "it": "produzione"
+  },
+  {
+    "en": "emotion",
+    "it": "emozione"
+  },
+  {
+    "en": "ambition",
+    "it": "ambizione"
+  },
+  {
+    "en": "reaction",
+    "it": "reazione"
+  },
+  {
+    "en": "collection",
+    "it": "collezione"
+  },
+  {
+    "en": "attraction",
+    "it": "attrazione"
+  },
+  {
+    "en": "function",
+    "it": "funzione"
+  },
+  {
+    "en": "protection",
+    "it": "protezione"
+  },
+  {
+    "en": "selection",
+    "it": "selezione"
+  },
+  {
+    "en": "destination",
+    "it": "destinazione"
+  },
+  {
+    "en": "imagination",
+    "it": "immaginazione"
+  },
+  {
+    "en": "organization",
+    "it": "organizzazione"
+  },
+  {
+    "en": "construction",
+    "it": "costruzione"
+  },
+  {
+    "en": "revolution",
+    "it": "rivoluzione"
+  },
+  {
+    "en": "population",
+    "it": "popolazione"
+  },
+  {
+    "en": "television",
+    "it": "televisione"
+  },
+  {
+    "en": "decision",
+    "it": "decisione"
+  },
+  {
+    "en": "explosion",
+    "it": "esplosione"
+  },
+  {
+    "en": "profession",
+    "it": "professione"
+  },
+  {
+    "en": "passion",
+    "it": "passione"
+  },
+  {
+    "en": "version",
+    "it": "versione"
+  },
+  {
+    "en": "occasion",
+    "it": "occasione"
+  },
+  {
+    "en": "expression",
+    "it": "espressione"
+  },
+  {
+    "en": "impression",
+    "it": "impressione"
+  },
+  {
+    "en": "confusion",
+    "it": "confusione"
+  },
+  {
+    "en": "division",
+    "it": "divisione"
+  },
+  {
+    "en": "conclusion",
+    "it": "conclusione"
+  },
+  {
+    "en": "dimension",
+    "it": "dimensione"
+  },
+  {
+    "en": "tension",
+    "it": "tensione"
+  },
+  {
+    "en": "pension",
+    "it": "pensione"
+  },
+  {
+    "en": "mission",
+    "it": "missione"
+  },
+  {
+    "en": "discussion",
+    "it": "discussione"
+  },
+  {
+    "en": "illusion",
+    "it": "illusione"
+  },
+  {
+    "en": "university",
+    "it": "università"
+  },
+  {
+    "en": "quality",
+    "it": "qualità"
+  },
+  {
+    "en": "liberty",
+    "it": "libertà"
+  },
+  {
+    "en": "society",
+    "it": "società"
+  },
+  {
+    "en": "possibility",
+    "it": "possibilità"
+  },
+  {
+    "en": "identity",
+    "it": "identità"
+  },
+  {
+    "en": "city",
+    "it": "città"
+  },
+  {
+    "en": "curiosity",
+    "it": "curiosità"
+  },
+  {
+    "en": "activity",
+    "it": "attività"
+  },
+  {
+    "en": "ability",
+    "it": "abilità"
+  },
+  {
+    "en": "necessity",
+    "it": "necessità"
+  },
+  {
+    "en": "nationality",
+    "it": "nazionalità"
+  },
+  {
+    "en": "personality",
+    "it": "personalità"
+  },
+  {
+    "en": "community",
+    "it": "comunità"
+  },
+  {
+    "en": "authority",
+    "it": "autorità"
+  },
+  {
+    "en": "priority",
+    "it": "priorità"
+  },
+  {
+    "en": "quantity",
+    "it": "quantità"
+  },
+  {
+    "en": "humanity",
+    "it": "umanità"
+  },
+  {
+    "en": "difficulty",
+    "it": "difficoltà"
+  },
+  {
+    "en": "opportunity",
+    "it": "opportunità"
+  },
+  {
+    "en": "electricity",
+    "it": "elettricità"
+  },
+  {
+    "en": "velocity",
+    "it": "velocità"
+  },
+  {
+    "en": "capacity",
+    "it": "capacità"
+  },
+  {
+    "en": "unity",
+    "it": "unità"
+  },
+  {
+    "en": "national",
+    "it": "nazionale"
+  },
+  {
+    "en": "personal",
+    "it": "personale"
+  },
+  {
+    "en": "natural",
+    "it": "naturale"
+  },
+  {
+    "en": "special",
+    "it": "speciale"
+  },
+  {
+    "en": "central",
+    "it": "centrale"
+  },
+  {
+    "en": "original",
+    "it": "originale"
+  },
+  {
+    "en": "total",
+    "it": "totale"
+  },
+  {
+    "en": "normal",
+    "it": "normale"
+  },
+  {
+    "en": "general",
+    "it": "generale"
+  },
+  {
+    "en": "local",
+    "it": "locale"
+  },
+  {
+    "en": "social",
+    "it": "sociale"
+  },
+  {
+    "en": "final",
+    "it": "finale"
+  },
+  {
+    "en": "formal",
+    "it": "formale"
+  },
+  {
+    "en": "legal",
+    "it": "legale"
+  },
+  {
+    "en": "moral",
+    "it": "morale"
+  },
+  {
+    "en": "animal",
+    "it": "animale"
+  },
+  {
+    "en": "capital",
+    "it": "capitale"
+  },
+  {
+    "en": "digital",
+    "it": "digitale"
+  },
+  {
+    "en": "ideal",
+    "it": "ideale"
+  },
+  {
+    "en": "material",
+    "it": "materiale"
+  },
+  {
+    "en": "musical",
+    "it": "musicale"
+  },
+  {
+    "en": "professional",
+    "it": "professionale"
+  },
+  {
+    "en": "international",
+    "it": "internazionale"
+  },
+  {
+    "en": "federal",
+    "it": "federale"
+  },
+  {
+    "en": "global",
+    "it": "globale"
+  },
+  {
+    "en": "vital",
+    "it": "vitale"
+  },
+  {
+    "en": "mental",
+    "it": "mentale"
+  },
+  {
+    "en": "rural",
+    "it": "rurale"
+  },
+  {
+    "en": "brutal",
+    "it": "brutale"
+  },
+  {
+    "en": "oral",
+    "it": "orale"
+  },
+  {
+    "en": "famous",
+    "it": "famoso"
+  },
+  {
+    "en": "curious",
+    "it": "curioso"
+  },
+  {
+    "en": "nervous",
+    "it": "nervoso"
+  },
+  {
+    "en": "generous",
+    "it": "generoso"
+  },
+  {
+    "en": "religious",
+    "it": "religioso"
+  },
+  {
+    "en": "numerous",
+    "it": "numeroso"
+  },
+  {
+    "en": "furious",
+    "it": "furioso"
+  },
+  {
+    "en": "glorious",
+    "it": "glorioso"
+  },
+  {
+    "en": "victorious",
+    "it": "vittorioso"
+  },
+  {
+    "en": "harmonious",
+    "it": "armonioso"
+  },
+  {
+    "en": "studious",
+    "it": "studioso"
+  },
+  {
+    "en": "mysterious",
+    "it": "misterioso"
+  },
+  {
+    "en": "contagious",
+    "it": "contagioso"
+  },
+  {
+    "en": "gracious",
+    "it": "grazioso"
+  },
+  {
+    "en": "spacious",
+    "it": "spazioso"
+  },
+  {
+    "en": "precious",
+    "it": "prezioso"
+  },
+  {
+    "en": "delicious",
+    "it": "delizioso"
+  },
+  {
+    "en": "ambitious",
+    "it": "ambizioso"
+  },
+  {
+    "en": "possible",
+    "it": "possibile"
+  },
+  {
+    "en": "terrible",
+    "it": "terribile"
+  },
+  {
+    "en": "incredible",
+    "it": "incredibile"
+  },
+  {
+    "en": "probable",
+    "it": "probabile"
+  },
+  {
+    "en": "visible",
+    "it": "visibile"
+  },
+  {
+    "en": "impossible",
+    "it": "impossibile"
+  },
+  {
+    "en": "horrible",
+    "it": "orribile"
+  },
+  {
+    "en": "flexible",
+    "it": "flessibile"
+  },
+  {
+    "en": "sensible",
+    "it": "sensibile"
+  },
+  {
+    "en": "responsible",
+    "it": "responsabile"
+  },
+  {
+    "en": "invisible",
+    "it": "invisibile"
+  },
+  {
+    "en": "compatible",
+    "it": "compatibile"
+  },
+  {
+    "en": "accessible",
+    "it": "accessibile"
+  },
+  {
+    "en": "inevitable",
+    "it": "inevitabile"
+  },
+  {
+    "en": "adorable",
+    "it": "adorabile"
+  },
+  {
+    "en": "memorable",
+    "it": "memorabile"
+  },
+  {
+    "en": "miserable",
+    "it": "miserabile"
+  },
+  {
+    "en": "importance",
+    "it": "importanza"
+  },
+  {
+    "en": "distance",
+    "it": "distanza"
+  },
+  {
+    "en": "elegance",
+    "it": "eleganza"
+  },
+  {
+    "en": "abundance",
+    "it": "abbondanza"
+  },
+  {
+    "en": "tolerance",
+    "it": "tolleranza"
+  },
+  {
+    "en": "ignorance",
+    "it": "ignoranza"
+  },
+  {
+    "en": "substance",
+    "it": "sostanza"
+  },
+  {
+    "en": "vigilance",
+    "it": "vigilanza"
+  },
+  {
+    "en": "arrogance",
+    "it": "arroganza"
+  },
+  {
+    "en": "fragrance",
+    "it": "fragranza"
+  },
+  {
+    "en": "difference",
+    "it": "differenza"
+  },
+  {
+    "en": "patience",
+    "it": "pazienza"
+  },
+  {
+    "en": "experience",
+    "it": "esperienza"
+  },
+  {
+    "en": "presence",
+    "it": "presenza"
+  },
+  {
+    "en": "violence",
+    "it": "violenza"
+  },
+  {
+    "en": "science",
+    "it": "scienza"
+  },
+  {
+    "en": "conference",
+    "it": "conferenza"
+  },
+  {
+    "en": "preference",
+    "it": "preferenza"
+  },
+  {
+    "en": "influence",
+    "it": "influenza"
+  },
+  {
+    "en": "evidence",
+    "it": "evidenza"
+  },
+  {
+    "en": "intelligence",
+    "it": "intelligenza"
+  },
+  {
+    "en": "competence",
+    "it": "competenza"
+  },
+  {
+    "en": "existence",
+    "it": "esistenza"
+  },
+  {
+    "en": "independence",
+    "it": "indipendenza"
+  },
+  {
+    "en": "coincidence",
+    "it": "coincidenza"
+  },
+  {
+    "en": "essence",
+    "it": "essenza"
+  },
+  {
+    "en": "absence",
+    "it": "assenza"
+  },
+  {
+    "en": "moment",
+    "it": "momento"
+  },
+  {
+    "en": "document",
+    "it": "documento"
+  },
+  {
+    "en": "element",
+    "it": "elemento"
+  },
+  {
+    "en": "instrument",
+    "it": "strumento"
+  },
+  {
+    "en": "apartment",
+    "it": "appartamento"
+  },
+  {
+    "en": "department",
+    "it": "dipartimento"
+  },
+  {
+    "en": "movement",
+    "it": "movimento"
+  },
+  {
+    "en": "argument",
+    "it": "argomento"
+  },
+  {
+    "en": "monument",
+    "it": "monumento"
+  },
+  {
+    "en": "temperament",
+    "it": "temperamento"
+  },
+  {
+    "en": "compliment",
+    "it": "complimento"
+  },
+  {
+    "en": "experiment",
+    "it": "esperimento"
+  },
+  {
+    "en": "fragment",
+    "it": "frammento"
+  },
+  {
+    "en": "sentiment",
+    "it": "sentimento"
+  },
+  {
+    "en": "supplement",
+    "it": "supplemento"
+  },
+  {
+    "en": "treatment",
+    "it": "trattamento"
+  },
+  {
+    "en": "payment",
+    "it": "pagamento"
+  },
+  {
+    "en": "public",
+    "it": "pubblico"
+  },
+  {
+    "en": "romantic",
+    "it": "romantico"
+  },
+  {
+    "en": "classic",
+    "it": "classico"
+  },
+  {
+    "en": "electric",
+    "it": "elettrico"
+  },
+  {
+    "en": "historic",
+    "it": "storico"
+  },
+  {
+    "en": "economic",
+    "it": "economico"
+  },
+  {
+    "en": "automatic",
+    "it": "automatico"
+  },
+  {
+    "en": "fantastic",
+    "it": "fantastico"
+  },
+  {
+    "en": "specific",
+    "it": "specifico"
+  },
+  {
+    "en": "dramatic",
+    "it": "drammatico"
+  },
+  {
+    "en": "logic",
+    "it": "logico"
+  },
+  {
+    "en": "magic",
+    "it": "magico"
+  },
+  {
+    "en": "tragic",
+    "it": "tragico"
+  },
+  {
+    "en": "comic",
+    "it": "comico"
+  },
+  {
+    "en": "artistic",
+    "it": "artistico"
+  },
+  {
+    "en": "atomic",
+    "it": "atomico"
+  },
+  {
+    "en": "organic",
+    "it": "organico"
+  },
+  {
+    "en": "dynamic",
+    "it": "dinamico"
+  },
+  {
+    "en": "symbolic",
+    "it": "simbolico"
+  },
+  {
+    "en": "authentic",
+    "it": "autentico"
+  },
+  {
+    "en": "academic",
+    "it": "accademico"
+  },
+  {
+    "en": "artist",
+    "it": "artista"
+  },
+  {
+    "en": "tourist",
+    "it": "turista"
+  },
+  {
+    "en": "pianist",
+    "it": "pianista"
+  },
+  {
+    "en": "dentist",
+    "it": "dentista"
+  },
+  {
+    "en": "journalist",
+    "it": "giornalista"
+  },
+  {
+    "en": "optimist",
+    "it": "ottimista"
+  },
+  {
+    "en": "economist",
+    "it": "economista"
+  },
+  {
+    "en": "specialist",
+    "it": "specialista"
+  },
+  {
+    "en": "realist",
+    "it": "realista"
+  },
+  {
+    "en": "idealist",
+    "it": "idealista"
+  },
+  {
+    "en": "activist",
+    "it": "attivista"
+  },
+  {
+    "en": "violinist",
+    "it": "violinista"
+  },
+  {
+    "en": "communist",
+    "it": "comunista"
+  },
+  {
+    "en": "pessimist",
+    "it": "pessimista"
+  },
+  {
+    "en": "egoist",
+    "it": "egoista"
+  },
+  {
+    "en": "finalist",
+    "it": "finalista"
+  },
+  {
+    "en": "positive",
+    "it": "positivo"
+  },
+  {
+    "en": "negative",
+    "it": "negativo"
+  },
+  {
+    "en": "creative",
+    "it": "creativo"
+  },
+  {
+    "en": "active",
+    "it": "attivo"
+  },
+  {
+    "en": "relative",
+    "it": "relativo"
+  },
+  {
+    "en": "alternative",
+    "it": "alternativo"
+  },
+  {
+    "en": "decisive",
+    "it": "decisivo"
+  },
+  {
+    "en": "intensive",
+    "it": "intensivo"
+  },
+  {
+    "en": "exclusive",
+    "it": "esclusivo"
+  },
+  {
+    "en": "progressive",
+    "it": "progressivo"
+  },
+  {
+    "en": "primitive",
+    "it": "primitivo"
+  },
+  {
+    "en": "collective",
+    "it": "collettivo"
+  },
+  {
+    "en": "error",
+    "it": "errore"
+  },
+  {
+    "en": "motor",
+    "it": "motore"
+  },
+  {
+    "en": "color",
+    "it": "colore"
+  },
+  {
+    "en": "professor",
+    "it": "professore"
+  },
+  {
+    "en": "actor",
+    "it": "attore"
+  },
+  {
+    "en": "doctor",
+    "it": "dottore"
+  },
+  {
+    "en": "author",
+    "it": "autore"
+  },
+  {
+    "en": "horror",
+    "it": "orrore"
+  },
+  {
+    "en": "terror",
+    "it": "terrore"
+  },
+  {
+    "en": "honor",
+    "it": "onore"
+  },
+  {
+    "en": "favor",
+    "it": "favore"
+  },
+  {
+    "en": "director",
+    "it": "direttore"
+  },
+  {
+    "en": "inventor",
+    "it": "inventore"
+  },
+  {
+    "en": "senator",
+    "it": "senatore"
+  },
+  {
+    "en": "editor",
+    "it": "editore"
+  },
+  {
+    "en": "factor",
+    "it": "fattore"
+  },
+  {
+    "en": "sector",
+    "it": "settore"
+  },
+  {
+    "en": "vapor",
+    "it": "vapore"
+  },
+  {
+    "en": "rumor",
+    "it": "rumore"
+  },
+  {
+    "en": "humor",
+    "it": "umore"
+  },
+  {
+    "en": "culture",
+    "it": "cultura"
+  },
+  {
+    "en": "nature",
+    "it": "natura"
+  },
+  {
+    "en": "adventure",
+    "it": "avventura"
+  },
+  {
+    "en": "temperature",
+    "it": "temperatura"
+  },
+  {
+    "en": "structure",
+    "it": "struttura"
+  },
+  {
+    "en": "figure",
+    "it": "figura"
+  },
+  {
+    "en": "literature",
+    "it": "letteratura"
+  },
+  {
+    "en": "creature",
+    "it": "creatura"
+  },
+  {
+    "en": "architecture",
+    "it": "architettura"
+  },
+  {
+    "en": "agriculture",
+    "it": "agricoltura"
+  },
+  {
+    "en": "sculpture",
+    "it": "scultura"
+  },
+  {
+    "en": "organize",
+    "it": "organizzare"
+  },
+  {
+    "en": "realize",
+    "it": "realizzare"
+  },
+  {
+    "en": "analyze",
+    "it": "analizzare"
+  },
+  {
+    "en": "utilize",
+    "it": "utilizzare"
+  },
+  {
+    "en": "modernize",
+    "it": "modernizzare"
+  },
+  {
+    "en": "memorize",
+    "it": "memorizzare"
+  },
+  {
+    "en": "minimize",
+    "it": "minimizzare"
+  },
+  {
+    "en": "maximize",
+    "it": "massimizzare"
+  },
+  {
+    "en": "normalize",
+    "it": "normalizzare"
+  },
+  {
+    "en": "symbolize",
+    "it": "simbolizzare"
+  },
+  {
+    "en": "civilize",
+    "it": "civilizzare"
+  },
+  {
+    "en": "specialize",
+    "it": "specializzare"
+  },
+  {
+    "en": "visualize",
+    "it": "visualizzare"
+  },
+  {
+    "en": "generalize",
+    "it": "generalizzare"
+  },
+  {
+    "en": "tourism",
+    "it": "turismo"
+  },
+  {
+    "en": "optimism",
+    "it": "ottimismo"
+  },
+  {
+    "en": "capitalism",
+    "it": "capitalismo"
+  },
+  {
+    "en": "socialism",
+    "it": "socialismo"
+  },
+  {
+    "en": "realism",
+    "it": "realismo"
+  },
+  {
+    "en": "idealism",
+    "it": "idealismo"
+  },
+  {
+    "en": "mechanism",
+    "it": "meccanismo"
+  },
+  {
+    "en": "organism",
+    "it": "organismo"
+  },
+  {
+    "en": "symbolism",
+    "it": "simbolismo"
+  },
+  {
+    "en": "nationalism",
+    "it": "nazionalismo"
+  },
+  {
+    "en": "racism",
+    "it": "razzismo"
+  },
+  {
+    "en": "egoism",
+    "it": "egoismo"
+  },
+  {
+    "en": "journalism",
+    "it": "giornalismo"
+  },
+  {
+    "en": "psychology",
+    "it": "psicologia"
+  },
+  {
+    "en": "technology",
+    "it": "tecnologia"
+  },
+  {
+    "en": "biology",
+    "it": "biologia"
+  },
+  {
+    "en": "geology",
+    "it": "geologia"
+  },
+  {
+    "en": "sociology",
+    "it": "sociologia"
+  },
+  {
+    "en": "ideology",
+    "it": "ideologia"
+  },
+  {
+    "en": "methodology",
+    "it": "metodologia"
+  },
+  {
+    "en": "terminology",
+    "it": "terminologia"
+  },
+  {
+    "en": "mythology",
+    "it": "mitologia"
+  }
+]
