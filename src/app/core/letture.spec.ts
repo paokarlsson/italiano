@@ -3,6 +3,7 @@ import appData from '../../../public/data/app-data.json';
 import letture from '../../../public/data/letture.json';
 import { LettureData } from '../models/leggi.models';
 import { Pillar } from '../models/quiz.models';
+import { LEVELS } from './levels';
 import { tokenize } from './tokenize';
 
 const data = letture as LettureData;
@@ -36,12 +37,16 @@ describe('letture.json', () => {
     }
   });
 
-  it('har unika id:n, en översättning per mening och ett giltigt facit', () => {
+  it('har unika id:n, en översättning per mening, ett giltigt facit och en nivå', () => {
     expect(new Set(data.texts.map((t) => t.id)).size).toBe(data.texts.length);
     for (const t of data.texts) {
       for (const s of t.sentences) expect(s.sv, `${t.id}: ${s.it}`).toBeTruthy();
       expect(t.question.options[t.question.answer], t.id).toBeTruthy();
       expect(new Set(t.question.options).size, t.id).toBe(t.question.options.length);
+      expect(
+        LEVELS.some((l) => l.n === t.level),
+        `${t.id}: nivå ${t.level}`,
+      ).toBe(true);
     }
   });
 });

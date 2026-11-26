@@ -5,21 +5,30 @@
 
 @let r = reading();
 @if (r) {
-  <div class="read-card">
-    <div class="eyebrow">
-      {{ r.again ? 'Läs om' : 'Leggi' }} · text {{ r.number }} av {{ r.total }}
+  @if (writeNext()) {
+    <div class="read-card">
+      <div class="eyebrow">Leggi · alla {{ r.total }} lästa</div>
+      <h2 lang="it">Un testo nuovo</h2>
+      <p>Claude skriver nästa text på din nivå, med dina öppna ord invävda.</p>
+      <button class="cta gold" type="button" routerLink="/testi">Ny text →</button>
     </div>
-    <h2 lang="it">{{ r.text.title }}</h2>
-    <p>{{ r.text.nota }}</p>
-    <button class="cta gold" type="button" [routerLink]="['/leggi', r.text.id]">Läs →</button>
-  </div>
+  } @else {
+    <div class="read-card">
+      <div class="eyebrow">
+        {{ r.again ? 'Läs om' : 'Leggi' }} · text {{ r.number }} av {{ r.total }}
+      </div>
+      <h2 lang="it">{{ r.text.title }}</h2>
+      <p>{{ r.text.nota }}</p>
+      <button class="cta gold" type="button" [routerLink]="['/leggi', r.text.id]">Läs →</button>
+    </div>
+  }
 
   <div class="read-row">
     @for (text of leggi.texts(); track text.id; let i = $index) {
       <a
         class="read-dot"
         [class.done]="leggi.isRead(text.id)"
-        [class.next]="text.id === r.text.id"
+        [class.next]="!writeNext() && text.id === r.text.id"
         [routerLink]="['/leggi', text.id]"
         [attr.aria-label]="'Text ' + (i + 1) + ': ' + text.title"
         [title]="text.title"
@@ -38,6 +47,19 @@
     </div>
   }
 }
+
+<div class="home-links">
+  @if (ripasso()) {
+    <a routerLink="/ripasso">
+      <b>Ripasso</b>
+      <span>{{ ripasso() }} {{ ripasso() === 1 ? 'fråga' : 'frågor' }} på det som skaver</span>
+    </a>
+  }
+  <a routerLink="/testi">
+    <b>Fler texter</b>
+    <span>{{ ai.hasKey() ? 'skriv en ny eller klistra in en egen' : 'koppla in Claude' }}</span>
+  </a>
+</div>
 
 @if (!hints.dismissed()) {
   <div class="hint-box">

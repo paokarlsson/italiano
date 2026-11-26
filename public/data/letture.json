@@ -1378,6 +1378,7 @@
       "title": "Maria",
       "sv": "Maria",
       "nota": "Två små verb bär nästan allt: è (är) och ha (har).",
+      "level": 1,
       "sentences": [
         {
           "it": "Maria è italiana.",
@@ -1411,6 +1412,7 @@
       "title": "Al bar",
       "sv": "På kaféet",
       "nota": "Ändelsen visar vem: prende = han tar, parlano = de pratar.",
+      "level": 1,
       "sentences": [
         {
           "it": "Marco è al bar con un amico.",
@@ -1444,6 +1446,7 @@
       "title": "Alla stazione",
       "sv": "På stationen",
       "nota": "Ord på -zione kan du redan: station → stazione.",
+      "level": 2,
       "sentences": [
         {
           "it": "La stazione centrale di Milano è molto grande.",
@@ -1481,6 +1484,7 @@
       "title": "Firenze",
       "sv": "Florens",
       "nota": "Fler gratisord: city → città, famous → famoso, incredible → incredibile.",
+      "level": 2,
       "sentences": [
         {
           "it": "Firenze è una città famosa.",
@@ -1518,6 +1522,7 @@
       "title": "La mia famiglia",
       "sv": "Min familj",
       "nota": "-iamo betyder alltid vi: mangiamo = vi äter.",
+      "level": 2,
       "sentences": [
         {
           "it": "Questa è la mia famiglia.",
@@ -1555,6 +1560,7 @@
       "title": "La mattina",
       "sv": "Morgonen",
       "nota": "Mi framför verbet = jag gör det med mig själv: mi alzo, jag stiger upp.",
+      "level": 3,
       "sentences": [
         {
           "it": "Mi sveglio alle sette.",
@@ -1588,6 +1594,7 @@
       "title": "Mi piace",
       "sv": "Jag gillar",
       "nota": "Piacere går baklänges: mi piace = det behagar mig.",
+      "level": 3,
       "sentences": [
         {
           "it": "Mi piace la musica italiana.",
@@ -1625,6 +1632,7 @@
       "title": "Ieri",
       "sv": "I går",
       "nota": "Dåtid i två delar: ho mangiato = jag åt. Rörelse tar essere: sono andata.",
+      "level": 4,
       "sentences": [
         {
           "it": "Ieri sono andata al mare con Anna.",
@@ -1658,6 +1666,7 @@
       "title": "Da bambino",
       "sv": "Som barn",
       "nota": "Imperfetto (-avo, -ava, -avamo) berättar hur det brukade vara.",
+      "level": 5,
       "sentences": [
         {
           "it": "Da bambino abitavo in un piccolo paese.",
@@ -1691,6 +1700,7 @@
       "title": "Mentre leggevo",
       "sv": "Medan jag läste",
       "nota": "Imperfetto är bakgrunden, passato prossimo är det som händer.",
+      "level": 5,
       "sentences": [
         {
           "it": "Ieri sera pioveva e faceva freddo.",
@@ -1728,6 +1738,7 @@
       "title": "Domani",
       "sv": "I morgon",
       "nota": "Futurum sitter i slutet av ordet: partirò, sarà, prenderemo.",
+      "level": 6,
       "sentences": [
         {
           "it": "Domani partirò per Venezia.",
@@ -1765,6 +1776,7 @@
       "title": "Al ristorante",
       "sv": "På restaurangen",
       "nota": "Samtalets småord: vorrei, ecco, allora — och ne, «av det».",
+      "level": 6,
       "sentences": [
         {
           "it": "«Buonasera! Vorrei un tavolo per due.»",
@@ -1802,6 +1814,7 @@
       "title": "Una notizia",
       "sv": "En nyhet",
       "nota": "En tidningsnotis. Se hur mycket som redan är limmet, reglerna och motorn.",
+      "level": 6,
       "sentences": [
         {
           "it": "Il governo ha presentato una nuova proposta.",

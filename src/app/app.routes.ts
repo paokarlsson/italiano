@@ -19,6 +19,16 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/leggi/leggi').then((m) => m.Leggi),
   },
   {
+    path: 'ripasso',
+    title: 'Ripasso · Italiano',
+    loadComponent: () => import('./pages/ripasso/ripasso').then((m) => m.Ripasso),
+  },
+  {
+    path: 'testi',
+    title: 'Fler texter · Italiano',
+    loadComponent: () => import('./pages/testi/testi').then((m) => m.Testi),
+  },
+  {
     path: 'deck/:deckId',
     canActivate: [deckExistsGuard],
     loadComponent: () => import('./pages/intro/intro').then((m) => m.Intro),

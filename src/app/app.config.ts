@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
+import { AiService } from './core/ai.service';
 import { DataService } from './core/data.service';
 import { HintService } from './core/hint.service';
 import { LeggiService } from './core/leggi.service';
@@ -28,8 +29,9 @@ export const appConfig: ApplicationConfig = {
       const stats = inject(StatsService);
       const hints = inject(HintService);
       const leggi = inject(LeggiService);
+      const ai = inject(AiService);
       await storage.init();
-      await Promise.all([data.load(), stats.load(), hints.load(), leggi.load()]);
+      await Promise.all([data.load(), stats.load(), hints.load(), leggi.load(), ai.load()]);
     }),
   ],
 };

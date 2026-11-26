@@ -9,9 +9,14 @@ delar som bygger på samma fyra pelare:
 - **Leggi** — vägen. Korta texter som nästan helt består av kärnan. Du läser, trycker på
   det du inte ser igenom och får ordet förklarat genom sin pelare. En fråga om innehållet
   avslutar texten. Det enda appen mäter är hur stor del du läste på egen hand.
+- **Ripasso** — det som skaver. En kort repetition som appen själv plockar ihop ur det du
+  slagit upp och det som går trögt i gymmet.
 - **Palestra** — gymmet. 66 mazzi och drygt tusen frågor för den som vill nöta en enskild
   punkt. Motorn drar nya, blandade frågor varje runda och skjuter in en repetition på det
   du just missade. Ingenting här måste göras.
+- **Fler texter** — valfritt. Med en egen API-nyckel från Anthropic skriver Claude nya
+  texter på din nivå och gör vilken italiensk text som helst läsbar. Utan nyckel fungerar
+  allt annat som vanligt.
 
 Allt sparas lokalt. Gymmets statistik kan exporteras som en färdig prompt till valfri AI.
 
@@ -46,14 +51,16 @@ samma commit inte körs två gånger.
 
 ## Så hänger det ihop
 
-| Vy        | Route                  | Vad som händer                                                 |
-| --------- | ---------------------- | -------------------------------------------------------------- |
-| Hem       | `/`                    | Nästa text att läsa, och gymmet hopfällt per pelare            |
-| Leggi     | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
-| Intro     | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
-| Runda     | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
-| Resultat  | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
-| Statistik | `/stats`               | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export |
+| Vy          | Route                  | Vad som händer                                                 |
+| ----------- | ---------------------- | -------------------------------------------------------------- |
+| Hem         | `/`                    | Nästa text att läsa, genvägar, och gymmet hopfällt per pelare  |
+| Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
+| Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter        |
+| Fler texter | `/testi`               | Nyckeln, ny text från Claude, egen inklistrad text             |
+| Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
+| Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
+| Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
+| Statistik   | `/stats`               | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export |
 
 Runda och resultat kräver en påbörjad runda — annars leder `activeRoundGuard`
 tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsGuard`.
@@ -62,19 +69,29 @@ tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsG
 
 ```
 src/app/
-  core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, hint, toast,
-                 ai-report, tag-labels, guards
+  core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, levels,
+                 ripasso, ai + ai-text, hint, toast, ai-report, tag-labels, guards
   models/        typerna bakom app-data.json och letture.json
-  pages/         home, leggi, intro, quiz (+ mc/tf/match), result, stats
+  pages/         home, leggi, ripasso, testi, intro, quiz (+ mc/tf/match), result, stats
   shared/        topbar
 public/data/     app-data.json — gymmets frågor · letture.json — texterna och ordlistan
 ```
 
 - **`LeggiService`** håller texterna, ordlistan och vad som hänt med varje ord. Ett
-  uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp.
-  Nästa text är den första olästa; när allt är läst den med flest öppna ord.
+  uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp,
+  eller sitter i en repetition. Nästa text är den första olästa; när allt är läst den med
+  flest öppna ord.
 - **`tokenize()`** delar en mening i uppslagbara bitar. Längsta träffen i ordlistan
   vinner, så «ho mangiato» och «c'è» förklaras som en enhet.
+- **`buildRipasso()`** väljer repetitionens frågor. Ord repeteras som ord, regler på nya
+  ord: ett uppslag i limmet eller orden blir en fråga på just det ordet — ur gymmet om det
+  finns en, annars byggd ur meningen där det stod. Ett uppslag i reglerna eller motorn
+  blir en fråga ur mazzot för samma mönster, helst på ett annat ord. Blir rundan kort
+  fylls den på med gymmets svagaste taggar.
+- **`levels.ts`** är stegen en text kan ligga på, 1–7. Första läsningen av en text flyttar
+  nivån: 97 % eller mer på egen hand ger ett steg upp, under 85 % ett steg ned.
+- **`AiService`** är kopplingen till Claude; `ai-text.ts` är allt runt omkring — prompten,
+  svarsformatet och kontrollen av det som kommer tillbaka. Se _Fler texter_ nedan.
 - **`QuizService`** är övningsmotorn: bygger rundans kö ur mazzots pool, räknar poäng
   och skjuter in högst två repetitioner per tagg och runda. En repetition är alltid en
   _ny_ fråga på samma punkt — aldrig samma fråga igen.
@@ -123,3 +140,27 @@ titeln på startsidans bricka. Är det tomt visas antalet frågor i stället.
 En ny text behöver bara en post i `texts` och ordlisteposter för de former som saknas.
 `letture.spec.ts` läser filen och fäller bygget om ett ord saknar uppslag, om en post
 aldrig används eller om `deck` pekar på ett mazzo som inte finns. Egennamn står i `names`.
+
+### Fler texter
+
+Appen har ingen server. Nyckeln läggs in på `/testi`, sparas i webbläsarens lagring och
+används bara i anrop direkt till Anthropic (`@anthropic-ai/sdk`, som laddas först när det
+behövs). Lägg inte in en nyckel på en dator du delar med andra.
+
+- **Ny text.** Claude får pelarna, nivåstegen, listan över mazzi och en inbyggd text som
+  mall, och ombeds skriva på läsarens nivå med de senast uppslagna orden invävda.
+- **Egen text.** En inklistrad italiensk text (högst 2 000 tecken) delas i meningar,
+  översätts och får en ordlista. Italienskan ska komma tillbaka ordagrant; gör den inte det
+  säger appen till.
+- **Kontrollen.** Svaret är låst till ett JSON-schema. Därefter gör `assembleText()` samma
+  sak som `letture.spec.ts` gör för de inbyggda texterna: varje ord ska ha ett uppslag
+  eller vara ett egennamn. Saknas något begärs en komplettering, en gång. Det som ändå
+  saknas blir ord utan uppslag, och antalet visas.
+- **Modell.** Opus 5.5 är förvald; Sonnet 5.5 och Haiku 5.5 går att välja. För Opus och
+  Sonnet är Anthropics reservmodell på serversidan påslagen (`fallbacks: "default"`), så
+  en avböjd begäran prövas på en annan modell i stället för att bara stanna.
+- **Kostnad.** Efter varje text visas en ungefärlig kostnad, räknad på listpriserna i
+  `AI_MODELS`. Ändras priserna behöver tabellen uppdateras för hand.
+
+Egna texter sparas lokalt och ligger kvar vid «Nollställ allt» — de är innehåll, inte
+framsteg.

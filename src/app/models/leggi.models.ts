@@ -26,9 +26,19 @@ export interface Lettura {
   sv: string;
   /** En rad om vad som är nytt i texten. */
   nota: string;
+  /** Svårighetsnivå, 1–7 — se core/levels.ts. Saknas på inklistrade texter. */
+  level?: number | null;
   sentences: Sentence[];
   /** En fråga om innehållet. `answer` är index i `options`. */
   question: { sv: string; options: string[]; answer: number };
+}
+
+/** En text som inte följer med appen: skriven av Claude eller inklistrad av läsaren. */
+export interface UserText extends Lettura {
+  source: 'ai' | 'paste';
+  createdAt: number;
+  /** Textens egen ordlista — går före den inbyggda. */
+  lexicon: Record<string, LexEntry>;
 }
 
 export interface LettureData {
@@ -72,6 +82,8 @@ export interface ReadState {
 export interface LeggiProgress {
   texts: Record<string, ReadState>;
   words: Record<string, WordState>;
+  /** Nivån nästa skrivna text ska ligga på. */
+  level?: number;
 }
 
 /** Det som visas när en text är läst. */
@@ -84,4 +96,15 @@ export interface ReadSummary {
   lookedKeys: string[];
   /** Slogs upp förra gången, lästes utan hjälp nu. */
   settledKeys: string[];
+  /** Hur nivån rörde sig: -1 lättare, 0 samma, 1 svårare — null om texten inte styr nivån. */
+  levelShift: -1 | 0 | 1 | null;
+}
+
+/** Ett öppet ord med meningen där det senast stod. */
+export interface OpenWord {
+  key: string;
+  entry: LexEntry;
+  looked: number;
+  /** Meningen ordet stod i, delad i bitar — för att kunna visa det i sitt sammanhang. */
+  sentence: Token[];
 }
