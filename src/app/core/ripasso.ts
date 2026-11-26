@@ -1,6 +1,6 @@
 import { LexEntry, OpenWord, TextQuestion, Token } from '../models/leggi.models';
 import { McQuestion, Pillar, Question, TfQuestion } from '../models/quiz.models';
-import { mdBold, shuffle } from './utils';
+import { escapeHtml, mdBold, shuffle } from './utils';
 
 /** Så många frågor en repetition har som mest. */
 export const RIPASSO_MAX = 6;
@@ -33,8 +33,6 @@ export interface RipassoInput {
   weak: { statKey: string; label: string }[];
 }
 
-const escapeHtml = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const isQuick = (q: Question): q is RipassoQuestion => q.type === 'mc' || q.type === 'tf';
 

@@ -13,6 +13,7 @@ import { HintService } from './core/hint.service';
 import { LeggiService } from './core/leggi.service';
 import { StatsService } from './core/stats.service';
 import { StorageService } from './core/storage.service';
+import { SupplyService } from './core/supply.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,8 +31,11 @@ export const appConfig: ApplicationConfig = {
       const hints = inject(HintService);
       const leggi = inject(LeggiService);
       const ai = inject(AiService);
+      const supply = inject(SupplyService);
       await storage.init();
       await Promise.all([data.load(), stats.load(), hints.load(), leggi.load(), ai.load()]);
+      // Först nu vet påfyllningen vad som finns på lager.
+      supply.start();
     }),
   ],
 };

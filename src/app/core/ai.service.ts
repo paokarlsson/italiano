@@ -1,5 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { UserText } from '../models/leggi.models';
+import {
+  cleanDeckQuestions,
+  DECK_SYSTEM,
+  deckPrompt,
+  deckSchema,
+  quickTags,
+  RawDeckQuestions,
+} from './ai-deck';
 import { EXPLAIN_SYSTEM } from './ai-explain';
 import {
   AiError,
@@ -20,6 +28,8 @@ import {
 import { DataService } from './data.service';
 import { LeggiService } from './leggi.service';
 import { focusOf } from './profile';
+import { deckStats } from './recommend';
+import { StatsService } from './stats.service';
 import { StorageService } from './storage.service';
 
 const AI_KEY = 'it_companion_ai_v1';
@@ -48,10 +58,18 @@ const DEFAULT_MODEL: AiModel = 'claude-opus-5-5';
 interface AiSettings {
   apiKey: string;
   model: AiModel;
+  /** Om appen fyller på av sig själv: texter på lager och fler frågor i uttömda mazzi. */
+  auto: boolean;
+  /** Ungefärlig kostnad i dollar för allt som beställts härifrån. */
+  spent: number;
 }
 
 type Effort = 'low' | 'medium';
-type Schema = typeof TEXT_SCHEMA | typeof REPAIR_SCHEMA;
+type Schema = typeof TEXT_SCHEMA | typeof REPAIR_SCHEMA | ReturnType<typeof deckSchema>;
+/** Vad som sägs medan svaret skrivs, utifrån det som kommit så långt. */
+type Progress = (snapshot: string) => string;
+
+const EMPTY: AiSettings = { apiKey: '', model: DEFAULT_MODEL, auto: true, spent: 0 };
 
 /** Resultatet av en beställning: texten, och det läsaren bör få veta om den. */
 export interface AiResult {
@@ -73,11 +91,14 @@ export class AiService {
   private readonly storage = inject(StorageService);
   private readonly data = inject(DataService);
   private readonly leggi = inject(LeggiService);
+  private readonly stats = inject(StatsService);
 
-  private readonly settings = signal<AiSettings>({ apiKey: '', model: DEFAULT_MODEL });
+  private readonly settings = signal<AiSettings>(EMPTY);
 
   readonly hasKey = computed(() => !!this.settings().apiKey);
   readonly model = computed(() => this.settings().model);
+  readonly auto = computed(() => this.settings().auto);
+  readonly spent = computed(() => this.settings().spent);
   /** Vad som pågår just nu — tomt när inget anrop är igång. */
   readonly status = signal('');
   readonly busy = computed(() => !!this.status());
@@ -98,6 +119,8 @@ export class AiService {
       this.settings.set({
         apiKey: parsed.apiKey ?? '',
         model: AI_MODELS.some((m) => m.id === parsed.model) ? parsed.model! : DEFAULT_MODEL,
+        auto: parsed.auto ?? true,
+        spent: Number(parsed.spent) || 0,
       });
     } catch {
       /* trasig data ignoreras */
@@ -125,15 +148,24 @@ export class AiService {
     this.update({ apiKey: '' });
   }
 
+  /** Nollställer räkningen av det förbrukade. */
+  resetSpent(): void {
+    this.update({ spent: 0 });
+  }
+
   setModel(model: AiModel): void {
     this.update({ model });
+  }
+
+  setAuto(auto: boolean): void {
+    this.update({ auto });
   }
 
   /**
    * Beställer en ny text på läsarens nivå: de öppna orden invävda, tät på pelaren där
    * uppslagen hopar sig, och — om `follow` är sant — som nästa del av berättelsen.
    */
-  async write(topic: string, follow = true): Promise<AiResult> {
+  async write(topic: string, follow = true, label = ''): Promise<AiResult> {
     const level = this.leggi.level();
     const weave = this.leggi
       .openWordDetails()
@@ -166,7 +198,48 @@ export class AiService {
       'medium',
       { source: 'ai', level, part },
       weave.map((w) => w.form),
+      label,
     );
+  }
+
+  /**
+   * Bygger ut ett mazzo med nya frågor på samma punkt, flest där det går sämst för läsaren.
+   * Returnerar hur många som höll för kontrollen och lades till.
+   */
+  async extend(deckId: string, label = ''): Promise<{ added: number; cost: number }> {
+    const entry = this.data.entry(deckId);
+    if (!entry) throw new AiError('bad-shape', 'Mazzot finns inte.');
+    const { deck, pillar } = entry;
+    const tags = quickTags(deck);
+    if (!tags.length) return { added: 0, cost: 0 };
+    if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
+    if (this.busy()) throw new AiError('api', 'En beställning är redan på väg.');
+
+    const stats = this.stats.stats().tags;
+    const accuracy = Object.fromEntries(
+      tags.map((tag) => {
+        const s = stats[`${deckId}::${tag}`];
+        return [tag, s?.attempts ? s.correct / s.attempts : null];
+      }),
+    );
+    const say = `${label}Skriver nya frågor till ${deck.title}…`;
+    this.status.set(say);
+    try {
+      const { output, cost } = await this.call(
+        DECK_SYSTEM,
+        deckPrompt({ deck, pillarTitle: pillar.pillarTitle, accuracy }),
+        deckSchema(tags),
+        'medium',
+        () => say,
+      );
+      const questions = cleanDeckQuestions(output as RawDeckQuestions, deck);
+      this.data.addQuestions(deckId, questions, deckStats(deck, stats).attempts);
+      return { added: questions.length, cost };
+    } catch (error) {
+      throw await describe(error);
+    } finally {
+      this.status.set('');
+    }
   }
 
   /** Gör en inklistrad italiensk text läsbar: meningar, översättning och uppslag. */
@@ -188,16 +261,19 @@ export class AiService {
     effort: Effort,
     meta: { source: 'ai' | 'paste'; level: number | null; original?: string; part?: number },
     weave: string[] = [],
+    label = '',
   ): Promise<AiResult> {
     if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
-    if (this.busy()) throw new AiError('api', 'En text är redan på väg.');
-    this.status.set('Skickar… det brukar ta en halv minut');
+    if (this.busy()) throw new AiError('api', 'En beställning är redan på väg.');
+    this.status.set(`${label}Skickar… det brukar ta en halv minut`);
+    const writing: Progress = (snapshot) =>
+      label + (snapshot.includes('"lexicon"') ? 'Slår upp orden…' : 'Skriver texten…');
     try {
       const system = this.system(meta.level, weave);
       const opts = {
         deckIds: new Set(this.data.pillars().flatMap((p) => p.decks.map((d) => d.deckId))),
       };
-      const first = await this.call(system, prompt, TEXT_SCHEMA, effort);
+      const first = await this.call(system, prompt, TEXT_SCHEMA, effort, writing);
       const raw = first.output as RawText;
       let { text, missing, faithful } = assembleText(raw, {
         ...opts,
@@ -209,7 +285,8 @@ export class AiService {
 
       // En komplettering, inte fler: det som fortfarande saknas blir ord utan uppslag.
       if (missing.length) {
-        this.status.set(`Kompletterar ${missing.length} ord…`);
+        const repairing = `${label}Kompletterar ${missing.length} ord…`;
+        this.status.set(repairing);
         const second = await this.call(
           system,
           repairPrompt(
@@ -218,6 +295,7 @@ export class AiService {
           ),
           REPAIR_SCHEMA,
           'low',
+          () => repairing,
         );
         const repair = second.output as { lexicon: RawEntry[]; names: string[] };
         ({ text, missing } = mergeRepair(text, repair, namesOf(raw), opts));
@@ -270,6 +348,7 @@ export class AiService {
       );
       stream.on('text', (_delta, snapshot) => onText(snapshot.trimStart()));
       const message = await stream.finalMessage();
+      this.charge(message.usage);
 
       if (message.stop_reason === 'refusal') {
         throw new AiError('refusal', 'Claude avböjde att förklara det här.');
@@ -297,6 +376,7 @@ export class AiService {
     prompt: string,
     schema: Schema,
     effort: Effort,
+    progress: Progress,
   ): Promise<{ output: unknown; cost: number }> {
     const [{ default: Anthropic }, { jsonSchemaOutputFormat }] = await Promise.all([
       import('@anthropic-ai/sdk'),
@@ -313,14 +393,12 @@ export class AiService {
       output_config: { effort, format: jsonSchemaOutputFormat(schema) },
       ...fallback(model),
     });
-    stream.on('text', (_delta, snapshot) => {
-      if (this.status().startsWith('Kompletterar')) return;
-      this.status.set(snapshot.includes('"lexicon"') ? 'Slår upp orden…' : 'Skriver texten…');
-    });
+    stream.on('text', (_delta, snapshot) => this.status.set(progress(snapshot)));
     const message = await stream.finalMessage();
+    const cost = this.charge(message.usage);
 
     if (message.stop_reason === 'refusal') {
-      throw new AiError('refusal', 'Claude avböjde att skriva den här texten.');
+      throw new AiError('refusal', 'Claude avböjde den här beställningen.');
     }
     if (message.stop_reason === 'max_tokens') {
       throw new AiError('too-long', 'Svaret blev för långt och klipptes. Pröva en kortare text.');
@@ -328,10 +406,15 @@ export class AiService {
     if (!message.parsed_output) {
       throw new AiError('bad-shape', 'Svaret gick inte att läsa. Försök igen.');
     }
-    const [input, output] = AI_MODELS.find((m) => m.id === model)!.price;
-    const cost =
-      (message.usage.input_tokens * input + message.usage.output_tokens * output) / 1_000_000;
     return { output: message.parsed_output, cost };
+  }
+
+  /** Räknar ut vad ett anrop kostade på listpriset och lägger det till det förbrukade. */
+  private charge(usage: { input_tokens: number; output_tokens: number }): number {
+    const [input, output] = AI_MODELS.find((m) => m.id === this.settings().model)!.price;
+    const cost = (usage.input_tokens * input + usage.output_tokens * output) / 1_000_000;
+    this.update({ spent: this.settings().spent + cost });
+    return cost;
   }
 
   /**

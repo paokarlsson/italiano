@@ -20,6 +20,12 @@
       }
     </div>
 
+    @if (added()) {
+      <p class="intro-added">
+        {{ d.pool.length }} frågor, varav {{ added() }} skrivna av Claude när mazzot tog slut.
+      </p>
+    }
+
     <div class="len-label">Hur många frågor?</div>
     <div class="seg">
       @for (len of lengths(); track $index) {

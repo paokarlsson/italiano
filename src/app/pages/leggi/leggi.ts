@@ -15,6 +15,7 @@ import { wordPrompt } from '../../core/ai-explain';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
 import { PILLAR_NAMES } from '../../core/profile';
+import { SupplyService } from '../../core/supply.service';
 import { shuffle } from '../../core/utils';
 import { PillarId, ReadSummary, Token } from '../../models/leggi.models';
 import { Perche } from '../../shared/perche';
@@ -39,6 +40,7 @@ export class Leggi {
   private readonly data = inject(DataService);
   protected readonly leggi = inject(LeggiService);
   protected readonly ai = inject(AiService);
+  protected readonly supply = inject(SupplyService);
 
   protected readonly text = computed(() => this.leggi.text(this.textId()) ?? null);
   protected readonly tokens = computed(() => this.leggi.tokens(this.textId()));
@@ -99,7 +101,12 @@ export class Leggi {
     const next = this.leggi.next();
     return next && next.id !== this.textId() ? next : null;
   });
-  /** Sant när nästa text bör beställas: de inbyggda är slut och en nyckel finns. */
+  /** Sant när det finns en oläst text att gå vidare till — inbyggd eller ur lagret. */
+  protected readonly nextIsNew = computed(() => {
+    const next = this.nextText();
+    return !!next && !this.leggi.isRead(next.id);
+  });
+  /** Sant när nästa text bör beställas: allt är läst och en nyckel finns. */
   protected readonly writeNext = computed(() => this.leggi.allRead() && this.ai.hasKey());
 
   // Uppläsning — bara där webbläsaren faktiskt har en italiensk röst.

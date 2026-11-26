@@ -21,6 +21,11 @@
         @if (quiz.isRetry()) {
           <span class="rtag">samma sak igen</span>
         }
+        @if (q.ai) {
+          <span class="rtag ai" title="Frågan är skriven av Claude och inte granskad"
+            >ny · Claude</span
+          >
+        }
       </div>
 
       @switch (q.type) {
