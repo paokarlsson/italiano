@@ -9,6 +9,7 @@ import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from 
 import { routes } from './app.routes';
 import { DataService } from './core/data.service';
 import { HintService } from './core/hint.service';
+import { LeggiService } from './core/leggi.service';
 import { StatsService } from './core/stats.service';
 import { StorageService } from './core/storage.service';
 
@@ -26,8 +27,9 @@ export const appConfig: ApplicationConfig = {
       const data = inject(DataService);
       const stats = inject(StatsService);
       const hints = inject(HintService);
+      const leggi = inject(LeggiService);
       await storage.init();
-      await Promise.all([data.load(), stats.load(), hints.load()]);
+      await Promise.all([data.load(), stats.load(), hints.load(), leggi.load()]);
     }),
   ],
 };

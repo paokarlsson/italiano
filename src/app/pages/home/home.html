@@ -1,70 +1,96 @@
 <div class="home-head">
   <div class="eyebrow">L'impalcatura</div>
   <h1 class="home-title">Italiano<br /><em>companion</em></h1>
-
-  <div class="progress-line">
-    <span>{{ progress().done }}/{{ progress().total }}</span>
-    <span class="pl-track">
-      <span class="pl-fill" [style.width.%]="progress().pct"></span>
-    </span>
-    <span>{{ progress().pct }}%</span>
-  </div>
-
-  @if (!hints.dismissed()) {
-    <div class="hint-box">
-      <span class="hint-icon">💡</span>
-      <span class="hint-text" title="Tryck för ett nytt tips" (click)="hints.cycle()">
-        {{ hints.phrase() }}
-      </span>
-      <span class="hint-actions">
-        <button
-          class="hint-next"
-          type="button"
-          aria-label="Visa nästa tips"
-          (click)="hints.cycle()"
-        >
-          ↻
-        </button>
-        <button class="hint-close" type="button" aria-label="Stäng" (click)="hints.dismiss()">
-          ✕
-        </button>
-      </span>
-    </div>
-  }
-
-  <div class="home-actions">
-    <button type="button" routerLink="/stats">📊 Statistik</button>
-    <button type="button" (click)="confirmReset()">Nollställ allt</button>
-  </div>
 </div>
 
-<div>
-  @for (pillar of pillars(); track pillar.pillarId; let pIdx = $index) {
-    <div class="pillar-block">
-      <div class="pillar-head">
-        <span class="pillar-num">0{{ pIdx + 1 }}</span>
-        <span class="pillar-title">{{ pillar.pillarTitle }}</span>
-        <span class="pillar-meta">{{ doneInPillar(pIdx) }}/{{ pillar.decks.length }}</span>
-      </div>
-      <div class="grid">
-        @for (deck of pillar.decks; track deck.deckId) {
-          @let done = stats.isDeckDone(deck.deckId);
-          <button
-            class="tile"
-            type="button"
-            [class.done]="done"
-            [routerLink]="['/deck', deck.deckId]"
-          >
-            <span class="tile-check">✓</span>
-            @if (!done && stats.deckHasWeakTag(deck)) {
-              <span class="tile-weak" title="Svag punkt här"></span>
-            }
-            <span class="tile-num">{{ deck.deckId }}</span>
-            <span class="tile-title">{{ deck.title }}</span>
-            <span class="tile-hint mono">{{ deck.hint || deck.pool.length + ' questions' }}</span>
-          </button>
-        }
-      </div>
+@let r = reading();
+@if (r) {
+  <div class="read-card">
+    <div class="eyebrow">
+      {{ r.again ? 'Läs om' : 'Leggi' }} · text {{ r.number }} av {{ r.total }}
+    </div>
+    <h2 lang="it">{{ r.text.title }}</h2>
+    <p>{{ r.text.nota }}</p>
+    <button class="cta gold" type="button" [routerLink]="['/leggi', r.text.id]">Läs →</button>
+  </div>
+
+  <div class="read-row">
+    @for (text of leggi.texts(); track text.id; let i = $index) {
+      <a
+        class="read-dot"
+        [class.done]="leggi.isRead(text.id)"
+        [class.next]="text.id === r.text.id"
+        [routerLink]="['/leggi', text.id]"
+        [attr.aria-label]="'Text ' + (i + 1) + ': ' + text.title"
+        [title]="text.title"
+        >{{ i + 1 }}</a
+      >
+    }
+  </div>
+
+  @let own = leggi.own();
+  @if (own !== null) {
+    <div class="read-meta">
+      {{ leggi.readCount() }} av {{ r.total }} lästa · {{ own }} % på egen hand
+      @if (leggi.openWords().length) {
+        · {{ leggi.openWords().length }} ord öppna
+      }
     </div>
   }
+}
+
+@if (!hints.dismissed()) {
+  <div class="hint-box">
+    <span class="hint-icon">💡</span>
+    <span class="hint-text" title="Tryck för ett nytt tips" (click)="hints.cycle()">
+      {{ hints.phrase() }}
+    </span>
+    <span class="hint-actions">
+      <button class="hint-next" type="button" aria-label="Visa nästa tips" (click)="hints.cycle()">
+        ↻
+      </button>
+      <button class="hint-close" type="button" aria-label="Stäng" (click)="hints.dismiss()">
+        ✕
+      </button>
+    </span>
+  </div>
+}
+
+<div class="gym-head">
+  <div class="eyebrow">Palestra</div>
+  <p>Gymmet. Här nöter du en enskild punkt när du vill — ingenting här måste göras.</p>
+</div>
+
+@for (pillar of pillars(); track pillar.pillarId; let pIdx = $index) {
+  <details class="pillar-block">
+    <summary class="pillar-head">
+      <span class="pillar-num">0{{ pIdx + 1 }}</span>
+      <span class="pillar-title">{{ pillar.pillarTitle }}</span>
+      <span class="pillar-meta">{{ doneInPillar(pIdx) }}/{{ pillar.decks.length }}</span>
+    </summary>
+    <div class="grid">
+      @for (deck of pillar.decks; track deck.deckId) {
+        @let done = stats.isDeckDone(deck.deckId);
+        <button
+          class="tile"
+          type="button"
+          [class.done]="done"
+          [routerLink]="['/deck', deck.deckId]"
+        >
+          <span class="tile-check">✓</span>
+          @if (!done && stats.deckHasWeakTag(deck)) {
+            <span class="tile-weak" title="Svag punkt här"></span>
+          }
+          <span class="tile-num">{{ deck.deckId }}</span>
+          <span class="tile-title">{{ deck.title }}</span>
+          <span class="tile-hint mono">{{ deck.hint || deck.pool.length + ' questions' }}</span>
+        </button>
+      }
+    </div>
+  </details>
+}
+
+<div class="home-actions">
+  <button type="button" routerLink="/stats">📊 Statistik</button>
+  <button type="button" (click)="confirmReset()">Nollställ allt</button>
 </div>

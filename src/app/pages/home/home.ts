@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { DataService } from '../../core/data.service';
 import { HintService } from '../../core/hint.service';
+import { LeggiService } from '../../core/leggi.service';
 import { StatsService } from '../../core/stats.service';
 
 @Component({
@@ -14,20 +15,20 @@ export class Home {
   private readonly data = inject(DataService);
   protected readonly stats = inject(StatsService);
   protected readonly hints = inject(HintService);
+  protected readonly leggi = inject(LeggiService);
 
   protected readonly pillars = this.data.pillars;
 
-  protected readonly progress = computed(() => {
-    const done = this.stats.stats().deckDone;
-    let total = 0;
-    let cleared = 0;
-    for (const p of this.pillars()) {
-      for (const d of p.decks) {
-        total++;
-        if (done[d.deckId]) cleared++;
-      }
-    }
-    return { total, done: cleared, pct: total ? Math.round((cleared / total) * 100) : 0 };
+  /** Kortet överst: nästa text att läsa, och var i raden den står. */
+  protected readonly reading = computed(() => {
+    const next = this.leggi.next();
+    if (!next) return null;
+    return {
+      text: next,
+      number: this.leggi.number(next.id),
+      total: this.leggi.texts().length,
+      again: this.leggi.isRead(next.id),
+    };
   });
 
   protected doneInPillar(pillarIndex: number): number {
@@ -38,6 +39,7 @@ export class Home {
   protected confirmReset(): void {
     if (confirm('Radera alla sparade framsteg och all statistik? Det går inte att ångra.')) {
       this.stats.reset();
+      this.leggi.reset();
       this.hints.restore();
     }
   }

@@ -1,0 +1,146 @@
+@let t = text();
+@let s = summary();
+@if (t) {
+  <app-topbar [step]="step()" [title]="t.title" />
+
+  <div class="stage">
+    <p class="lt-nota">{{ t.nota }}</p>
+
+    <div class="lt-tools">
+      @if (voice()) {
+        <button type="button" [class.on]="speaking()" (click)="toggleSpeech()">
+          {{ speaking() ? '■ Tyst' : '▶ Lyssna' }}
+        </button>
+      }
+      <button
+        type="button"
+        [class.on]="skeleton()"
+        [attr.aria-pressed]="skeleton()"
+        (click)="skeleton.set(!skeleton())"
+      >
+        Visa skelettet
+      </button>
+    </div>
+
+    @if (skeleton()) {
+      <div class="lt-legend">
+        @for (p of pillars(); track p.id) {
+          <span [attr.data-p]="p.id">{{ p.sv }}</span>
+        }
+      </div>
+    }
+
+    <div class="lt-text" [class.skel]="skeleton()">
+      @for (sentence of tokens(); track $index; let i = $index) {
+        <p class="lt-s" lang="it">
+          @for (tok of sentence; track $index) {
+            @if (tok.pre) {
+              <span>{{ tok.pre }}</span>
+            }
+            @if (tok.entry) {
+              <span
+                class="lt-w"
+                role="button"
+                tabindex="0"
+                [attr.data-p]="tok.entry.p"
+                [class.looked]="looked().has(tok.key!)"
+                [class.sel]="selected() === tok"
+                (click)="lookUp(tok)"
+                (keydown.enter)="lookUp(tok)"
+                (keydown.space)="lookUp(tok); $event.preventDefault()"
+                >{{ tok.text }}</span
+              >
+            } @else {
+              <span>{{ tok.text }}</span>
+            }
+            <span>{{ tok.post + (tok.space ? ' ' : '') }}</span>
+          }
+        </p>
+        @if (s) {
+          <p class="lt-sv">{{ t.sentences[i].sv }}</p>
+        }
+      }
+    </div>
+
+    @let g = gloss();
+    <div class="lt-gloss" [attr.data-p]="g?.p" aria-live="polite">
+      @if (g) {
+        <div class="lt-g-tag">{{ g.pillar }}</div>
+        <div class="lt-g-main">
+          <b lang="it">{{ g.form }}</b>
+          <span>{{ g.sv }}</span>
+        </div>
+        @if (g.note) {
+          <div class="lt-g-note">{{ g.note }}</div>
+        }
+        @if (s && g.deckRef) {
+          <a class="lt-g-deck" [routerLink]="['/deck', g.deckRef.deckId]">
+            Nöta just det här: {{ g.deckRef.title }} →
+          </a>
+        }
+      } @else {
+        <div class="lt-g-empty">
+          {{
+            s
+              ? 'Tryck på ett ord för att se det igen.'
+              : 'Tryck på det du inte ser igenom. Det är ingen miss — bara ett uppslag.'
+          }}
+        </div>
+      }
+    </div>
+
+    @if (!asking()) {
+      <button class="cta gold push-bottom" type="button" (click)="ask()">Jag har läst →</button>
+    } @else {
+      <div class="lt-q">
+        <div class="qkind">Capito?</div>
+        <div class="lt-q-text">{{ t.question.sv }}</div>
+        <div class="options">
+          @for (option of options(); track option.label) {
+            <button
+              class="opt"
+              type="button"
+              [disabled]="!!chosen()"
+              [class.correct]="chosen() && option.correct"
+              [class.wrong]="chosen() === option && !option.correct"
+              [class.dim]="chosen() && chosen() !== option && !option.correct"
+              (click)="answer(option)"
+            >
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (s) {
+      <div class="lt-done">
+        <div class="lt-own">{{ s.own }}<span>%</span></div>
+        <div class="lt-own-label">på egen hand · {{ s.words }} ord, {{ s.looked }} uppslag</div>
+        @if (!chosen()?.correct) {
+          <p>Frågan gick snett — svaret står i texten. Svenskan ligger nu under varje rad.</p>
+        }
+        @if (s.settledKeys.length) {
+          <p>
+            Satt den här gången: <i lang="it">{{ s.settledKeys.join(' · ') }}</i>
+          </p>
+        }
+        @if (s.lookedKeys.length) {
+          <p>
+            Du slog upp: <i lang="it">{{ s.lookedKeys.join(' · ') }}</i>
+          </p>
+        }
+      </div>
+
+      <div class="result-btns">
+        @let next = nextText();
+        @if (next) {
+          <button class="cta gold" type="button" [routerLink]="['/leggi', next.id]">
+            {{ leggi.isRead(next.id) ? 'Läs om' : 'Nästa text' }}: {{ next.title }} →
+          </button>
+        }
+        <button class="cta ghost" type="button" routerLink="/">Klart för nu</button>
+      </div>
+    }
+  </div>
+}

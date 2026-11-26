@@ -6,6 +6,8 @@ const HINT_KEY = 'it_companion_hint_v1';
 
 export const HINT_PHRASES = [
   'En liten kärna av italienskan bär det mesta du faktiskt läser och hör.',
+  'Läs först. Gymmet finns kvar för den punkt som skaver.',
+  'Ett uppslag är ingen miss — det visar bara vad som inte sitter än.',
   'De ~500–600 vanligaste orden täcker redan ~80 % av löpande text.',
   'De 1 000 vanligaste orden tar täckningen till ungefär 84 %.',
   'Motorn — genus, plural, verbändelser — ger +8–9 procentenheter gratis.',
