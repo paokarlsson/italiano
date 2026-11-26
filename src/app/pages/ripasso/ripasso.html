@@ -1,0 +1,73 @@
+<app-topbar step="Ripasso" title="Det som skaver" />
+
+@let item = current();
+@if (item) {
+  <div class="dots">
+    @for (it of items; track $index) {
+      <span class="dot" [class.past]="$index < pos()" [class.active]="$index === pos()"></span>
+    }
+  </div>
+
+  <div class="stage">
+    <div class="qwrap">
+      <div class="rp-why" [class.weak]="item.kind === 'weak'">{{ item.why }}</div>
+      <div class="qkind">
+        {{ item.question.type === 'tf' ? 'Sant eller falskt' : asMc(item).kind || 'Flerval' }}
+      </div>
+
+      @if (item.question.type === 'mc') {
+        <div class="qtext" [class.rp-it]="item.kind === 'word' && !item.question.statKey">
+          <span [innerHTML]="asMc(item).q"></span>
+        </div>
+        <app-mc-question
+          [question]="asMc(item)"
+          [answered]="answered() !== null"
+          (answer)="onAnswer($event)"
+        />
+      } @else {
+        <div class="qtext" [innerHTML]="asTf(item).q"></div>
+        <app-tf-question
+          [question]="asTf(item)"
+          [answered]="answered() !== null"
+          (answer)="onAnswer($event)"
+        />
+      }
+
+      @if (answered() !== null) {
+        <div class="feedback show" [class.ok]="answered()" [class.no]="!answered()">
+          <strong>{{ answered() ? 'Giusto!' : 'Quasi.' }}</strong>
+          <span [innerHTML]="' ' + bold(item.question.explain)"></span>
+        </div>
+
+        <button class="cta" type="button" (click)="next()">
+          {{ isLast() ? 'Klar →' : 'Nästa →' }}
+        </button>
+      }
+    </div>
+  </div>
+} @else if (done() && items.length) {
+  <div class="result">
+    <div class="big">
+      {{ correct() }}<span>/{{ items.length }}</span>
+    </div>
+    <div class="of">satt</div>
+    @if (stillOpen().length) {
+      <p>
+        Kvar som öppna: <i lang="it">{{ stillOpen().join(' · ') }}</i
+        >. De kommer tillbaka.
+      </p>
+    } @else {
+      <p>Inget av det här ligger kvar som öppet.</p>
+    }
+
+    <div class="result-btns">
+      @let next = nextText();
+      @if (next) {
+        <button class="cta gold" type="button" [routerLink]="['/leggi', next.id]">
+          Läs: {{ next.title }} →
+        </button>
+      }
+      <button class="cta ghost" type="button" routerLink="/">Klart för nu</button>
+    </div>
+  </div>
+}

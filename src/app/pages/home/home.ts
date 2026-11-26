@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AiService } from '../../core/ai.service';
 import { DataService } from '../../core/data.service';
 import { HintService } from '../../core/hint.service';
 import { LeggiService } from '../../core/leggi.service';
+import { RIPASSO_MAX } from '../../core/ripasso';
 import { StatsService } from '../../core/stats.service';
 
 @Component({
@@ -16,6 +18,7 @@ export class Home {
   protected readonly stats = inject(StatsService);
   protected readonly hints = inject(HintService);
   protected readonly leggi = inject(LeggiService);
+  protected readonly ai = inject(AiService);
 
   protected readonly pillars = this.data.pillars;
 
@@ -30,6 +33,17 @@ export class Home {
       again: this.leggi.isRead(next.id),
     };
   });
+
+  /** Sant när kortet ska leda till en ny text från Claude i stället för en omläsning. */
+  protected readonly writeNext = computed(() => this.leggi.allRead() && this.ai.hasKey());
+
+  /** Antal frågor en repetition skulle få just nu — 0 när inget skaver. */
+  protected readonly ripasso = computed(() =>
+    Math.min(
+      RIPASSO_MAX,
+      this.leggi.openWords().length + Math.min(2, this.stats.weakTags().length),
+    ),
+  );
 
   protected doneInPillar(pillarIndex: number): number {
     const done = this.stats.stats().deckDone;

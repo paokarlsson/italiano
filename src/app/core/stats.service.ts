@@ -67,6 +67,13 @@ export class StatsService {
     return false;
   }
 
+  /** Taggar under 60 % efter minst tre försök, svagast först — underlag till repetitionen. */
+  weakTags(): { statKey: string; label: string }[] {
+    return this.rows()
+      .filter((r) => r.attempts >= 3 && r.acc < 0.6)
+      .map((r) => ({ statKey: r.key, label: r.tagLabel }));
+  }
+
   reset(): void {
     this._stats.set({ tags: {}, deckDone: {} });
     if (this.saveTimer) clearTimeout(this.saveTimer);

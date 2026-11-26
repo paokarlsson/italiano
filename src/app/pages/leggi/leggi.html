@@ -125,6 +125,9 @@
             Satt den här gången: <i lang="it">{{ s.settledKeys.join(' · ') }}</i>
           </p>
         }
+        @if (ai.hasKey() && s.levelShift) {
+          <p>Nästa skrivna text blir lite {{ s.levelShift > 0 ? 'svårare' : 'lättare' }}.</p>
+        }
         @if (s.lookedKeys.length) {
           <p>
             Du slog upp: <i lang="it">{{ s.lookedKeys.join(' · ') }}</i>
@@ -134,7 +137,9 @@
 
       <div class="result-btns">
         @let next = nextText();
-        @if (next) {
+        @if (writeNext()) {
+          <button class="cta gold" type="button" routerLink="/testi">Ny text →</button>
+        } @else if (next) {
           <button class="cta gold" type="button" [routerLink]="['/leggi', next.id]">
             {{ leggi.isRead(next.id) ? 'Läs om' : 'Nästa text' }}: {{ next.title }} →
           </button>

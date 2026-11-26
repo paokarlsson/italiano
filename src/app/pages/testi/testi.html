@@ -1,0 +1,118 @@
+<app-topbar step="Leggi" title="Fler texter" />
+
+<div class="stage">
+  @if (!ai.hasKey()) {
+    <div class="ai-card">
+      <div class="eyebrow">Koppla in Claude</div>
+      <p>
+        Med en egen API-nyckel från Anthropic skriver appen nya texter på din nivå och gör vilken
+        italiensk text som helst läsbar. Utan nyckel fungerar allt annat som vanligt.
+      </p>
+      <input
+        type="password"
+        autocomplete="off"
+        placeholder="sk-ant-…"
+        aria-label="API-nyckel"
+        [value]="key()"
+        [disabled]="ai.busy()"
+        (input)="key.set(valueOf($event))"
+      />
+      <button class="cta gold" type="button" [disabled]="ai.busy()" (click)="saveKey()">
+        Spara nyckeln
+      </button>
+      <p class="ai-fine">
+        Nyckeln sparas bara i den här webbläsaren och skickas bara till Anthropic. Lägg inte in den
+        på en dator du delar med andra. Varje text dras från ditt Anthropic-konto.
+      </p>
+    </div>
+  } @else {
+    <div class="ai-card">
+      <div class="eyebrow">Ny text</div>
+      <p>
+        Nivå {{ level().n }} av {{ levelCount }} · {{ level().label }}.
+        @if (openCount()) {
+          Dina öppna ord vävs in.
+        }
+      </p>
+      <input
+        type="text"
+        placeholder="Ämne, om du vill — t.ex. en cykeltur"
+        aria-label="Ämne"
+        maxlength="80"
+        [value]="topic()"
+        [disabled]="ai.busy()"
+        (input)="topic.set(valueOf($event))"
+      />
+      <button class="cta gold" type="button" [disabled]="ai.busy()" (click)="write()">
+        Skriv en text åt mig →
+      </button>
+    </div>
+
+    <div class="ai-card">
+      <div class="eyebrow">Egen text</div>
+      <p>Klistra in italienska — en artikel, en meny, en låttext — så blir den läsbar här.</p>
+      <textarea
+        rows="5"
+        placeholder="Incolla qui…"
+        aria-label="Italiensk text"
+        lang="it"
+        [value]="pasted()"
+        [disabled]="ai.busy()"
+        (input)="pasted.set(valueOf($event))"
+      ></textarea>
+      <div class="ai-count" [class.over]="tooLong()">
+        {{ pasted().trim().length }} / {{ pasteMax }} tecken
+      </div>
+      <button
+        class="cta"
+        type="button"
+        [disabled]="ai.busy() || tooLong() || !pasted().trim()"
+        (click)="gloss()"
+      >
+        Gör den läsbar →
+      </button>
+    </div>
+  }
+
+  @if (ai.status()) {
+    <div class="ai-status" role="status">{{ ai.status() }}</div>
+  }
+  @if (error()) {
+    <div class="ai-error" role="alert">{{ error() }}</div>
+  }
+
+  @if (leggi.userTexts().length) {
+    <div class="stat-section-title">Dina texter ({{ leggi.userTexts().length }})</div>
+    @for (text of leggi.userTexts(); track text.id) {
+      <div class="ai-row">
+        <a [routerLink]="['/leggi', text.id]">
+          <span class="ai-row-title" lang="it">{{ text.title }}</span>
+          <span class="ai-row-meta">
+            {{ sourceLabel(text) }}{{ leggi.isRead(text.id) ? ' · läst' : '' }}
+          </span>
+        </a>
+        <button type="button" [attr.aria-label]="'Ta bort ' + text.title" (click)="remove(text)">
+          ✕
+        </button>
+      </div>
+    }
+  }
+
+  @if (ai.hasKey()) {
+    <div class="ai-settings">
+      <label>
+        Modell
+        <select [disabled]="ai.busy()" (change)="setModel($event)">
+          @for (m of models; track m.id) {
+            <option [value]="m.id" [selected]="m.id === ai.model()">
+              {{ m.label }} — {{ m.note }}
+            </option>
+          }
+        </select>
+      </label>
+      <button type="button" [disabled]="ai.busy()" (click)="removeKey()">Ta bort nyckeln</button>
+    </div>
+  }
+
+  <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka</button>
+</div>

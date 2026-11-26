@@ -1271,6 +1271,225 @@ textarea.export-box {
   color: var(--ink);
 }
 
+/* --- Startsidan: genvägar under läskortet --- */
+.home-links {
+  margin-top: 16px;
+  border-top: 1.5px solid var(--line);
+}
+.home-links a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 13px 2px;
+  border-bottom: 1.5px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+.home-links a::after {
+  content: '→';
+  margin-left: auto;
+  color: var(--ink-soft);
+}
+.home-links b {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.home-links span {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.home-links a:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.home-links + .hint-box {
+  margin-top: 18px;
+}
+
+/* --- Ripasso --- */
+.rp-why {
+  align-self: flex-start;
+  background: var(--paper-2);
+  border-radius: 99px;
+  padding: 5px 11px;
+  font-size: 12.5px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.rp-why.weak {
+  background: rgba(168, 62, 41, 0.12);
+  color: var(--brick);
+}
+.qtext.rp-it {
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* --- Fler texter: nyckel, beställning, egna texter --- */
+.ai-card {
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.ai-card p {
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 8px 0 12px;
+}
+.ai-card input,
+.ai-card textarea,
+.ai-settings select {
+  width: 100%;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 13px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+}
+.ai-card textarea {
+  resize: vertical;
+  line-height: 1.45;
+  display: block;
+}
+.ai-card input:focus-visible,
+.ai-card textarea:focus-visible,
+.ai-settings select:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 1px;
+}
+.ai-card .cta {
+  margin-top: 12px;
+}
+.ai-card p.ai-fine {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 12px 0 0;
+}
+.ai-count {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-align: right;
+  margin-top: 6px;
+}
+.ai-count.over {
+  color: var(--brick);
+  font-weight: 700;
+}
+.cta[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+.ai-status,
+.ai-error {
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+.ai-status {
+  background: var(--paper-2);
+  font-family: 'Space Mono', monospace;
+  font-size: 12.5px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.ai-error {
+  background: rgba(168, 62, 41, 0.1);
+  border: 1.5px solid var(--brick);
+  color: var(--brick);
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+.ai-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1.5px solid var(--line);
+}
+.ai-row a {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 2px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.ai-row-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+.ai-row-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.ai-row button {
+  background: none;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.ai-row button:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.ai-row a:focus-visible,
+.ai-row button:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 1px;
+}
+.ai-settings {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ai-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.ai-settings select {
+  background: var(--card);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.ai-settings button {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 6px 0;
+  font: inherit;
+  font-size: 13px;
+  color: var(--brick);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
@@ -1286,6 +1505,8 @@ router-outlet {
 }
 app-home,
 app-leggi,
+app-ripasso,
+app-testi,
 app-intro,
 app-quiz,
 app-result,

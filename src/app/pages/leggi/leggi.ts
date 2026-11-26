@@ -10,6 +10,7 @@ import {
   untracked,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AiService } from '../../core/ai.service';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
 import { shuffle } from '../../core/utils';
@@ -42,12 +43,16 @@ export class Leggi {
 
   private readonly data = inject(DataService);
   protected readonly leggi = inject(LeggiService);
+  protected readonly ai = inject(AiService);
 
   protected readonly text = computed(() => this.leggi.text(this.textId()) ?? null);
   protected readonly tokens = computed(() => this.leggi.tokens(this.textId()));
-  protected readonly step = computed(
-    () => `Leggi · ${this.leggi.number(this.textId())} / ${this.leggi.texts().length}`,
-  );
+  protected readonly step = computed(() => {
+    const number = this.leggi.number(this.textId());
+    if (number) return `Leggi · ${number} / ${this.leggi.texts().length}`;
+    const own = this.leggi.userTexts().find((t) => t.id === this.textId());
+    return own?.source === 'paste' ? 'Leggi · din text' : 'Leggi · skriven åt dig';
+  });
 
   /** Ordet som visas i förklaringsrutan. */
   protected readonly selected = signal<Token | null>(null);
@@ -85,6 +90,8 @@ export class Leggi {
     const next = this.leggi.next();
     return next && next.id !== this.textId() ? next : null;
   });
+  /** Sant när nästa text bör beställas: de inbyggda är slut och en nyckel finns. */
+  protected readonly writeNext = computed(() => this.leggi.allRead() && this.ai.hasKey());
 
   // Uppläsning — bara där webbläsaren faktiskt har en italiensk röst.
   private readonly synth = typeof speechSynthesis === 'undefined' ? null : speechSynthesis;
