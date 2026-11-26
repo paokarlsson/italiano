@@ -37,7 +37,7 @@ export interface Lettura {
 export interface UserText extends Lettura {
   source: 'ai' | 'paste';
   createdAt: number;
-  /** Textens egen ordlista — går före den inbyggda. */
+  /** Textens egen ordlista — den enda som används när texten läses. */
   lexicon: Record<string, LexEntry>;
 }
 

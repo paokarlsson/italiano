@@ -30,6 +30,8 @@ const raw = (patch: Partial<RawText> = {}): RawText => ({
     { it: 'Ha mangiato troppo!', sv: 'Den har ätit för mycket!' },
   ],
   lexicon: [
+    { form: 'il', p: 'D1', sv: 'bestämd artikel', note: '', deck: '' },
+    { form: 'di', p: 'D1', sv: 'av', note: '', deck: '' },
     { form: 'Gatto', p: 'D4', sv: 'katt', note: '', deck: '' },
     { form: 'dorme', p: 'D3', sv: 'sover', note: 'dorm·e — -e = han/hon (dormire)', deck: 'D3.8' },
     { form: 'ha mangiato', p: 'D3', sv: 'har ätit', note: '', deck: 'D9.99' },
@@ -47,7 +49,6 @@ const opts = {
   source: 'ai' as const,
   level: 3,
   createdAt: 1,
-  baseLexicon: data.lexicon,
   deckIds,
 };
 
@@ -55,11 +56,11 @@ describe('assembleText', () => {
   it('gör ett svar till en text och säger vilka ord som saknar uppslag', () => {
     const { text, missing } = assembleText(raw(), opts);
 
-    // «troppo» hade en ogiltig pelare och föll bort; «il» och «di» kommer ur den inbyggda listan.
+    // «troppo» hade en ogiltig pelare och föll bort.
     expect(missing).toEqual(['troppo']);
     expect(text).toMatchObject({ id: 'ai-1', source: 'ai', level: 3, title: 'Il gatto' });
     // Nyckeln görs om till gemener, okända mazzi tas bort, oanvända poster rensas.
-    expect(Object.keys(text.lexicon).sort()).toEqual(['dorme', 'gatto', 'ha mangiato']);
+    expect(Object.keys(text.lexicon).sort()).toEqual(['di', 'dorme', 'gatto', 'ha mangiato', 'il']);
     expect(text.lexicon['dorme'].deck).toBe('D3.8');
     expect(text.lexicon['ha mangiato'].deck).toBeUndefined();
     expect(text.lexicon['gatto'].note).toBeUndefined();
@@ -125,7 +126,7 @@ describe('prompterna', () => {
     expect(example.names).toEqual(['Anna']);
     expect(example.lexicon.map((e) => e.form)).toContain('sono andata');
 
-    const { missing, text } = assembleText(example, { ...opts, baseLexicon: {} });
+    const { missing, text } = assembleText(example, opts);
     expect(missing).toEqual([]);
     expect(Object.keys(text.lexicon).length).toBe(example.lexicon.length);
   });
@@ -146,6 +147,10 @@ describe('prompterna', () => {
       avoid: ['Maria'],
     });
     expect(prompt).toContain('Nivå: 4 av 7.');
+    // Det som hör till nivå 5 och 6 nämns som förbjudet; den fria nivå 7 gör det inte.
+    expect(prompt).toContain('får inte förekomma: Imperfetto');
+    expect(prompt).toContain('Futurum');
+    expect(prompt).not.toContain('Fri text');
     expect(prompt).toContain('högst 12 ord per mening');
     expect(prompt).toContain('Ämne: en cykeltur');
     expect(prompt).toContain('- prende (tar)');

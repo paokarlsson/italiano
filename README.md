@@ -155,7 +155,8 @@ behövs). Lägg inte in en nyckel på en dator du delar med andra.
 - **Kontrollen.** Svaret är låst till ett JSON-schema. Därefter gör `assembleText()` samma
   sak som `letture.spec.ts` gör för de inbyggda texterna: varje ord ska ha ett uppslag
   eller vara ett egennamn. Saknas något begärs en komplettering, en gång. Det som ändå
-  saknas blir ord utan uppslag, och antalet visas.
+  saknas blir ord utan uppslag, och antalet visas. En egen text läses bara med sin egen
+  ordlista, så varje ord är förklarat i sitt sammanhang.
 - **Modell.** Opus 5.5 är förvald; Sonnet 5.5 och Haiku 5.5 går att välja. För Opus och
   Sonnet är Anthropics reservmodell på serversidan påslagen (`fallbacks: "default"`), så
   en avböjd begäran prövas på en annan modell i stället för att bara stanna.

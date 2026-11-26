@@ -267,10 +267,12 @@ export class LeggiService {
     this.saveProgress(EMPTY);
   }
 
-  /** Ordlistan som gäller för en text: den inbyggda, och textens egen ovanpå. */
+  /**
+   * Ordlistan som gäller för en text. En egen text läses bara med sin egen: där är varje
+   * ord förklarat i sitt sammanhang, och «l'» kan vara ett pronomen i stället för en artikel.
+   */
   private lexiconFor(id: string): Record<string, LexEntry> {
-    const own = this._userTexts().find((t) => t.id === id)?.lexicon;
-    return own ? { ...this._lexicon, ...own } : this._lexicon;
+    return this._userTexts().find((t) => t.id === id)?.lexicon ?? this._lexicon;
   }
 
   /** Alla uppslagbara bitar i texten, i ordning och med upprepningar. */

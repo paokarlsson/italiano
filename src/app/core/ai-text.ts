@@ -149,7 +149,7 @@ En post per form som står i texten, exakt som den står men i gemener. Varje or
 
 # Resten
 
-- sentences: en mening per post; en kort replik och dess svar får stå ihop. sv är en naturlig svensk översättning. Repliker skrivs med «».
+- sentences: en mening per post; en kort replik och dess svar får stå ihop. sv är en naturlig svensk översättning. Repliker skrivs med «» i italienskan och med ”” i svenskan.
 - title: kort italiensk titel. sv: samma titel på svenska.
 - nota: en enda mening på svenska om det som är värt att lägga märke till i texten, gärna med ett exempel ur den.
 - question: en fråga på svenska om innehållet, som bara går att besvara om man har förstått texten. Exakt tre korta svarsalternativ på svenska; answer är index (0–2) för det rätta.
@@ -183,10 +183,12 @@ export interface WriteRequest {
 
 export function writePrompt(req: WriteRequest): string {
   const lv = levelOf(req.level);
+  const above = LEVELS.filter((l) => l.n > lv.n && l.n < LEVELS.length).map((l) => l.scope);
   const lines = [
     'Skriv en ny text.',
     '',
     `Nivå: ${lv.n} av ${LEVELS.length}.`,
+    ...(above.length ? [`Hör till högre nivåer och får inte förekomma: ${above.join(' ')}`] : []),
     `Längd: 5–6 meningar, högst ${lv.maxWords} ord per mening.`,
     'Ordförråd: de vanligaste orden och gärna kognater. Högst ett par ord som en nybörjare inte kan gissa.',
     req.topic.trim()
@@ -266,8 +268,6 @@ export interface AssembleOptions {
   source: 'ai' | 'paste';
   level: number | null;
   createdAt: number;
-  /** Den inbyggda ordlistan — fyller i där textens egen saknar en form. */
-  baseLexicon: Readonly<Record<string, LexEntry>>;
   deckIds: ReadonlySet<string>;
   /** Den inklistrade texten, för att kunna se om italienskan ändrats. */
   original?: string;
@@ -337,7 +337,7 @@ export function assembleText(raw: RawText, opts: AssembleOptions): Assembled {
     lexicon: cleanEntries(raw.lexicon ?? [], opts.deckIds),
   };
   const names = new Set((raw.names ?? []).map(normalizeForm));
-  const { missing, used } = audit(text, opts.baseLexicon, names);
+  const { missing, used } = audit(text, names);
   // Poster som ingen bit i texten använder — t.ex. «ho» när «ho mangiato» blev en enhet.
   text.lexicon = Object.fromEntries(Object.entries(text.lexicon).filter(([k]) => used.has(k)));
 
@@ -352,14 +352,14 @@ export function mergeRepair(
   text: UserText,
   repair: { lexicon: RawEntry[]; names: string[] },
   names: ReadonlySet<string>,
-  opts: Pick<AssembleOptions, 'baseLexicon' | 'deckIds'>,
+  opts: Pick<AssembleOptions, 'deckIds'>,
 ): { text: UserText; missing: string[] } {
   const merged: UserText = {
     ...text,
     lexicon: { ...cleanEntries(repair.lexicon ?? [], opts.deckIds), ...text.lexicon },
   };
   const allNames = new Set([...names, ...(repair.names ?? []).map(normalizeForm)]);
-  const { missing, used } = audit(merged, opts.baseLexicon, allNames);
+  const { missing, used } = audit(merged, allNames);
   merged.lexicon = Object.fromEntries(Object.entries(merged.lexicon).filter(([k]) => used.has(k)));
   return { text: merged, missing };
 }
@@ -367,10 +367,9 @@ export function mergeRepair(
 /** Går igenom textens bitar: vilka poster som används, och vilka ord som saknar en. */
 function audit(
   text: UserText,
-  baseLexicon: Readonly<Record<string, LexEntry>>,
   names: ReadonlySet<string>,
 ): { missing: string[]; used: Set<string> } {
-  const lexicon = { ...baseLexicon, ...text.lexicon };
+  const lexicon = text.lexicon;
   const missing = new Set<string>();
   const used = new Set<string>();
   for (const sentence of text.sentences) {

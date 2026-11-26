@@ -22,8 +22,6 @@ import { StorageService } from './storage.service';
 
 const AI_KEY = 'it_companion_ai_v1';
 
-/** Den inbyggda text som visas för Claude som mall — har enheter, böjningar och småord. */
-const EXAMPLE_TEXT_ID = 'ieri';
 /** Så många öppna ord som vävs in i en ny text. */
 const WEAVE_MAX = 5;
 
@@ -36,9 +34,9 @@ export const AI_MODELS: readonly {
   note: string;
   price: [number, number];
 }[] = [
-  { id: 'claude-opus-5-5', label: 'Opus 5.5', note: 'noggrannast', price: [4, 20] },
+  { id: 'claude-opus-5-5', label: 'Opus 5.5', note: 'förvald', price: [4, 20] },
   { id: 'claude-sonnet-5-5', label: 'Sonnet 5.5', note: 'ungefär halva priset', price: [2, 10] },
-  { id: 'claude-haiku-5-5', label: 'Haiku 5.5', note: 'billigast och snabbast', price: [0.1, 0.5] },
+  { id: 'claude-haiku-5-5', label: 'Haiku 5.5', note: 'billigast', price: [0.1, 0.5] },
 ];
 
 const DEFAULT_MODEL: AiModel = 'claude-opus-5-5';
@@ -127,10 +125,12 @@ export class AiService {
       .slice(0, WEAVE_MAX)
       .map((w) => ({ form: w.key, sv: w.entry.sv }));
     const avoid = [...this.leggi.texts(), ...this.leggi.userTexts()].map((t) => t.title);
-    return this.produce(writePrompt({ level, weave, topic, avoid }), 'medium', {
-      source: 'ai',
-      level,
-    });
+    return this.produce(
+      writePrompt({ level, weave, topic, avoid }),
+      'medium',
+      { source: 'ai', level },
+      weave.map((w) => w.form),
+    );
   }
 
   /** Gör en inklistrad italiensk text läsbar: meningar, översättning och uppslag. */
@@ -140,21 +140,25 @@ export class AiService {
     if (original.length > PASTE_MAX_CHARS) {
       throw new AiError('too-long', `Texten är för lång — högst ${PASTE_MAX_CHARS} tecken.`);
     }
-    return this.produce(glossPrompt(original), 'low', { source: 'paste', level: null, original });
+    return this.produce(glossPrompt(original), 'medium', {
+      source: 'paste',
+      level: null,
+      original,
+    });
   }
 
   private async produce(
     prompt: string,
     effort: Effort,
     meta: { source: 'ai' | 'paste'; level: number | null; original?: string },
+    weave: string[] = [],
   ): Promise<AiResult> {
     if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
     if (this.busy()) throw new AiError('api', 'En text är redan på väg.');
-    this.status.set('Skickar…');
+    this.status.set('Skickar… det brukar ta en halv minut');
     try {
-      const system = this.system();
+      const system = this.system(meta.level, weave);
       const opts = {
-        baseLexicon: this.leggi.lexicon(),
         deckIds: new Set(this.data.pillars().flatMap((p) => p.decks.map((d) => d.deckId))),
       };
       const first = await this.call(system, prompt, TEXT_SCHEMA, effort);
@@ -240,8 +244,24 @@ export class AiService {
     return { output: message.parsed_output, cost };
   }
 
-  private system(): string {
-    const text = this.leggi.text(EXAMPLE_TEXT_ID) ?? this.leggi.texts()[0];
+  /**
+   * Systemprompten, med en inbyggd text som mall. Mallen väljs så nära den beställda nivån
+   * som möjligt utan att gå över, och helst utan orden som ska vävas in — annars skriver
+   * Claude gärna om mallen i stället för att hitta på något nytt.
+   */
+  private system(level: number | null, weave: readonly string[]): string {
+    const all = this.leggi.texts();
+    const within = all.filter((t) => level === null || (t.level ?? 1) <= level);
+    const pool = within.length ? within : all;
+    const forms = new Set(weave);
+    const fresh = pool.filter(
+      (t) =>
+        !this.leggi
+          .tokens(t.id)
+          .flat()
+          .some((token) => token.key && forms.has(token.key)),
+    );
+    const text = (fresh.length ? fresh : pool).at(-1)!;
     return systemPrompt(
       this.data.pillars(),
       exampleFrom(text, this.leggi.tokens(text.id), this.leggi.knownNames()),

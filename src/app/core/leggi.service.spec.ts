@@ -95,7 +95,7 @@ describe('LeggiService', () => {
     expect(leggi.level()).toBe(1);
   });
 
-  it('läser en egen text med dess egen ordlista ovanpå den inbyggda', () => {
+  it('läser en egen text med dess egen ordlista, inte den inbyggda', () => {
     const own: UserText = {
       ...text('ai-1', 'Il gatto è grande.', 4),
       source: 'ai',
@@ -110,7 +110,7 @@ describe('LeggiService', () => {
     expect(keys).toEqual([
       [null, undefined],
       ['gatto', 'katt'],
-      ['è', 'är'],
+      [null, undefined],
       ['grande', 'vuxen'],
     ]);
     // Egna texter räknas inte in bland de inbyggda.
