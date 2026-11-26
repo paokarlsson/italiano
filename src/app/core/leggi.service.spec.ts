@@ -82,6 +82,56 @@ describe('LeggiService', () => {
     expect(second.key).toBe('casa');
   });
 
+  it('ger ett öppet ord frågorna som följde med texten där det stod', () => {
+    const own: UserText = {
+      ...text('ai-1', 'Il gatto è grande.', 4),
+      source: 'ai',
+      createdAt: 1,
+      lexicon: { gatto: { p: 'D4', sv: 'katt' }, grande: { p: 'D4', sv: 'vuxen' } },
+      questions: [
+        {
+          form: 'gatto',
+          q: '**gatto**?',
+          options: ['katt', 'hund', 'häst'],
+          answer: 0,
+          explain: '',
+        },
+        { form: 'cane', q: '**cane**?', options: ['katt', 'hund', 'häst'], answer: 1, explain: '' },
+      ],
+    };
+    leggi.addUserText(own);
+    leggi.complete('ai-1', new Set(['gatto', 'grande']));
+
+    const details = leggi.openWordDetails();
+    expect(details.find((w) => w.key === 'gatto')?.questions).toEqual([own.questions![0]]);
+    expect(details.find((w) => w.key === 'grande')?.questions).toBeUndefined();
+  });
+
+  it('räknar per pelare hur ofta orden slås upp, och i vilka mazzin', () => {
+    leggi.hydrate({
+      ...data,
+      lexicon: { ...data.lexicon, casa: { p: 'D4', sv: 'hus', deck: 'D4.1' } },
+    });
+    leggi.addUserText({
+      ...text('ai-1', 'Parlano.', 2),
+      source: 'ai',
+      createdAt: 1,
+      lexicon: { parlano: { p: 'D3', sv: 'de pratar', deck: 'D3.7' } },
+    });
+    leggi.complete('uno', new Set(['grande']));
+    leggi.complete('due', new Set(['casa']));
+    leggi.complete('ai-1', new Set(['parlano']));
+
+    const { pillars, decks } = leggi.profile();
+    const load = Object.fromEntries(pillars.map((l) => [l.p, [l.seen, l.looked]]));
+    // è två gånger och la en; grande två gånger och casa en; parlano ur den egna textens ordlista.
+    expect(load).toEqual({ D1: [3, 0], D2: [0, 0], D3: [1, 1], D4: [3, 2] });
+    expect(decks).toEqual([
+      { deckId: 'D4.1', looked: 1 },
+      { deckId: 'D3.7', looked: 1 },
+    ]);
+  });
+
   it('låter första läsningen flytta nivån — upp, ned eller inte alls', () => {
     expect(leggi.level()).toBe(1);
     // Inga uppslag: för lätt, ett steg över textens nivå.

@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { UserText } from '../models/leggi.models';
+import { EXPLAIN_SYSTEM } from './ai-explain';
 import {
   AiError,
   assembleText,
@@ -18,12 +19,15 @@ import {
 } from './ai-text';
 import { DataService } from './data.service';
 import { LeggiService } from './leggi.service';
+import { focusOf } from './profile';
 import { StorageService } from './storage.service';
 
 const AI_KEY = 'it_companion_ai_v1';
 
 /** Så många öppna ord som vävs in i en ny text. */
 const WEAVE_MAX = 5;
+/** Så många förklaringar som hålls kvar i minnet. */
+const EXPLAINED_MAX = 200;
 
 export type AiModel = 'claude-opus-5-5' | 'claude-sonnet-5-5' | 'claude-haiku-5-5';
 
@@ -78,6 +82,14 @@ export class AiService {
   readonly status = signal('');
   readonly busy = computed(() => !!this.status());
 
+  /** Pelaren där uppslagen hopar sig — det nästa text görs tät på. Null när inget sticker ut. */
+  readonly focus = computed(() => focusOf(this.leggi.profile()));
+  /** Den senaste texten från Claude — den en ny text kan fortsätta på. */
+  readonly lastPart = computed(() => this.leggi.userTexts().find((t) => t.source === 'ai') ?? null);
+
+  /** Förklaringar som redan hämtats — samma fråga kostar inget en gång till. */
+  private readonly explained = new Map<string, string>();
+
   async load(): Promise<void> {
     const raw = await this.storage.get(AI_KEY);
     if (!raw) return;
@@ -117,18 +129,42 @@ export class AiService {
     this.update({ model });
   }
 
-  /** Beställer en ny text på läsarens nivå, med de öppna orden invävda. */
-  async write(topic: string): Promise<AiResult> {
+  /**
+   * Beställer en ny text på läsarens nivå: de öppna orden invävda, tät på pelaren där
+   * uppslagen hopar sig, och — om `follow` är sant — som nästa del av berättelsen.
+   */
+  async write(topic: string, follow = true): Promise<AiResult> {
     const level = this.leggi.level();
     const weave = this.leggi
       .openWordDetails()
       .slice(0, WEAVE_MAX)
       .map((w) => ({ form: w.key, sv: w.entry.sv }));
     const avoid = [...this.leggi.texts(), ...this.leggi.userTexts()].map((t) => t.title);
+
+    const focus = this.focus();
+    const deckLabel = (id: string) => {
+      const deck = this.data.deck(id);
+      return deck ? `${id} ${deck.title}${deck.hint ? ` (${deck.hint})` : ''}` : id;
+    };
+    const last = follow ? this.lastPart() : null;
+    const part = last ? (last.part ?? 1) + 1 : 1;
+
     return this.produce(
-      writePrompt({ level, weave, topic, avoid }),
+      writePrompt({
+        level,
+        weave,
+        topic,
+        avoid,
+        focus: focus && { p: focus.p, decks: focus.deckIds.map(deckLabel) },
+        story: last && {
+          part,
+          recap: last.recap ?? '',
+          title: last.title,
+          last: last.sentences.map((s) => s.it),
+        },
+      }),
       'medium',
-      { source: 'ai', level },
+      { source: 'ai', level, part },
       weave.map((w) => w.form),
     );
   }
@@ -150,7 +186,7 @@ export class AiService {
   private async produce(
     prompt: string,
     effort: Effort,
-    meta: { source: 'ai' | 'paste'; level: number | null; original?: string },
+    meta: { source: 'ai' | 'paste'; level: number | null; original?: string; part?: number },
     weave: string[] = [],
   ): Promise<AiResult> {
     if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
@@ -197,6 +233,64 @@ export class AiService {
     }
   }
 
+  /** Förklaringen till en fråga, om den redan är hämtad. */
+  explanation(prompt: string): string | null {
+    return this.explained.get(prompt) ?? null;
+  }
+
+  /**
+   * «Perché?» — en kort förklaring i löpande text, på den valda modellen med lägsta effort.
+   * `onText` får texten så långt den hunnit, medan den skrivs. Avbryts med `signal`.
+   */
+  async explain(
+    prompt: string,
+    onText: (text: string) => void,
+    signal?: AbortSignal,
+  ): Promise<string> {
+    if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
+    const known = this.explained.get(prompt);
+    if (known) {
+      onText(known);
+      return known;
+    }
+    try {
+      const { default: Anthropic } = await import('@anthropic-ai/sdk');
+      const { apiKey, model } = this.settings();
+      const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
+      const stream = client.beta.messages.stream(
+        {
+          model,
+          max_tokens: 8000,
+          system: EXPLAIN_SYSTEM,
+          messages: [{ role: 'user', content: prompt }],
+          output_config: { effort: 'low' },
+          ...fallback(model),
+        },
+        { signal },
+      );
+      stream.on('text', (_delta, snapshot) => onText(snapshot.trimStart()));
+      const message = await stream.finalMessage();
+
+      if (message.stop_reason === 'refusal') {
+        throw new AiError('refusal', 'Claude avböjde att förklara det här.');
+      }
+      const text = message.content
+        .flatMap((block) => (block.type === 'text' ? [block.text] : []))
+        .join('')
+        .trim();
+      if (!text) throw new AiError('bad-shape', 'Det kom ingen förklaring. Försök igen.');
+
+      if (this.explained.size >= EXPLAINED_MAX) {
+        this.explained.delete(this.explained.keys().next().value!);
+      }
+      this.explained.set(prompt, text);
+      onText(text);
+      return text;
+    } catch (error) {
+      throw await describe(error);
+    }
+  }
+
   /** Ett anrop med svaret låst till ett schema. Returnerar det tolkade svaret och vad det kostade. */
   private async call(
     system: string,
@@ -211,17 +305,13 @@ export class AiService {
     const { apiKey, model } = this.settings();
     const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
 
-    // Haiku har ingen reservmodell på serversidan; de andra får Anthropics förvalda.
-    const withFallback = model !== 'claude-haiku-5-5';
     const stream = client.beta.messages.stream({
       model,
       max_tokens: 32000,
       system,
       messages: [{ role: 'user', content: prompt }],
       output_config: { effort, format: jsonSchemaOutputFormat(schema) },
-      ...(withFallback
-        ? { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' as const }
-        : {}),
+      ...fallback(model),
     });
     stream.on('text', (_delta, snapshot) => {
       if (this.status().startsWith('Kompletterar')) return;
@@ -272,6 +362,13 @@ export class AiService {
     this.settings.update((s) => ({ ...s, ...patch }));
     void this.storage.set(AI_KEY, JSON.stringify(this.settings()));
   }
+}
+
+/** Haiku har ingen reservmodell på serversidan; de andra får Anthropics förvalda. */
+function fallback(model: AiModel) {
+  return model === 'claude-haiku-5-5'
+    ? {}
+    : { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' as const };
 }
 
 /** Översätter ett fel från SDK:t till något läsaren kan göra något åt. */

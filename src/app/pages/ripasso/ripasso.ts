@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { answerPrompt } from '../../core/ai-explain';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
 import { buildRipasso, RipassoItem } from '../../core/ripasso';
 import { StatsService } from '../../core/stats.service';
 import { mdBold } from '../../core/utils';
 import { McQuestion, TfQuestion } from '../../models/quiz.models';
+import { Perche } from '../../shared/perche';
 import { Topbar } from '../../shared/topbar';
 import { McQuestionComponent } from '../quiz/mc-question';
 import { TfQuestionComponent } from '../quiz/tf-question';
@@ -13,7 +15,7 @@ import { TfQuestionComponent } from '../quiz/tf-question';
 /** En kort repetition, vald efter det som slagits upp och det som går trögt i gymmet. */
 @Component({
   selector: 'app-ripasso',
-  imports: [RouterLink, Topbar, McQuestionComponent, TfQuestionComponent],
+  imports: [RouterLink, Topbar, Perche, McQuestionComponent, TfQuestionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ripasso.html',
 })
@@ -32,6 +34,10 @@ export class Ripasso {
 
   protected readonly pos = signal(0);
   protected readonly answered = signal<boolean | null>(null);
+  /** Frågan till Claude om läsaren vill veta varför. */
+  protected readonly why = signal<string | null>(null);
+  /** Alternativet som valdes på den aktuella flervalsfrågan. */
+  private picked: string | null = null;
   protected readonly results = signal<boolean[]>([]);
 
   protected readonly current = computed<RipassoItem | null>(() => this.items[this.pos()] ?? null);
@@ -58,13 +64,23 @@ export class Ripasso {
   protected onAnswer(isCorrect: boolean): void {
     const item = this.current();
     if (!item || this.answered() !== null) return;
+    const deck = this.data.deck(item.question.statKey.split('::')[0]);
+    this.why.set(
+      answerPrompt({ question: item.question, picked: this.picked, correct: isCorrect, deck }),
+    );
     this.answered.set(isCorrect);
     this.results.update((r) => [...r, isCorrect]);
     if (item.question.statKey) this.stats.recordAnswer(item.question.statKey, isCorrect);
     if (isCorrect && item.wordKey) this.leggi.settle(item.wordKey);
   }
 
+  protected onPicked(option: string): void {
+    this.picked = option;
+  }
+
   protected next(): void {
+    this.picked = null;
+    this.why.set(null);
     this.answered.set(null);
     this.pos.update((p) => p + 1);
   }

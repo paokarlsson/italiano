@@ -4,6 +4,7 @@ import { AI_MODELS, AiModel, AiResult, AiService } from '../../core/ai.service';
 import { AiError, PASTE_MAX_CHARS } from '../../core/ai-text';
 import { LeggiService } from '../../core/leggi.service';
 import { level, LEVELS } from '../../core/levels';
+import { PILLAR_NAMES } from '../../core/profile';
 import { ToastService } from '../../core/toast.service';
 import { UserText } from '../../models/leggi.models';
 import { Topbar } from '../../shared/topbar';
@@ -29,9 +30,16 @@ export class Testi {
   protected readonly topic = signal('');
   protected readonly pasted = signal('');
   protected readonly error = signal('');
+  /** Om nästa text ska fortsätta på den senaste — förvalt, så länge det finns en. */
+  protected readonly follow = signal(true);
 
   protected readonly level = computed(() => level(this.leggi.level()));
   protected readonly openCount = computed(() => this.leggi.openWords().length);
+  /** Pelaren nästa text görs tät på, som den heter i appen. */
+  protected readonly focus = computed(() => {
+    const focus = this.ai.focus();
+    return focus && PILLAR_NAMES[focus.p];
+  });
   protected readonly tooLong = computed(() => this.pasted().trim().length > PASTE_MAX_CHARS);
 
   protected valueOf(event: Event): string {
@@ -57,7 +65,7 @@ export class Testi {
   }
 
   protected write(): Promise<void> {
-    return this.run(async () => this.open(await this.ai.write(this.topic())));
+    return this.run(async () => this.open(await this.ai.write(this.topic(), this.follow())));
   }
 
   protected gloss(): Promise<void> {
@@ -69,7 +77,8 @@ export class Testi {
   }
 
   protected sourceLabel(text: UserText): string {
-    return text.source === 'ai' ? `skriven åt dig · nivå ${text.level}` : 'din text';
+    if (text.source !== 'ai') return 'din text';
+    return `skriven åt dig · nivå ${text.level}${text.part && text.part > 1 ? ` · del ${text.part}` : ''}`;
   }
 
   /** Öppnar den nya texten och säger det som är värt att veta om den. */

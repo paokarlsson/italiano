@@ -16,12 +16,13 @@
       </div>
 
       @if (item.question.type === 'mc') {
-        <div class="qtext" [class.rp-it]="item.kind === 'word' && !item.question.statKey">
+        <div class="qtext" [class.rp-it]="item.source === 'context'">
           <span [innerHTML]="asMc(item).q"></span>
         </div>
         <app-mc-question
           [question]="asMc(item)"
           [answered]="answered() !== null"
+          (picked)="onPicked($event)"
           (answer)="onAnswer($event)"
         />
       } @else {
@@ -37,6 +38,10 @@
         <div class="feedback show" [class.ok]="answered()" [class.no]="!answered()">
           <strong>{{ answered() ? 'Giusto!' : 'Quasi.' }}</strong>
           <span [innerHTML]="' ' + bold(item.question.explain)"></span>
+          @let w = why();
+          @if (w) {
+            <app-perche [prompt]="w" />
+          }
         </div>
 
         <button class="cta" type="button" (click)="next()">

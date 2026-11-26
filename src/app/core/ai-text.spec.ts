@@ -86,6 +86,52 @@ describe('assembleText', () => {
     expect(text.lexicon['dorme'].sv).toBe('sover');
   });
 
+  it('behåller repetitionsfrågor som håller formen och hör till en bit i texten', () => {
+    const ask = (form: string, patch: object = {}) => ({
+      form,
+      q: `Vad betyder **${form}**?`,
+      options: ['a', 'b', 'c', 'd'],
+      answer: 1,
+      explain: ' därför ',
+      ...patch,
+    });
+    const { text } = assembleText(
+      raw({
+        ripasso: [
+          ask('Dorme'),
+          // Saknar uppslag än så länge — kompletteringen kan ge det ett.
+          ask('troppo'),
+          ask('cane'),
+          ask('gatto', { options: ['a', 'a', 'b'] }),
+          ask('gatto', { options: ['a', 'b'] }),
+          ask('gatto', { options: ['a', '', 'b'] }),
+          ask('gatto', { answer: 4 }),
+          ask('gatto', { q: ' ' }),
+        ],
+      }),
+      opts,
+    );
+    expect(text.questions).toEqual([
+      // Formen görs om till gemener, som ordlistans nycklar.
+      { ...ask('Dorme'), form: 'dorme', explain: 'därför' },
+      { ...ask('troppo'), explain: 'därför' },
+    ]);
+    // Frågorna följer med genom kompletteringen.
+    const repaired = mergeRepair(text, { lexicon: [], names: [] }, namesOf(raw()), opts);
+    expect(repaired.text.questions?.length).toBe(2);
+    expect(assembleText(raw(), opts).text.questions).toBeUndefined();
+  });
+
+  it('märker en text från Claude med del och recap, men inte en inklistrad', () => {
+    const ai = assembleText(raw({ recap: ' Giulia har en katt. ' }), { ...opts, part: 3 }).text;
+    expect(ai).toMatchObject({ part: 3, recap: 'Giulia har en katt.' });
+    expect(assembleText(raw(), opts).text.part).toBe(1);
+
+    const paste = assembleText(raw({ recap: 'x' }), { ...opts, source: 'paste' }).text;
+    expect(paste.part).toBeUndefined();
+    expect(paste.recap).toBeUndefined();
+  });
+
   it('märker när italienskan i en inklistrad text har ändrats', () => {
     const original = 'Il gatto di Giulia dorme. Ha mangiato troppo!';
     expect(assembleText(raw(), { ...opts, source: 'paste', original }).faithful).toBe(true);
@@ -137,6 +183,53 @@ describe('prompterna', () => {
     expect(system).toContain('D2.1 -zione');
     expect(system).toContain('"form":"sono andata"');
     expect(system.match(/^\d\. /gm)?.length).toBe(7);
+    expect(system).toContain('# Repetitionsfrågor (ripasso)');
+    expect(system).toContain('- recap:');
+  });
+
+  it('börjar en berättelse, eller fortsätter den med det som hänt hittills', () => {
+    const base = { level: 2, weave: [], avoid: [] };
+    const first = writePrompt({ ...base, topic: '' });
+    expect(first).toContain('första delen av en berättelse');
+    expect(first).toContain('Ämne: välj själv — en vardaglig scen');
+
+    const next = writePrompt({
+      ...base,
+      topic: '',
+      story: {
+        part: 3,
+        recap: 'Luca har tappat nyckeln.',
+        title: 'La chiave',
+        last: ['Luca cerca.'],
+      },
+    });
+    expect(next).toContain('del 3 av en berättelse');
+    expect(next).toContain('Hittills: Luca har tappat nyckeln.');
+    expect(next).toContain('Förra delen, «La chiave»:\nLuca cerca.');
+    expect(next).toContain('Ämne: välj själv — nästa scen i berättelsen.');
+    expect(next).not.toContain('första delen');
+
+    // En äldre text utan recap går också att fortsätta på, och ämnet får styra scenen.
+    const old = writePrompt({
+      ...base,
+      topic: 'en resa',
+      story: { part: 2, recap: '', title: 'La chiave', last: ['Luca cerca.'] },
+    });
+    expect(old).not.toContain('Hittills');
+    expect(old).toContain('Ämne: en resa');
+  });
+
+  it('gör texten tät på pelaren där uppslagen hopar sig', () => {
+    const base = { level: 4, weave: [], topic: '', avoid: [] };
+    const prompt = writePrompt({
+      ...base,
+      focus: { p: 'D3', decks: ['D3.11 Passato prossimo (avere + -ato)'] },
+    });
+    expect(prompt).toContain('slår oftast upp ord ur motorn (D3)');
+    expect(prompt).toContain('Flest uppslag där hör till: D3.11 Passato prossimo (avere + -ato).');
+
+    expect(writePrompt({ ...base, focus: { p: 'D1', decks: [] } })).not.toContain('Flest uppslag');
+    expect(writePrompt({ ...base, focus: null })).not.toContain('slår oftast upp');
   });
 
   it('beställer på rätt nivå, med öppna ord och ämne', () => {

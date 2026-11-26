@@ -19,6 +19,18 @@ export interface Sentence {
   sv: string;
 }
 
+/** En repetitionsfråga som följer med en text, knuten till en form i den. */
+export interface TextQuestion {
+  /** Formen frågan hör till — en nyckel i textens ordlista. */
+  form: string;
+  /** Frågan, med det som frågas efter inom **…**. */
+  q: string;
+  options: string[];
+  /** Index i `options`. */
+  answer: number;
+  explain: string;
+}
+
 export interface Lettura {
   id: string;
   title: string;
@@ -31,6 +43,8 @@ export interface Lettura {
   sentences: Sentence[];
   /** En fråga om innehållet. `answer` är index i `options`. */
   question: { sv: string; options: string[]; answer: number };
+  /** Frågor till repetitionen, om texten har några — se core/ripasso.ts. */
+  questions?: TextQuestion[];
 }
 
 /** En text som inte följer med appen: skriven av Claude eller inklistrad av läsaren. */
@@ -39,6 +53,10 @@ export interface UserText extends Lettura {
   createdAt: number;
   /** Textens egen ordlista — den enda som används när texten läses. */
   lexicon: Record<string, LexEntry>;
+  /** Vilken del av berättelsen texten är, från 1 — bara på texter från Claude. */
+  part?: number;
+  /** Berättelsen så här långt, på svenska — det nästa del får veta om de förra. */
+  recap?: string;
 }
 
 export interface LettureData {
@@ -107,4 +125,20 @@ export interface OpenWord {
   looked: number;
   /** Meningen ordet stod i, delad i bitar — för att kunna visa det i sitt sammanhang. */
   sentence: Token[];
+  /** Frågor på just den här formen som följde med texten. */
+  questions?: TextQuestion[];
+}
+
+/** Hur ofta ord ur en pelare har slagits upp, räknat över allt som lästs. */
+export interface PillarLoad {
+  p: PillarId;
+  seen: number;
+  looked: number;
+}
+
+/** Underlaget till en beställning: var läsaren slår upp mest. */
+export interface ReadingProfile {
+  pillars: PillarLoad[];
+  /** Mazzin vars former slagits upp, flest uppslag först. */
+  decks: { deckId: string; looked: number }[];
 }

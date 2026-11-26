@@ -15,8 +15,12 @@ delar som bygger på samma fyra pelare:
   punkt. Motorn drar nya, blandade frågor varje runda och skjuter in en repetition på det
   du just missade. Ingenting här måste göras.
 - **Fler texter** — valfritt. Med en egen API-nyckel från Anthropic skriver Claude nya
-  texter på din nivå och gör vilken italiensk text som helst läsbar. Utan nyckel fungerar
-  allt annat som vanligt.
+  texter på din nivå, som delar i en berättelse och täta på det du slår upp mest, och gör
+  vilken italiensk text som helst läsbar. Varje sådan text kommer med egna frågor till
+  repetitionen. Utan nyckel fungerar allt annat som vanligt.
+- **Perché?** — valfritt, samma nyckel. En knapp i uppslaget och under facit i gymmet och
+  repetitionen: Claude förklarar varför formen ser ut som den gör, eller varför svaret var
+  fel, när appens egen rad inte räcker.
 
 Allt sparas lokalt. Gymmets statistik kan exporteras som en färdig prompt till valfri AI.
 
@@ -56,7 +60,7 @@ samma commit inte körs två gånger.
 | Hem         | `/`                    | Nästa text att läsa, genvägar, och gymmet hopfällt per pelare  |
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter        |
-| Fler texter | `/testi`               | Nyckeln, ny text från Claude, egen inklistrad text             |
+| Fler texter | `/testi`               | Nyckeln, ny text eller nästa del från Claude, egen text        |
 | Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
 | Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
 | Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
@@ -70,10 +74,11 @@ tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsG
 ```
 src/app/
   core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, levels,
-                 ripasso, ai + ai-text, hint, toast, ai-report, tag-labels, guards
+                 profile, ripasso, ai + ai-text + ai-explain, hint, toast, ai-report,
+                 tag-labels, guards
   models/        typerna bakom app-data.json och letture.json
   pages/         home, leggi, ripasso, testi, intro, quiz (+ mc/tf/match), result, stats
-  shared/        topbar
+  shared/        topbar, perche
 public/data/     app-data.json — gymmets frågor · letture.json — texterna och ordlistan
 ```
 
@@ -85,13 +90,18 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
   vinner, så «ho mangiato» och «c'è» förklaras som en enhet.
 - **`buildRipasso()`** väljer repetitionens frågor. Ord repeteras som ord, regler på nya
   ord: ett uppslag i limmet eller orden blir en fråga på just det ordet — ur gymmet om det
-  finns en, annars byggd ur meningen där det stod. Ett uppslag i reglerna eller motorn
-  blir en fråga ur mazzot för samma mönster, helst på ett annat ord. Blir rundan kort
+  finns en, annars den som följde med texten, annars byggd ur meningen där det stod. Ett
+  uppslag i reglerna eller motorn blir en fråga på samma mönster i ett annat ord — den som
+  följde med texten om det finns en, annars en ur mazzot för mönstret. Blir rundan kort
   fylls den på med gymmets svagaste taggar.
+- **`focusOf()`** i `profile.ts` pekar ut pelaren där uppslagen hopar sig. Det som jämförs
+  är andelen uppslag, inte antalet — limmet står i varje mening och skulle annars alltid
+  vinna. Är underlaget tunt eller uppslagen jämnt spridda pekas ingenting ut.
 - **`levels.ts`** är stegen en text kan ligga på, 1–7. Första läsningen av en text flyttar
   nivån: 97 % eller mer på egen hand ger ett steg upp, under 85 % ett steg ned.
-- **`AiService`** är kopplingen till Claude; `ai-text.ts` är allt runt omkring — prompten,
-  svarsformatet och kontrollen av det som kommer tillbaka. Se _Fler texter_ nedan.
+- **`AiService`** är kopplingen till Claude; `ai-text.ts` är allt runt en text — prompten,
+  svarsformatet och kontrollen av det som kommer tillbaka — och `ai-explain.ts` det som
+  sägs när läsaren frågar varför. Se _Fler texter_ och _Perché?_ nedan.
 - **`QuizService`** är övningsmotorn: bygger rundans kö ur mazzots pool, räknar poäng
   och skjuter in högst två repetitioner per tagg och runda. En repetition är alltid en
   _ny_ fråga på samma punkt — aldrig samma fråga igen.
@@ -148,7 +158,18 @@ används bara i anrop direkt till Anthropic (`@anthropic-ai/sdk`, som laddas fö
 behövs). Lägg inte in en nyckel på en dator du delar med andra.
 
 - **Ny text.** Claude får pelarna, nivåstegen, listan över mazzi och en inbyggd text som
-  mall, och ombeds skriva på läsarens nivå med de senast uppslagna orden invävda.
+  mall, och ombeds skriva på läsarens nivå med de senast uppslagna orden invävda. Sticker
+  en pelare ut i uppslagen (`focusOf()`) görs texten tät på just den, och mazzin där
+  uppslagen hopar sig nämns.
+- **Berättelsen.** Varje text från Claude är en del i en berättelse. Med svaret kommer en
+  `recap` — två, tre meningar om vad som hänt hittills — och nästa beställning skickar med
+  den och förra delen i sin helhet, så att personerna och orden återkommer. Rutan «Fortsätt
+  berättelsen» är förvald; avbockad börjar en ny.
+- **Frågorna.** I samma svar skriver Claude upp till åtta flervalsfrågor (`ripasso`) på de
+  former en läsare troligast slår upp: på ordet självt i en ny mening för limmet och orden,
+  på ett annat ord med samma ändelse eller regel för motorn och reglerna. De sparas med
+  texten och tas fram av `buildRipasso()` när formen är öppen. En fråga som inte håller
+  formen, eller hör till ett ord som inte står i texten, faller bort utan vidare.
 - **Egen text.** En inklistrad italiensk text (högst 2 000 tecken) delas i meningar,
   översätts och får en ordlista. Italienskan ska komma tillbaka ordagrant; gör den inte det
   säger appen till.
@@ -161,7 +182,19 @@ behövs). Lägg inte in en nyckel på en dator du delar med andra.
   Sonnet är Anthropics reservmodell på serversidan påslagen (`fallbacks: "default"`), så
   en avböjd begäran prövas på en annan modell i stället för att bara stanna.
 - **Kostnad.** Efter varje text visas en ungefärlig kostnad, räknad på listpriserna i
-  `AI_MODELS`. Ändras priserna behöver tabellen uppdateras för hand.
+  `AI_MODELS`. Ändras priserna behöver tabellen uppdateras för hand. Förklaringarna under
+  _Perché?_ är små och visar ingen kostnad.
 
 Egna texter sparas lokalt och ligger kvar vid «Nollställ allt» — de är innehåll, inte
 framsteg.
+
+### Perché?
+
+`<app-perche>` (`shared/perche.ts`) syns bara när en nyckel är inlagd, och står på tre
+ställen: i uppslaget under läsningen, och under facit i gymmet och repetitionen (inte på
+para ihop-frågor). Den tar en färdig prompt — `wordPrompt()` med formen, meningen och det
+uppslaget redan sagt, eller `answerPrompt()` med frågan, det rätta svaret och det läsaren
+valde — och `AiService.explain()` skickar den till den valda modellen på lägsta effort.
+Svaret är två till fyra meningar löpande text som skrivs fram medan det kommer. Byter
+läsaren ord avbryts anropet. En förklaring som redan hämtats ligger kvar i minnet tills
+sidan laddas om, så samma fråga kostar inget en gång till.

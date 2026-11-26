@@ -11,19 +11,14 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiService } from '../../core/ai.service';
+import { wordPrompt } from '../../core/ai-explain';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
+import { PILLAR_NAMES } from '../../core/profile';
 import { shuffle } from '../../core/utils';
 import { PillarId, ReadSummary, Token } from '../../models/leggi.models';
+import { Perche } from '../../shared/perche';
 import { Topbar } from '../../shared/topbar';
-
-/** Pelarna på svenska, som de heter i tipsrutan. */
-const PILLAR_SV: Record<PillarId, string> = {
-  D1: 'limmet',
-  D2: 'reglerna',
-  D3: 'motorn',
-  D4: 'orden',
-};
 
 interface Option {
   label: string;
@@ -33,7 +28,7 @@ interface Option {
 /** Läs en text: tryck på det du inte ser igenom, svara på en fråga om innehållet. */
 @Component({
   selector: 'app-leggi',
-  imports: [RouterLink, Topbar],
+  imports: [RouterLink, Topbar, Perche],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './leggi.html',
 })
@@ -69,7 +64,7 @@ export class Leggi {
     this.data.pillars().map((p) => ({
       id: p.pillarId as PillarId,
       title: p.pillarTitle,
-      sv: PILLAR_SV[p.pillarId as PillarId] ?? '',
+      sv: PILLAR_NAMES[p.pillarId as PillarId] ?? '',
     })),
   );
 
@@ -83,6 +78,20 @@ export class Leggi {
       pillar: pillar ? `${pillar.title} · ${pillar.sv}` : '',
       deckRef: entry.deck ? (this.data.deck(entry.deck) ?? null) : null,
     };
+  });
+
+  /** Frågan till Claude om det valda ordet: formen, meningen och det appen redan sagt. */
+  protected readonly why = computed(() => {
+    const token = this.selected();
+    const text = this.text();
+    if (!token?.entry || !text) return null;
+    const i = this.tokens().findIndex((sentence) => sentence.includes(token));
+    if (i < 0) return null;
+    return wordPrompt({
+      form: token.text.toLocaleLowerCase('it'),
+      sentence: text.sentences[i].it,
+      entry: token.entry,
+    });
   });
 
   /** Vart det går härnäst — aldrig tillbaka till samma text. */

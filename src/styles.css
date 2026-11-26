@@ -1516,3 +1516,68 @@ app-stats {
   flex: 1;
   min-height: 0;
 }
+
+/* --- Perché: förklaringen från Claude --- */
+app-perche {
+  display: block;
+}
+.pq-btn {
+  margin-top: 10px;
+  background: none;
+  border: 1.5px solid currentColor;
+  border-radius: 99px;
+  padding: 5px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: inherit;
+  cursor: pointer;
+}
+.pq-btn[disabled] {
+  cursor: default;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.pq-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.lt-gloss .pq-btn {
+  color: var(--pc);
+}
+.pq-text {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  line-height: 1.5;
+  white-space: pre-line;
+  animation: rise 0.3s ease;
+}
+.feedback .pq-text {
+  border-top-color: currentColor;
+  color: var(--ink);
+}
+.pq-error {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--brick);
+}
+
+/* --- Fler texter: fortsätt berättelsen --- */
+.ai-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.ai-card .ai-check input {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin: 1px 0 0;
+  padding: 0;
+  accent-color: var(--verde);
+}
