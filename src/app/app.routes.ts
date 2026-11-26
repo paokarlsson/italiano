@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { activeRoundGuard, deckExistsGuard } from './core/route-guards';
+import { activeRoundGuard, deckExistsGuard, textExistsGuard } from './core/route-guards';
 
 export const routes: Routes = [
   {
@@ -11,6 +11,12 @@ export const routes: Routes = [
     path: 'stats',
     title: 'Statistik · Italiano',
     loadComponent: () => import('./pages/stats/stats').then((m) => m.Stats),
+  },
+  {
+    path: 'leggi/:textId',
+    title: 'Leggi · Italiano',
+    canActivate: [textExistsGuard],
+    loadComponent: () => import('./pages/leggi/leggi').then((m) => m.Leggi),
   },
   {
     path: 'deck/:deckId',

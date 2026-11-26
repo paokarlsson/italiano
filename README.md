@@ -1,13 +1,22 @@
 # Italiano · Companion
 
-En Angular-app för att öva italienska: fyra pelare, 66 mazzi och drygt tusen frågor.
-Motorn drar nya, blandade frågor varje runda och skjuter automatiskt in en repetition
-på det du just missade. Framsteg och träffsäkerhet sparas lokalt och kan exporteras
-som en färdig prompt till valfri AI.
+En Angular-app för att komma in i italienskan genom att läsa den.
 
-Appen är en port av den ursprungliga enfilade HTML-prototypen
-(`italianocompanion.html`) till en Angular 22-app med standalone-komponenter,
-signaler och zoneless change detection. Formspråk, texter och övningslogik är desamma.
+Tanken bakom är att en liten kärna bär det mesta av löpande text: limmet (småorden),
+reglerna (`-tion → -zione`), motorn (ändelserna) och de vanligaste orden. Appen har två
+delar som bygger på samma fyra pelare:
+
+- **Leggi** — vägen. Korta texter som nästan helt består av kärnan. Du läser, trycker på
+  det du inte ser igenom och får ordet förklarat genom sin pelare. En fråga om innehållet
+  avslutar texten. Det enda appen mäter är hur stor del du läste på egen hand.
+- **Palestra** — gymmet. 66 mazzi och drygt tusen frågor för den som vill nöta en enskild
+  punkt. Motorn drar nya, blandade frågor varje runda och skjuter in en repetition på det
+  du just missade. Ingenting här måste göras.
+
+Allt sparas lokalt. Gymmets statistik kan exporteras som en färdig prompt till valfri AI.
+
+Appen började som en enfilad HTML-prototyp (`docs/original-prototype.html`) och är nu en
+Angular 22-app med standalone-komponenter, signaler och zoneless change detection.
 
 ## Kom igång
 
@@ -39,26 +48,33 @@ samma commit inte körs två gånger.
 
 | Vy        | Route                  | Vad som händer                                                 |
 | --------- | ---------------------- | -------------------------------------------------------------- |
-| Hem       | `/`                    | Alla pelare och mazzi, framstegsmätare, tips och nollställning |
+| Hem       | `/`                    | Nästa text att läsa, och gymmet hopfällt per pelare            |
+| Leggi     | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
 | Intro     | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
 | Runda     | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
 | Resultat  | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
 | Statistik | `/stats`               | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export |
 
 Runda och resultat kräver en påbörjad runda — annars leder `activeRoundGuard`
-tillbaka till introt. Okända mazzo-id:n fångas av `deckExistsGuard`.
+tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsGuard`.
 
 ### Kod
 
 ```
 src/app/
-  core/          storage, data, stats, quiz (motorn), hint, toast, ai-report, tag-labels, guards
-  models/        typerna bakom app-data.json
-  pages/         home, intro, quiz (+ mc/tf/match), result, stats
+  core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, hint, toast,
+                 ai-report, tag-labels, guards
+  models/        typerna bakom app-data.json och letture.json
+  pages/         home, leggi, intro, quiz (+ mc/tf/match), result, stats
   shared/        topbar
-public/data/     app-data.json — allt innehåll
+public/data/     app-data.json — gymmets frågor · letture.json — texterna och ordlistan
 ```
 
+- **`LeggiService`** håller texterna, ordlistan och vad som hänt med varje ord. Ett
+  uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp.
+  Nästa text är den första olästa; när allt är läst den med flest öppna ord.
+- **`tokenize()`** delar en mening i uppslagbara bitar. Längsta träffen i ordlistan
+  vinner, så «ho mangiato» och «c'è» förklaras som en enhet.
 - **`QuizService`** är övningsmotorn: bygger rundans kö ur mazzots pool, räknar poäng
   och skjuter in högst två repetitioner per tagg och runda. En repetition är alltid en
   _ny_ fråga på samma punkt — aldrig samma fråga igen.
@@ -88,3 +104,22 @@ frågor räcker det att fylla på JSON-filen — inget i koden behöver ändras.
 
 Varje mazzo har också ett `hint` — minnesregeln, `"-tion → -zione"` — som står under
 titeln på startsidans bricka. Är det tomt visas antalet frågor i stället.
+
+### Texterna
+
+`public/data/letture.json` har tre delar: `texts`, `lexicon` och `names`.
+
+```jsonc
+// texts — meningar med översättning, en rad om vad som är nytt och en fråga om innehållet
+{ "id": "al-bar", "title": "Al bar", "sv": "På kaféet", "nota": "Ändelsen visar vem …",
+  "sentences": [{ "it": "Marco è al bar con un amico.", "sv": "Marco är på kaféet med en vän." }],
+  "question": { "sv": "Vad pratar de om?", "options": ["Musik", "Kaffe", "Arbete"], "answer": 0 } }
+
+// lexicon — nyckeln är formen i gemener; p är pelaren, deck mazzot där punkten går att nöta
+"parlano":     { "p": "D3", "sv": "de pratar", "note": "parl·ano — -ano = de (parlare)", "deck": "D3.7" }
+"ho mangiato": { "p": "D3", "sv": "jag åt", "note": "avere + mangi·ato (mangiare)", "deck": "D3.11" }
+```
+
+En ny text behöver bara en post i `texts` och ordlisteposter för de former som saknas.
+`letture.spec.ts` läser filen och fäller bygget om ett ord saknar uppslag, om en post
+aldrig används eller om `deck` pekar på ett mazzo som inte finns. Egennamn står i `names`.

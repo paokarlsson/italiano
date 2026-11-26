@@ -1,0 +1,1842 @@
+{
+  "names": ["maria", "marco", "roma", "milano", "firenze", "paolo", "anna", "luca", "venezia"],
+  "lexicon": {
+    "è": {
+      "p": "D1",
+      "sv": "är",
+      "note": "essere · lui/lei è",
+      "deck": "D1.2"
+    },
+    "ha": {
+      "p": "D1",
+      "sv": "har",
+      "note": "avere · lui/lei ha — h:et hörs inte",
+      "deck": "D1.2"
+    },
+    "ho": {
+      "p": "D1",
+      "sv": "jag har",
+      "note": "avere · io ho",
+      "deck": "D1.2"
+    },
+    "sono": {
+      "p": "D1",
+      "sv": "är (jag eller de)",
+      "note": "essere · io sono och loro sono — sammanhanget avgör",
+      "deck": "D1.2"
+    },
+    "una": {
+      "p": "D1",
+      "sv": "en, ett (feminin)",
+      "deck": "D1.4"
+    },
+    "un": {
+      "p": "D1",
+      "sv": "en, ett (maskulin)",
+      "deck": "D1.4"
+    },
+    "uno": {
+      "p": "D1",
+      "sv": "en, ett",
+      "note": "här står det ensamt: uno speciale = ett särskilt",
+      "deck": "D1.4"
+    },
+    "la": {
+      "p": "D1",
+      "sv": "bestämd artikel, feminin",
+      "note": "la casa = huset",
+      "deck": "D1.4"
+    },
+    "il": {
+      "p": "D1",
+      "sv": "bestämd artikel, maskulin",
+      "note": "il cane = hunden",
+      "deck": "D1.4"
+    },
+    "l'": {
+      "p": "D1",
+      "sv": "bestämd artikel framför vokal",
+      "note": "l'amico = vännen",
+      "deck": "D1.4"
+    },
+    "i": {
+      "p": "D1",
+      "sv": "bestämd artikel, maskulin plural",
+      "note": "i turisti = turisterna",
+      "deck": "D1.4"
+    },
+    "a": {
+      "p": "D1",
+      "sv": "i, till, på",
+      "note": "a Roma = i Rom · a casa = hem, hemma",
+      "deck": "D1.5"
+    },
+    "di": {
+      "p": "D1",
+      "sv": "av, om, från",
+      "note": "parlare di = prata om",
+      "deck": "D1.5"
+    },
+    "da": {
+      "p": "D1",
+      "sv": "från",
+      "note": "även: hos, sedan",
+      "deck": "D1.5"
+    },
+    "in": {
+      "p": "D1",
+      "sv": "i, på",
+      "deck": "D1.5"
+    },
+    "con": {
+      "p": "D1",
+      "sv": "med",
+      "deck": "D1.5"
+    },
+    "per": {
+      "p": "D1",
+      "sv": "till, för",
+      "note": "il treno per Roma = tåget till Rom",
+      "deck": "D1.5"
+    },
+    "al": {
+      "p": "D1",
+      "sv": "på, till (a + il)",
+      "note": "al bar = på kaféet",
+      "deck": "D1.6"
+    },
+    "alle": {
+      "p": "D1",
+      "sv": "klockan … (a + le)",
+      "note": "alle sette = klockan sju",
+      "deck": "D1.6"
+    },
+    "dai": {
+      "p": "D1",
+      "sv": "hos, till (da + i)",
+      "note": "dai nonni = hos mor- och farföräldrarna",
+      "deck": "D1.6"
+    },
+    "della": {
+      "p": "D1",
+      "sv": "från, av (di + la)",
+      "note": "della regione = från regionen",
+      "deck": "D1.6"
+    },
+    "ma": {
+      "p": "D1",
+      "sv": "men",
+      "deck": "D1.1"
+    },
+    "e": {
+      "p": "D1",
+      "sv": "och",
+      "deck": "D1.1"
+    },
+    "non": {
+      "p": "D1",
+      "sv": "inte",
+      "note": "står alltid före verbet",
+      "deck": "D1.1"
+    },
+    "sì": {
+      "p": "D1",
+      "sv": "ja",
+      "deck": "D1.1"
+    },
+    "anche": {
+      "p": "D1",
+      "sv": "också",
+      "deck": "D1.9"
+    },
+    "molto": {
+      "p": "D1",
+      "sv": "mycket",
+      "deck": "D1.9"
+    },
+    "sempre": {
+      "p": "D1",
+      "sv": "alltid",
+      "deck": "D1.9"
+    },
+    "poi": {
+      "p": "D1",
+      "sv": "sedan, därefter"
+    },
+    "spesso": {
+      "p": "D1",
+      "sv": "ofta",
+      "deck": "D1.9"
+    },
+    "subito": {
+      "p": "D1",
+      "sv": "genast, direkt"
+    },
+    "di solito": {
+      "p": "D1",
+      "sv": "vanligtvis"
+    },
+    "c'è": {
+      "p": "D1",
+      "sv": "det finns, det är",
+      "note": "ci + è · singular — i plural: ci sono",
+      "deck": "D1.12"
+    },
+    "ci sono": {
+      "p": "D1",
+      "sv": "det finns (flera)",
+      "note": "plural av c'è",
+      "deck": "D1.12"
+    },
+    "ecco": {
+      "p": "D1",
+      "sv": "här är …, varsågod",
+      "deck": "D1.12"
+    },
+    "dov'è": {
+      "p": "D1",
+      "sv": "var är …?",
+      "note": "dove + è",
+      "deck": "D1.8"
+    },
+    "che cosa": {
+      "p": "D1",
+      "sv": "vad",
+      "deck": "D1.8"
+    },
+    "che": {
+      "p": "D1",
+      "sv": "vilken …!",
+      "note": "Che situazione! = Vilken situation! · annars: som, att",
+      "deck": "D1.7"
+    },
+    "mentre": {
+      "p": "D1",
+      "sv": "medan",
+      "deck": "D1.7"
+    },
+    "se": {
+      "p": "D1",
+      "sv": "om",
+      "deck": "D1.7"
+    },
+    "io": {
+      "p": "D1",
+      "sv": "jag",
+      "note": "sätts bara ut för betoning — annars räcker ändelsen",
+      "deck": "D1.3"
+    },
+    "lui": {
+      "p": "D1",
+      "sv": "han",
+      "deck": "D1.3"
+    },
+    "me": {
+      "p": "D1",
+      "sv": "mig",
+      "note": "betonad form efter preposition: con me",
+      "deck": "D1.3"
+    },
+    "lo": {
+      "p": "D1",
+      "sv": "honom, den",
+      "note": "objektspronomen — står före verbet",
+      "deck": "D1.10"
+    },
+    "ti": {
+      "p": "D1",
+      "sv": "dig",
+      "note": "objektspronomen — står före verbet",
+      "deck": "D1.10"
+    },
+    "ci": {
+      "p": "D1",
+      "sv": "oss",
+      "note": "ci invita = han bjuder oss",
+      "deck": "D1.10"
+    },
+    "ne": {
+      "p": "D1",
+      "sv": "av det, av den",
+      "note": "ersätter «di + något»: ne abbiamo = vi har (av det)",
+      "deck": "D1.13"
+    },
+    "ce n'è": {
+      "p": "D1",
+      "sv": "det finns (av det)",
+      "note": "c'è + ne → ce n'è",
+      "deck": "D1.13"
+    },
+    "questa": {
+      "p": "D1",
+      "sv": "den här, det här (feminin)"
+    },
+    "mia": {
+      "p": "D1",
+      "sv": "min (feminin)"
+    },
+    "mio": {
+      "p": "D1",
+      "sv": "min (maskulin)"
+    },
+    "miei": {
+      "p": "D1",
+      "sv": "mina (maskulin plural)",
+      "note": "oregelbunden plural av mio"
+    },
+    "sua": {
+      "p": "D1",
+      "sv": "hans, hennes",
+      "note": "rättar sig efter saken, inte efter ägaren"
+    },
+    "ogni": {
+      "p": "D1",
+      "sv": "varje"
+    },
+    "secondo": {
+      "p": "D1",
+      "sv": "enligt"
+    },
+    "allora": {
+      "p": "D1",
+      "sv": "då, alltså",
+      "deck": "D1.14"
+    },
+    "certo": {
+      "p": "D1",
+      "sv": "självklart, visst"
+    },
+    "buonasera": {
+      "p": "D1",
+      "sv": "god kväll",
+      "note": "buona + sera"
+    },
+    "grazie mille": {
+      "p": "D1",
+      "sv": "tack så mycket",
+      "note": "ordagrant: tusen tack"
+    },
+    "stazione": {
+      "p": "D2",
+      "sv": "station",
+      "note": "station → stazione · -tion → -zione",
+      "deck": "D2.1"
+    },
+    "situazione": {
+      "p": "D2",
+      "sv": "situation, läge",
+      "note": "situation → situazione · -tion → -zione",
+      "deck": "D2.1"
+    },
+    "informazioni": {
+      "p": "D2",
+      "sv": "information, upplysningar",
+      "note": "information → informazione · -tion → -zione, -i = plural",
+      "deck": "D2.1"
+    },
+    "opposizione": {
+      "p": "D2",
+      "sv": "opposition",
+      "note": "opposition → opposizione · -tion → -zione",
+      "deck": "D2.1"
+    },
+    "soluzione": {
+      "p": "D2",
+      "sv": "lösning",
+      "note": "solution → soluzione · -tion → -zione",
+      "deck": "D2.1"
+    },
+    "decisione": {
+      "p": "D2",
+      "sv": "beslut",
+      "note": "decision → decisione · -sion → -sione",
+      "deck": "D2.1"
+    },
+    "discussione": {
+      "p": "D2",
+      "sv": "diskussion",
+      "note": "discussion → discussione · -sion → -sione",
+      "deck": "D2.1"
+    },
+    "televisione": {
+      "p": "D2",
+      "sv": "tv",
+      "note": "television → televisione · -sion → -sione",
+      "deck": "D2.1"
+    },
+    "regione": {
+      "p": "D2",
+      "sv": "region",
+      "note": "region → regione · -ion → -ione",
+      "deck": "D2.1"
+    },
+    "città": {
+      "p": "D2",
+      "sv": "stad",
+      "note": "city → città · -ty → -tà, samma form i plural",
+      "deck": "D2.2"
+    },
+    "università": {
+      "p": "D2",
+      "sv": "universitet",
+      "note": "university → università · -ty → -tà, samma form i plural",
+      "deck": "D2.2"
+    },
+    "priorità": {
+      "p": "D2",
+      "sv": "prioritet",
+      "note": "priority → priorità · -ty → -tà",
+      "deck": "D2.2"
+    },
+    "centrale": {
+      "p": "D2",
+      "sv": "central",
+      "note": "central → centrale · -al → -ale",
+      "deck": "D2.3"
+    },
+    "normale": {
+      "p": "D2",
+      "sv": "normal",
+      "note": "normal → normale · -al → -ale",
+      "deck": "D2.3"
+    },
+    "speciale": {
+      "p": "D2",
+      "sv": "särskild, speciell",
+      "note": "special → speciale · -al → -ale",
+      "deck": "D2.3"
+    },
+    "finale": {
+      "p": "D2",
+      "sv": "slutgiltig",
+      "note": "final → finale · -al → -ale",
+      "deck": "D2.3"
+    },
+    "parziale": {
+      "p": "D2",
+      "sv": "delvis, ofullständig",
+      "note": "partial → parziale · -al → -ale, -ti- → -zi-",
+      "deck": "D2.3"
+    },
+    "famosa": {
+      "p": "D2",
+      "sv": "berömd",
+      "note": "famous → famoso · -ous → -oso, -a = feminin",
+      "deck": "D2.4"
+    },
+    "incredibile": {
+      "p": "D2",
+      "sv": "otrolig",
+      "note": "incredible → incredibile · -ble → -bile",
+      "deck": "D2.5"
+    },
+    "impossibile": {
+      "p": "D2",
+      "sv": "omöjlig",
+      "note": "impossible → impossibile · -ble → -bile",
+      "deck": "D2.5"
+    },
+    "parlamento": {
+      "p": "D2",
+      "sv": "parlament",
+      "note": "parliament → parlamento · -ment → -mento",
+      "deck": "D2.7"
+    },
+    "musica": {
+      "p": "D2",
+      "sv": "musik",
+      "note": "music → musica · -ic → -ico/-ica",
+      "deck": "D2.8"
+    },
+    "storico": {
+      "p": "D2",
+      "sv": "historisk",
+      "note": "historic → storico · -ic → -ico",
+      "deck": "D2.8"
+    },
+    "tipici": {
+      "p": "D2",
+      "sv": "typiska",
+      "note": "typical → tipico · -ic → -ico, -i = maskulin plural",
+      "deck": "D2.8"
+    },
+    "economica": {
+      "p": "D2",
+      "sv": "ekonomisk",
+      "note": "economic → economico · -ic → -ico, -a = feminin",
+      "deck": "D2.8"
+    },
+    "turisti": {
+      "p": "D2",
+      "sv": "turister",
+      "note": "tourist → turista · -ist → -ista, -i = plural",
+      "deck": "D2.9"
+    },
+    "giornalista": {
+      "p": "D2",
+      "sv": "journalist",
+      "note": "journalist → giornalista · -ist → -ista, samma form för man och kvinna",
+      "deck": "D2.9"
+    },
+    "perfetto": {
+      "p": "D2",
+      "sv": "perfekt",
+      "note": "perfect → perfetto · -ct → -tto",
+      "deck": "D2.10"
+    },
+    "perfetta": {
+      "p": "D2",
+      "sv": "perfekt",
+      "note": "perfect → perfetto · -ct → -tto, -a = feminin",
+      "deck": "D2.10"
+    },
+    "probabilmente": {
+      "p": "D2",
+      "sv": "troligen",
+      "note": "probably → probabilmente · -ly → -mente",
+      "deck": "D2.12"
+    },
+    "messaggio": {
+      "p": "D2",
+      "sv": "meddelande",
+      "note": "message → messaggio · -age → -aggio"
+    },
+    "caldo": {
+      "p": "D2",
+      "sv": "varm",
+      "note": "falsk vän: caldo = varm, inte kall — kall heter freddo",
+      "deck": "D2.11"
+    },
+    "italiana": {
+      "p": "D3",
+      "sv": "italiensk",
+      "note": "italian·a — -a = feminin",
+      "deck": "D3.3"
+    },
+    "italiani": {
+      "p": "D3",
+      "sv": "italienska",
+      "note": "italian·i — -i = maskulin plural",
+      "deck": "D3.3"
+    },
+    "piccola": {
+      "p": "D3",
+      "sv": "liten",
+      "note": "piccol·a — -a följer ett feminint substantiv",
+      "deck": "D3.3"
+    },
+    "bella": {
+      "p": "D3",
+      "sv": "vacker, fin",
+      "note": "bell·a — feminin av bello",
+      "deck": "D3.3"
+    },
+    "tranquilla": {
+      "p": "D3",
+      "sv": "lugn",
+      "note": "tranquill·a — feminin av tranquillo",
+      "deck": "D3.3"
+    },
+    "nuova": {
+      "p": "D3",
+      "sv": "ny",
+      "note": "nuov·a — feminin av nuovo",
+      "deck": "D3.3"
+    },
+    "alti": {
+      "p": "D3",
+      "sv": "långa",
+      "note": "alt·i — maskulin plural av alto",
+      "deck": "D3.3"
+    },
+    "felici": {
+      "p": "D3",
+      "sv": "lyckliga",
+      "note": "felic·i — plural av felice",
+      "deck": "D3.3"
+    },
+    "stanche": {
+      "p": "D3",
+      "sv": "trötta",
+      "note": "stanc·he — feminin plural av stanco",
+      "deck": "D3.3"
+    },
+    "contente": {
+      "p": "D3",
+      "sv": "nöjda, glada",
+      "note": "content·e — feminin plural av contento",
+      "deck": "D3.3"
+    },
+    "molta": {
+      "p": "D3",
+      "sv": "mycket",
+      "note": "molt·a — rättar sig efter gente (feminin)",
+      "deck": "D4.16"
+    },
+    "molti": {
+      "p": "D3",
+      "sv": "många",
+      "note": "molt·i — maskulin plural",
+      "deck": "D4.16"
+    },
+    "molte": {
+      "p": "D3",
+      "sv": "många",
+      "note": "molt·e — feminin plural",
+      "deck": "D4.16"
+    },
+    "troppi": {
+      "p": "D3",
+      "sv": "för många",
+      "note": "tropp·i — maskulin plural av troppo",
+      "deck": "D4.16"
+    },
+    "treni": {
+      "p": "D3",
+      "sv": "tåg (flera)",
+      "note": "tren·i — -o blir -i i plural (treno)",
+      "deck": "D3.2"
+    },
+    "persone": {
+      "p": "D3",
+      "sv": "människor",
+      "note": "person·e — -a blir -e i plural (persona)",
+      "deck": "D3.2"
+    },
+    "musei": {
+      "p": "D3",
+      "sv": "museer",
+      "note": "muse·i — -o blir -i i plural (museo)",
+      "deck": "D3.2"
+    },
+    "ristoranti": {
+      "p": "D3",
+      "sv": "restauranger",
+      "note": "ristorant·i — -e blir -i i plural (ristorante)",
+      "deck": "D3.2"
+    },
+    "fratelli": {
+      "p": "D3",
+      "sv": "bröder",
+      "note": "fratell·i — -o blir -i i plural (fratello)",
+      "deck": "D3.2"
+    },
+    "lingue": {
+      "p": "D3",
+      "sv": "språk (flera)",
+      "note": "lingu·e — -a blir -e i plural (lingua)",
+      "deck": "D3.2"
+    },
+    "storie": {
+      "p": "D3",
+      "sv": "historier",
+      "note": "stori·e — -a blir -e i plural (storia)",
+      "deck": "D3.2"
+    },
+    "giovani": {
+      "p": "D3",
+      "sv": "unga, ungdomar",
+      "note": "giovan·i — plural av giovane",
+      "deck": "D3.2"
+    },
+    "prende": {
+      "p": "D3",
+      "sv": "tar",
+      "note": "prend·e — -e = han/hon (prendere)",
+      "deck": "D3.8"
+    },
+    "prendo": {
+      "p": "D3",
+      "sv": "jag tar",
+      "note": "prend·o — -o = jag (prendere)",
+      "deck": "D3.8"
+    },
+    "parlano": {
+      "p": "D3",
+      "sv": "de pratar",
+      "note": "parl·ano — -ano = de (parlare)",
+      "deck": "D3.7"
+    },
+    "parliamo": {
+      "p": "D3",
+      "sv": "vi pratar",
+      "note": "parl·iamo — -iamo = vi (parlare)",
+      "deck": "D3.7"
+    },
+    "cerca": {
+      "p": "D3",
+      "sv": "söker, letar efter",
+      "note": "cerc·a — -a = han/hon (cercare)",
+      "deck": "D3.7"
+    },
+    "risponde": {
+      "p": "D3",
+      "sv": "svarar",
+      "note": "rispond·e — -e = han/hon (rispondere)",
+      "deck": "D3.8"
+    },
+    "arrivano": {
+      "p": "D3",
+      "sv": "de kommer",
+      "note": "arriv·ano — -ano = de (arrivare)",
+      "deck": "D3.7"
+    },
+    "arrivo": {
+      "p": "D3",
+      "sv": "jag kommer fram",
+      "note": "arriv·o — -o = jag (arrivare)",
+      "deck": "D3.7"
+    },
+    "lavora": {
+      "p": "D3",
+      "sv": "arbetar",
+      "note": "lavor·a — -a = han/hon (lavorare)",
+      "deck": "D3.7"
+    },
+    "mangiamo": {
+      "p": "D3",
+      "sv": "vi äter",
+      "note": "mang·iamo — -iamo = vi (mangiare)",
+      "deck": "D3.5"
+    },
+    "ridiamo": {
+      "p": "D3",
+      "sv": "vi skrattar",
+      "note": "rid·iamo — -iamo = vi (ridere)",
+      "deck": "D3.8"
+    },
+    "capisco": {
+      "p": "D3",
+      "sv": "jag förstår",
+      "note": "cap·isc·o — -ire-verb med -isc- (capire)",
+      "deck": "D3.8"
+    },
+    "conosci": {
+      "p": "D3",
+      "sv": "känner du",
+      "note": "conosc·i — -i = du · conoscere = känna en person eller plats",
+      "deck": "D4.13"
+    },
+    "sa": {
+      "p": "D3",
+      "sv": "kan, vet",
+      "note": "sapere = veta, kunna (hur man gör) · so, sai, sa",
+      "deck": "D4.13"
+    },
+    "vedo": {
+      "p": "D3",
+      "sv": "jag ser",
+      "note": "ved·o — -o = jag (vedere)",
+      "deck": "D3.8"
+    },
+    "invita": {
+      "p": "D3",
+      "sv": "bjuder in",
+      "note": "invit·a — -a = han/hon (invitare)",
+      "deck": "D3.7"
+    },
+    "critica": {
+      "p": "D3",
+      "sv": "kritiserar",
+      "note": "critic·a — -a = han/hon/den (criticare)",
+      "deck": "D3.7"
+    },
+    "avete": {
+      "p": "D3",
+      "sv": "har ni",
+      "note": "av·ete — -ete = ni (avere)",
+      "deck": "D1.2"
+    },
+    "abbiamo": {
+      "p": "D3",
+      "sv": "vi har",
+      "note": "avere · noi abbiamo — -iamo = vi",
+      "deck": "D1.2"
+    },
+    "dice": {
+      "p": "D3",
+      "sv": "säger",
+      "note": "oregelbundet: dire · dico, dici, dice",
+      "deck": "D3.10"
+    },
+    "fa": {
+      "p": "D3",
+      "sv": "gör · om väder: det är",
+      "note": "oregelbundet: fare · fa caldo = det är varmt",
+      "deck": "D3.10"
+    },
+    "faccio": {
+      "p": "D3",
+      "sv": "jag gör",
+      "note": "oregelbundet: fare · faccio, fai, fa — fare colazione = äta frukost",
+      "deck": "D3.10"
+    },
+    "esco": {
+      "p": "D3",
+      "sv": "jag går ut",
+      "note": "oregelbundet: uscire · esco, esci, esce"
+    },
+    "vado": {
+      "p": "D3",
+      "sv": "jag går, åker",
+      "note": "oregelbundet: andare · vado, vai, va",
+      "deck": "D3.10"
+    },
+    "parlare": {
+      "p": "D3",
+      "sv": "tala, prata",
+      "note": "grundform på -are",
+      "deck": "D3.4"
+    },
+    "cucinare": {
+      "p": "D3",
+      "sv": "laga mat",
+      "note": "grundform på -are",
+      "deck": "D3.4"
+    },
+    "mangiare": {
+      "p": "D3",
+      "sv": "äta",
+      "note": "grundform på -are",
+      "deck": "D3.4"
+    },
+    "creare": {
+      "p": "D3",
+      "sv": "skapa",
+      "note": "grundform på -are",
+      "deck": "D3.4"
+    },
+    "vedere": {
+      "p": "D3",
+      "sv": "se",
+      "note": "grundform på -ere",
+      "deck": "D3.4"
+    },
+    "venire": {
+      "p": "D3",
+      "sv": "komma, följa med",
+      "note": "grundform på -ire",
+      "deck": "D3.4"
+    },
+    "mi sveglio": {
+      "p": "D3",
+      "sv": "jag vaknar",
+      "note": "reflexivt: svegliarsi — mi + -o = jag",
+      "deck": "D3.13"
+    },
+    "mi alzo": {
+      "p": "D3",
+      "sv": "jag stiger upp",
+      "note": "reflexivt: alzarsi — ordagrant «jag reser mig»",
+      "deck": "D3.13"
+    },
+    "mi lavo": {
+      "p": "D3",
+      "sv": "jag tvättar mig",
+      "note": "reflexivt: lavarsi",
+      "deck": "D3.13"
+    },
+    "mi vesto": {
+      "p": "D3",
+      "sv": "jag klär på mig",
+      "note": "reflexivt: vestirsi",
+      "deck": "D3.13"
+    },
+    "sono andata": {
+      "p": "D3",
+      "sv": "jag åkte",
+      "note": "essere + andat·a — rörelseverb tar essere, -a = en kvinna berättar",
+      "deck": "D3.12"
+    },
+    "siamo arrivate": {
+      "p": "D3",
+      "sv": "vi kom fram",
+      "note": "essere + arrivat·e — -e = flera kvinnor",
+      "deck": "D3.12"
+    },
+    "siamo tornate": {
+      "p": "D3",
+      "sv": "vi åkte tillbaka",
+      "note": "essere + tornat·e (tornare)",
+      "deck": "D3.12"
+    },
+    "è arrivato": {
+      "p": "D3",
+      "sv": "kom, anlände",
+      "note": "essere + arriv·ato — händelsen som bryter in i bakgrunden",
+      "deck": "D3.15"
+    },
+    "abbiamo preso": {
+      "p": "D3",
+      "sv": "vi tog",
+      "note": "avere + preso — oregelbundet particip av prendere",
+      "deck": "D3.11"
+    },
+    "abbiamo trovato": {
+      "p": "D3",
+      "sv": "vi hittade",
+      "note": "avere + trov·ato (trovare)",
+      "deck": "D3.11"
+    },
+    "ho mangiato": {
+      "p": "D3",
+      "sv": "jag åt",
+      "note": "avere + mangi·ato (mangiare)",
+      "deck": "D3.11"
+    },
+    "ha letto": {
+      "p": "D3",
+      "sv": "läste",
+      "note": "avere + letto — oregelbundet particip av leggere",
+      "deck": "D3.11"
+    },
+    "ho risposto": {
+      "p": "D3",
+      "sv": "jag svarade",
+      "note": "avere + risposto — oregelbundet particip av rispondere",
+      "deck": "D3.11"
+    },
+    "ho chiuso": {
+      "p": "D3",
+      "sv": "jag stängde",
+      "note": "avere + chiuso — oregelbundet particip av chiudere",
+      "deck": "D3.11"
+    },
+    "ha presentato": {
+      "p": "D3",
+      "sv": "har lagt fram",
+      "note": "avere + present·ato (presentare)",
+      "deck": "D3.11"
+    },
+    "abitavo": {
+      "p": "D3",
+      "sv": "jag bodde",
+      "note": "abit·avo — -avo = jag, imperfetto (abitare)",
+      "deck": "D3.14"
+    },
+    "andavamo": {
+      "p": "D3",
+      "sv": "vi brukade åka",
+      "note": "and·avamo — -avamo = vi, imperfetto (andare)",
+      "deck": "D3.14"
+    },
+    "cucinava": {
+      "p": "D3",
+      "sv": "lagade mat",
+      "note": "cucin·ava — -ava = han/hon, imperfetto: något som brukade ske",
+      "deck": "D3.14"
+    },
+    "raccontava": {
+      "p": "D3",
+      "sv": "berättade",
+      "note": "raccont·ava — imperfetto (raccontare)",
+      "deck": "D3.14"
+    },
+    "avevamo": {
+      "p": "D3",
+      "sv": "vi hade",
+      "note": "av·evamo — -evamo = vi, imperfetto (avere)",
+      "deck": "D3.14"
+    },
+    "eravamo": {
+      "p": "D3",
+      "sv": "vi var",
+      "note": "essere i imperfetto: ero, eri, era, eravamo",
+      "deck": "D3.14"
+    },
+    "era": {
+      "p": "D3",
+      "sv": "var",
+      "note": "essere i imperfetto: ero, eri, era",
+      "deck": "D3.14"
+    },
+    "pioveva": {
+      "p": "D3",
+      "sv": "det regnade",
+      "note": "piov·eva — imperfetto: bakgrunden (piovere)",
+      "deck": "D3.15"
+    },
+    "faceva": {
+      "p": "D3",
+      "sv": "det var (om väder)",
+      "note": "fac·eva — imperfetto av fare · faceva freddo = det var kallt",
+      "deck": "D3.15"
+    },
+    "leggevo": {
+      "p": "D3",
+      "sv": "jag läste, höll på att läsa",
+      "note": "legg·evo — -evo = jag, imperfetto: det som pågick",
+      "deck": "D3.15"
+    },
+    "stai facendo": {
+      "p": "D3",
+      "sv": "gör du (just nu)",
+      "note": "stare + fac·endo — pågår just nu",
+      "deck": "D3.18"
+    },
+    "sto leggendo": {
+      "p": "D3",
+      "sv": "jag läser (just nu)",
+      "note": "stare + legg·endo",
+      "deck": "D3.18"
+    },
+    "sto arrivando": {
+      "p": "D3",
+      "sv": "jag är på väg",
+      "note": "stare + arriv·ando",
+      "deck": "D3.18"
+    },
+    "partirò": {
+      "p": "D3",
+      "sv": "jag ska åka",
+      "note": "partir·ò — -ò = jag, futurum (partire)",
+      "deck": "D3.16"
+    },
+    "sarà": {
+      "p": "D3",
+      "sv": "det blir, kommer att vara",
+      "note": "essere i futurum: sarò, sarai, sarà",
+      "deck": "D3.16"
+    },
+    "verrai": {
+      "p": "D3",
+      "sv": "du kommer",
+      "note": "verr·ai — -ai = du, futurum · venire har stammen verr-",
+      "deck": "D3.16"
+    },
+    "prenderemo": {
+      "p": "D3",
+      "sv": "vi ska ta",
+      "note": "prender·emo — -emo = vi, futurum (prendere)",
+      "deck": "D3.16"
+    },
+    "chiamerò": {
+      "p": "D3",
+      "sv": "jag ska ringa",
+      "note": "chiamer·ò — -ò = jag, futurum (chiamare)",
+      "deck": "D3.16"
+    },
+    "continuerà": {
+      "p": "D3",
+      "sv": "kommer att fortsätta",
+      "note": "continuer·à — -à = han/hon/den, futurum (continuare)",
+      "deck": "D3.16"
+    },
+    "arriverà": {
+      "p": "D3",
+      "sv": "kommer",
+      "note": "arriver·à — -à = han/hon/den, futurum (arrivare)",
+      "deck": "D3.16"
+    },
+    "vorrei": {
+      "p": "D3",
+      "sv": "jag skulle vilja",
+      "note": "volere i konditionalis — det artiga sättet att be om något",
+      "deck": "D3.17"
+    },
+    "potresti": {
+      "p": "D3",
+      "sv": "skulle du kunna",
+      "note": "potr·esti — -esti = du, konditionalis (potere)",
+      "deck": "D3.17"
+    },
+    "casa": {
+      "p": "D4",
+      "sv": "hus, hem",
+      "deck": "D4.6"
+    },
+    "cane": {
+      "p": "D4",
+      "sv": "hund"
+    },
+    "grande": {
+      "p": "D4",
+      "sv": "stor",
+      "deck": "D4.10"
+    },
+    "piccolo": {
+      "p": "D4",
+      "sv": "liten",
+      "deck": "D4.10"
+    },
+    "tranquillo": {
+      "p": "D4",
+      "sv": "lugn"
+    },
+    "bar": {
+      "p": "D4",
+      "sv": "kafé, bar",
+      "note": "en italiensk bar är mest ett kafé"
+    },
+    "amico": {
+      "p": "D4",
+      "sv": "vän",
+      "deck": "D4.3"
+    },
+    "caffè": {
+      "p": "D4",
+      "sv": "kaffe"
+    },
+    "tè": {
+      "p": "D4",
+      "sv": "te"
+    },
+    "buono": {
+      "p": "D4",
+      "sv": "god, bra",
+      "note": "buono beskriver saken · bene beskriver verbet",
+      "deck": "D4.15"
+    },
+    "bene": {
+      "p": "D4",
+      "sv": "bra, gott",
+      "note": "bene beskriver verbet · buono beskriver saken",
+      "deck": "D4.15"
+    },
+    "gente": {
+      "p": "D4",
+      "sv": "folk",
+      "note": "singular på italienska: la gente è …",
+      "deck": "D4.3"
+    },
+    "donna": {
+      "p": "D4",
+      "sv": "kvinna",
+      "deck": "D4.3"
+    },
+    "uomo": {
+      "p": "D4",
+      "sv": "man",
+      "deck": "D4.3"
+    },
+    "treno": {
+      "p": "D4",
+      "sv": "tåg"
+    },
+    "qui": {
+      "p": "D4",
+      "sv": "här"
+    },
+    "oggi": {
+      "p": "D4",
+      "sv": "i dag",
+      "deck": "D4.5"
+    },
+    "ieri": {
+      "p": "D4",
+      "sv": "i går",
+      "deck": "D4.5"
+    },
+    "domani": {
+      "p": "D4",
+      "sv": "i morgon",
+      "deck": "D4.5"
+    },
+    "stasera": {
+      "p": "D4",
+      "sv": "i kväll",
+      "note": "questa sera → stasera"
+    },
+    "in ritardo": {
+      "p": "D4",
+      "sv": "försenad, sen",
+      "note": "ritardo = försening"
+    },
+    "centro": {
+      "p": "D4",
+      "sv": "centrum, stadskärna"
+    },
+    "tutto": {
+      "p": "D4",
+      "sv": "allt, hela",
+      "deck": "D4.12"
+    },
+    "mondo": {
+      "p": "D4",
+      "sv": "värld"
+    },
+    "estate": {
+      "p": "D4",
+      "sv": "sommar",
+      "note": "liknar engelskans estate, men betyder sommar"
+    },
+    "famiglia": {
+      "p": "D4",
+      "sv": "familj",
+      "deck": "D4.3"
+    },
+    "padre": {
+      "p": "D4",
+      "sv": "far, pappa",
+      "deck": "D4.3"
+    },
+    "madre": {
+      "p": "D4",
+      "sv": "mor, mamma",
+      "deck": "D4.3"
+    },
+    "sorella": {
+      "p": "D4",
+      "sv": "syster",
+      "deck": "D4.3"
+    },
+    "nonni": {
+      "p": "D4",
+      "sv": "mor- och farföräldrar"
+    },
+    "nonna": {
+      "p": "D4",
+      "sv": "mormor, farmor"
+    },
+    "nonno": {
+      "p": "D4",
+      "sv": "morfar, farfar"
+    },
+    "banca": {
+      "p": "D4",
+      "sv": "bank"
+    },
+    "due": {
+      "p": "D4",
+      "sv": "två"
+    },
+    "tre": {
+      "p": "D4",
+      "sv": "tre"
+    },
+    "sette": {
+      "p": "D4",
+      "sv": "sju"
+    },
+    "otto": {
+      "p": "D4",
+      "sv": "åtta"
+    },
+    "domenica": {
+      "p": "D4",
+      "sv": "söndag",
+      "note": "la domenica = på söndagarna"
+    },
+    "insieme": {
+      "p": "D4",
+      "sv": "tillsammans"
+    },
+    "colazione": {
+      "p": "D4",
+      "sv": "frukost"
+    },
+    "pane": {
+      "p": "D4",
+      "sv": "bröd",
+      "deck": "D4.8"
+    },
+    "lavoro": {
+      "p": "D4",
+      "sv": "arbete, jobb"
+    },
+    "presto": {
+      "p": "D4",
+      "sv": "tidigt · snart"
+    },
+    "mi piace": {
+      "p": "D4",
+      "sv": "jag gillar",
+      "note": "ordagrant «det behagar mig» — det man gillar är subjekt",
+      "deck": "D4.17"
+    },
+    "mi piacciono": {
+      "p": "D4",
+      "sv": "jag gillar (flera saker)",
+      "note": "flera saker → piacciono",
+      "deck": "D4.17"
+    },
+    "gli piace": {
+      "p": "D4",
+      "sv": "han gillar",
+      "note": "gli = åt honom · ordagrant «det behagar honom»",
+      "deck": "D4.17"
+    },
+    "film": {
+      "p": "D4",
+      "sv": "film, filmer",
+      "note": "lånord — samma form i plural: i film"
+    },
+    "giorno": {
+      "p": "D4",
+      "sv": "dag",
+      "deck": "D4.5"
+    },
+    "cena": {
+      "p": "D4",
+      "sv": "middag"
+    },
+    "pasta": {
+      "p": "D4",
+      "sv": "pasta"
+    },
+    "mare": {
+      "p": "D4",
+      "sv": "hav",
+      "deck": "D4.9"
+    },
+    "posto": {
+      "p": "D4",
+      "sv": "plats"
+    },
+    "libero": {
+      "p": "D4",
+      "sv": "ledig, fri"
+    },
+    "gelato": {
+      "p": "D4",
+      "sv": "glass"
+    },
+    "libro": {
+      "p": "D4",
+      "sv": "bok"
+    },
+    "sera": {
+      "p": "D4",
+      "sv": "kväll",
+      "note": "la sera = på kvällen",
+      "deck": "D4.5"
+    },
+    "da bambino": {
+      "p": "D4",
+      "sv": "som barn",
+      "note": "da + substantiv = när jag var …"
+    },
+    "paese": {
+      "p": "D4",
+      "sv": "by · land"
+    },
+    "vita": {
+      "p": "D4",
+      "sv": "liv"
+    },
+    "semplice": {
+      "p": "D4",
+      "sv": "enkel"
+    },
+    "freddo": {
+      "p": "D4",
+      "sv": "kall"
+    },
+    "pizza": {
+      "p": "D4",
+      "sv": "pizza"
+    },
+    "viaggio": {
+      "p": "D4",
+      "sv": "resa"
+    },
+    "breve": {
+      "p": "D4",
+      "sv": "kort"
+    },
+    "bello": {
+      "p": "D4",
+      "sv": "fin, vacker"
+    },
+    "tavolo": {
+      "p": "D4",
+      "sv": "bord"
+    },
+    "menù": {
+      "p": "D4",
+      "sv": "meny"
+    },
+    "pesce": {
+      "p": "D4",
+      "sv": "fisk"
+    },
+    "vino": {
+      "p": "D4",
+      "sv": "vin",
+      "deck": "D4.8"
+    },
+    "governo": {
+      "p": "D4",
+      "sv": "regering"
+    },
+    "proposta": {
+      "p": "D4",
+      "sv": "förslag"
+    },
+    "ministro": {
+      "p": "D4",
+      "sv": "minister"
+    },
+    "difficile": {
+      "p": "D4",
+      "sv": "svår"
+    }
+  },
+  "texts": [
+    {
+      "id": "maria",
+      "title": "Maria",
+      "sv": "Maria",
+      "nota": "Två små verb bär nästan allt: è (är) och ha (har).",
+      "sentences": [
+        {
+          "it": "Maria è italiana.",
+          "sv": "Maria är italienska."
+        },
+        {
+          "it": "Ha una casa a Roma.",
+          "sv": "Hon har ett hus i Rom."
+        },
+        {
+          "it": "La casa è piccola ma bella.",
+          "sv": "Huset är litet men fint."
+        },
+        {
+          "it": "Maria ha anche un cane.",
+          "sv": "Maria har också en hund."
+        },
+        {
+          "it": "Il cane è grande e non è tranquillo!",
+          "sv": "Hunden är stor och är inte lugn!"
+        }
+      ],
+      "question": {
+        "sv": "Hur är Marias hus?",
+        "options": ["Litet men fint", "Stort och lugnt", "Gammalt och dyrt"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "al-bar",
+      "title": "Al bar",
+      "sv": "På kaféet",
+      "nota": "Ändelsen visar vem: prende = han tar, parlano = de pratar.",
+      "sentences": [
+        {
+          "it": "Marco è al bar con un amico.",
+          "sv": "Marco är på kaféet med en vän."
+        },
+        {
+          "it": "Marco prende un caffè e l'amico prende un tè.",
+          "sv": "Marco tar en kaffe och vännen tar en te."
+        },
+        {
+          "it": "«Il caffè è buono?» «Sì, molto buono!»",
+          "sv": "”Är kaffet gott?” ”Ja, mycket gott!”"
+        },
+        {
+          "it": "Il bar è piccolo, ma c'è sempre molta gente.",
+          "sv": "Kaféet är litet, men där är alltid mycket folk."
+        },
+        {
+          "it": "Marco e l'amico parlano di musica.",
+          "sv": "Marco och vännen pratar om musik."
+        }
+      ],
+      "question": {
+        "sv": "Vad pratar Marco och vännen om?",
+        "options": ["Musik", "Kaffe", "Arbete"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "alla-stazione",
+      "title": "Alla stazione",
+      "sv": "På stationen",
+      "nota": "Ord på -zione kan du redan: station → stazione.",
+      "sentences": [
+        {
+          "it": "La stazione centrale di Milano è molto grande.",
+          "sv": "Centralstationen i Milano är mycket stor."
+        },
+        {
+          "it": "Ci sono molti treni e molte persone.",
+          "sv": "Där finns många tåg och många människor."
+        },
+        {
+          "it": "Una donna cerca informazioni: «Dov'è il treno per Roma?»",
+          "sv": "En kvinna söker information: ”Var är tåget till Rom?”"
+        },
+        {
+          "it": "Un uomo risponde: «È qui, ma oggi è in ritardo.»",
+          "sv": "En man svarar: ”Det är här, men i dag är det försenat.”"
+        },
+        {
+          "it": "«Che situazione!» dice la donna.",
+          "sv": "”Vilken situation!” säger kvinnan."
+        },
+        {
+          "it": "«È normale», dice l'uomo.",
+          "sv": "”Det är normalt”, säger mannen."
+        }
+      ],
+      "question": {
+        "sv": "Vad är det med tåget till Rom?",
+        "options": ["Det är försenat", "Det är inställt", "Det har redan gått"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "firenze",
+      "title": "Firenze",
+      "sv": "Florens",
+      "nota": "Fler gratisord: city → città, famous → famoso, incredible → incredibile.",
+      "sentences": [
+        {
+          "it": "Firenze è una città famosa.",
+          "sv": "Florens är en berömd stad."
+        },
+        {
+          "it": "Il centro storico è piccolo ma incredibile.",
+          "sv": "Den historiska stadskärnan är liten men otrolig."
+        },
+        {
+          "it": "Ci sono musei, università e ristoranti tipici.",
+          "sv": "Där finns museer, universitet och typiska restauranger."
+        },
+        {
+          "it": "I turisti arrivano da tutto il mondo.",
+          "sv": "Turisterna kommer från hela världen."
+        },
+        {
+          "it": "In estate fa molto caldo e ci sono troppi turisti.",
+          "sv": "På sommaren är det mycket varmt och det är för många turister."
+        },
+        {
+          "it": "Ma la città è sempre bella.",
+          "sv": "Men staden är alltid vacker."
+        }
+      ],
+      "question": {
+        "sv": "Hur är Florens på sommaren?",
+        "options": ["Varmt och fullt av turister", "Kallt och tomt", "Lugnt och svalt"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "la-mia-famiglia",
+      "title": "La mia famiglia",
+      "sv": "Min familj",
+      "nota": "-iamo betyder alltid vi: mangiamo = vi äter.",
+      "sentences": [
+        {
+          "it": "Questa è la mia famiglia.",
+          "sv": "Det här är min familj."
+        },
+        {
+          "it": "Mio padre lavora in una banca e mia madre è giornalista.",
+          "sv": "Min pappa arbetar på en bank och min mamma är journalist."
+        },
+        {
+          "it": "Ho due fratelli e una sorella.",
+          "sv": "Jag har två bröder och en syster."
+        },
+        {
+          "it": "I miei fratelli sono alti, mia sorella è piccola.",
+          "sv": "Mina bröder är långa, min syster är liten."
+        },
+        {
+          "it": "La domenica mangiamo sempre insieme.",
+          "sv": "På söndagarna äter vi alltid tillsammans."
+        },
+        {
+          "it": "Parliamo molto e ridiamo molto!",
+          "sv": "Vi pratar mycket och skrattar mycket!"
+        }
+      ],
+      "question": {
+        "sv": "Vad gör familjen på söndagarna?",
+        "options": ["Äter tillsammans", "Arbetar på banken", "Åker till Rom"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "la-mattina",
+      "title": "La mattina",
+      "sv": "Morgonen",
+      "nota": "Mi framför verbet = jag gör det med mig själv: mi alzo, jag stiger upp.",
+      "sentences": [
+        {
+          "it": "Mi sveglio alle sette.",
+          "sv": "Jag vaknar klockan sju."
+        },
+        {
+          "it": "Mi alzo, mi lavo e mi vesto.",
+          "sv": "Jag stiger upp, tvättar mig och klär på mig."
+        },
+        {
+          "it": "Poi faccio colazione: caffè e pane.",
+          "sv": "Sedan äter jag frukost: kaffe och bröd."
+        },
+        {
+          "it": "Alle otto esco di casa e vado al lavoro.",
+          "sv": "Klockan åtta går jag hemifrån och åker till jobbet."
+        },
+        {
+          "it": "Di solito arrivo presto, ma oggi sono in ritardo!",
+          "sv": "Vanligtvis kommer jag tidigt, men i dag är jag sen!"
+        }
+      ],
+      "question": {
+        "sv": "När går berättaren hemifrån?",
+        "options": ["Klockan åtta", "Klockan sju", "Klockan nio"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "mi-piace",
+      "title": "Mi piace",
+      "sv": "Jag gillar",
+      "nota": "Piacere går baklänges: mi piace = det behagar mig.",
+      "sentences": [
+        {
+          "it": "Mi piace la musica italiana.",
+          "sv": "Jag gillar italiensk musik."
+        },
+        {
+          "it": "Mi piacciono anche i film italiani, ma non capisco tutto.",
+          "sv": "Jag gillar också italienska filmer, men jag förstår inte allt."
+        },
+        {
+          "it": "Conosci Paolo? Lui sa parlare tre lingue.",
+          "sv": "Känner du Paolo? Han kan tala tre språk."
+        },
+        {
+          "it": "Lo vedo ogni giorno al lavoro.",
+          "sv": "Jag ser honom varje dag på jobbet."
+        },
+        {
+          "it": "Gli piace cucinare e ci invita spesso a cena.",
+          "sv": "Han gillar att laga mat och bjuder oss ofta på middag."
+        },
+        {
+          "it": "La sua pasta è perfetta!",
+          "sv": "Hans pasta är perfekt!"
+        }
+      ],
+      "question": {
+        "sv": "Vad kan Paolo?",
+        "options": ["Tala tre språk", "Spela musik", "Göra film"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "ieri",
+      "title": "Ieri",
+      "sv": "I går",
+      "nota": "Dåtid i två delar: ho mangiato = jag åt. Rörelse tar essere: sono andata.",
+      "sentences": [
+        {
+          "it": "Ieri sono andata al mare con Anna.",
+          "sv": "I går åkte jag till havet med Anna."
+        },
+        {
+          "it": "Abbiamo preso il treno alle otto.",
+          "sv": "Vi tog tåget klockan åtta."
+        },
+        {
+          "it": "Siamo arrivate presto e abbiamo trovato un posto libero.",
+          "sv": "Vi kom fram tidigt och hittade en ledig plats."
+        },
+        {
+          "it": "Ho mangiato un gelato e Anna ha letto un libro.",
+          "sv": "Jag åt en glass och Anna läste en bok."
+        },
+        {
+          "it": "La sera siamo tornate a casa stanche ma contente.",
+          "sv": "På kvällen åkte vi hem, trötta men nöjda."
+        }
+      ],
+      "question": {
+        "sv": "Hur tog de sig till havet?",
+        "options": ["Med tåg", "Med bil", "Till fots"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "da-bambino",
+      "title": "Da bambino",
+      "sv": "Som barn",
+      "nota": "Imperfetto (-avo, -ava, -avamo) berättar hur det brukade vara.",
+      "sentences": [
+        {
+          "it": "Da bambino abitavo in un piccolo paese.",
+          "sv": "Som barn bodde jag i en liten by."
+        },
+        {
+          "it": "Ogni estate andavamo dai nonni.",
+          "sv": "Varje sommar åkte vi till mor- och farföräldrarna."
+        },
+        {
+          "it": "La nonna cucinava e il nonno raccontava storie.",
+          "sv": "Mormor lagade mat och morfar berättade historier."
+        },
+        {
+          "it": "Non avevamo la televisione, ma eravamo felici.",
+          "sv": "Vi hade ingen tv, men vi var lyckliga."
+        },
+        {
+          "it": "Era una vita semplice e tranquilla.",
+          "sv": "Det var ett enkelt och lugnt liv."
+        }
+      ],
+      "question": {
+        "sv": "Vad gjorde il nonno?",
+        "options": ["Berättade historier", "Lagade mat", "Tittade på tv"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "mentre-leggevo",
+      "title": "Mentre leggevo",
+      "sv": "Medan jag läste",
+      "nota": "Imperfetto är bakgrunden, passato prossimo är det som händer.",
+      "sentences": [
+        {
+          "it": "Ieri sera pioveva e faceva freddo.",
+          "sv": "I går kväll regnade det och var kallt."
+        },
+        {
+          "it": "Mentre leggevo, è arrivato un messaggio.",
+          "sv": "Medan jag läste kom ett meddelande."
+        },
+        {
+          "it": "Era Luca: «Che cosa stai facendo?»",
+          "sv": "Det var Luca: ”Vad gör du?”"
+        },
+        {
+          "it": "«Sto leggendo», ho risposto.",
+          "sv": "”Jag läser”, svarade jag."
+        },
+        {
+          "it": "«Io sto arrivando con una pizza!»",
+          "sv": "”Jag är på väg med en pizza!”"
+        },
+        {
+          "it": "Ho chiuso il libro subito.",
+          "sv": "Jag slog igen boken direkt."
+        }
+      ],
+      "question": {
+        "sv": "Varför slog berättaren igen boken?",
+        "options": ["Luca var på väg med pizza", "Det började regna", "Boken var slut"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "domani",
+      "title": "Domani",
+      "sv": "I morgon",
+      "nota": "Futurum sitter i slutet av ordet: partirò, sarà, prenderemo.",
+      "sentences": [
+        {
+          "it": "Domani partirò per Venezia.",
+          "sv": "I morgon åker jag till Venedig."
+        },
+        {
+          "it": "Sarà un viaggio breve, ma sarà bello.",
+          "sv": "Det blir en kort resa, men den blir fin."
+        },
+        {
+          "it": "Vorrei vedere il mare e mangiare bene.",
+          "sv": "Jag skulle vilja se havet och äta gott."
+        },
+        {
+          "it": "Potresti venire con me?",
+          "sv": "Skulle du kunna följa med mig?"
+        },
+        {
+          "it": "Se verrai, prenderemo il treno insieme.",
+          "sv": "Om du kommer tar vi tåget tillsammans."
+        },
+        {
+          "it": "Ti chiamerò stasera.",
+          "sv": "Jag ringer dig i kväll."
+        }
+      ],
+      "question": {
+        "sv": "När ringer berättaren?",
+        "options": ["I kväll", "I morgon", "Från Venedig"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "al-ristorante",
+      "title": "Al ristorante",
+      "sv": "På restaurangen",
+      "nota": "Samtalets småord: vorrei, ecco, allora — och ne, «av det».",
+      "sentences": [
+        {
+          "it": "«Buonasera! Vorrei un tavolo per due.»",
+          "sv": "”God kväll! Jag skulle vilja ha ett bord för två.”"
+        },
+        {
+          "it": "«Certo. Ecco il menù.»",
+          "sv": "”Självklart. Här är menyn.”"
+        },
+        {
+          "it": "«Avete il pesce oggi?» «Sì, ne abbiamo molto.»",
+          "sv": "”Har ni fisk i dag?” ”Ja, det har vi mycket av.”"
+        },
+        {
+          "it": "«Allora prendo il pesce. E il vino?»",
+          "sv": "”Då tar jag fisken. Och vinet?”"
+        },
+        {
+          "it": "«Ce n'è uno speciale, della regione.»",
+          "sv": "”Det finns ett särskilt, från regionen.”"
+        },
+        {
+          "it": "«Perfetto, grazie mille!»",
+          "sv": "”Perfekt, tack så mycket!”"
+        }
+      ],
+      "question": {
+        "sv": "Vad beställer gästen?",
+        "options": ["Fisk", "Pasta", "Pizza"],
+        "answer": 0
+      }
+    },
+    {
+      "id": "una-notizia",
+      "title": "Una notizia",
+      "sv": "En nyhet",
+      "nota": "En tidningsnotis. Se hur mycket som redan är limmet, reglerna och motorn.",
+      "sentences": [
+        {
+          "it": "Il governo ha presentato una nuova proposta.",
+          "sv": "Regeringen har lagt fram ett nytt förslag."
+        },
+        {
+          "it": "Secondo il ministro, la situazione economica è difficile ma non impossibile.",
+          "sv": "Enligt ministern är det ekonomiska läget svårt men inte omöjligt."
+        },
+        {
+          "it": "La priorità è creare lavoro per i giovani.",
+          "sv": "Prioriteten är att skapa arbete åt de unga."
+        },
+        {
+          "it": "L'opposizione critica la decisione: «È una soluzione parziale.»",
+          "sv": "Oppositionen kritiserar beslutet: ”Det är en ofullständig lösning.”"
+        },
+        {
+          "it": "La discussione continuerà domani in parlamento.",
+          "sv": "Diskussionen fortsätter i morgon i parlamentet."
+        },
+        {
+          "it": "Probabilmente la decisione finale arriverà presto.",
+          "sv": "Troligen kommer det slutgiltiga beslutet snart."
+        }
+      ],
+      "question": {
+        "sv": "Vad säger oppositionen om beslutet?",
+        "options": [
+          "Att det bara är en halv lösning",
+          "Att det är omöjligt",
+          "Att det kom för sent"
+        ],
+        "answer": 0
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { DataService } from './data.service';
+import { LeggiService } from './leggi.service';
 import { QuizService } from './quiz.service';
 
 /** Okänt mazzo-id i adressfältet → tillbaka till startsidan. */
@@ -16,4 +17,11 @@ export const activeRoundGuard: CanActivateFn = (route) => {
   const quiz = inject(QuizService);
   const active = quiz.deckId() === deckId && quiz.queue().length > 0;
   return active || inject(Router).createUrlTree(['/deck', deckId!]);
+};
+
+/** Okänt text-id i adressfältet → tillbaka till startsidan. */
+export const textExistsGuard: CanActivateFn = (route) => {
+  const textId = route.paramMap.get('textId');
+  const exists = !!textId && !!inject(LeggiService).text(textId);
+  return exists || inject(Router).createUrlTree(['/']);
 };
