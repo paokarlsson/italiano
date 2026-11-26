@@ -8,9 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { answerPrompt } from '../../core/ai-explain';
 import { QuizService } from '../../core/quiz.service';
 import { mdBold } from '../../core/utils';
 import { McQuestion, MatchQuestion, QueuedQuestion, TfQuestion } from '../../models/quiz.models';
+import { Perche } from '../../shared/perche';
 import { Topbar } from '../../shared/topbar';
 import { MatchQuestionComponent } from './match-question';
 import { McQuestionComponent } from './mc-question';
@@ -21,11 +23,13 @@ interface Feedback {
   headline: string;
   body: string;
   retried: boolean;
+  /** Frågan till Claude om läsaren vill veta varför — null där det inte finns något att fråga om. */
+  why: string | null;
 }
 
 @Component({
   selector: 'app-quiz',
-  imports: [Topbar, McQuestionComponent, TfQuestionComponent, MatchQuestionComponent],
+  imports: [Topbar, Perche, McQuestionComponent, TfQuestionComponent, MatchQuestionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './quiz.html',
 })
@@ -37,6 +41,8 @@ export class Quiz {
   protected readonly quiz = inject(QuizService);
 
   protected readonly feedback = signal<Feedback | null>(null);
+  /** Alternativet som valdes på den aktuella flervalsfrågan. */
+  private picked: string | null = null;
 
   protected readonly kindLabel = computed(() => {
     const q = this.quiz.current();
@@ -62,11 +68,19 @@ export class Quiz {
   protected onAnswer(correct: boolean): void {
     const q = this.quiz.current();
     if (!q || this.feedback()) return;
+    const deck = this.quiz.deck();
+    const why =
+      q.type === 'match' ? null : answerPrompt({ question: q, picked: this.picked, correct, deck });
     const retried = this.quiz.submit(correct);
-    this.feedback.set(buildFeedback(q, correct, retried));
+    this.feedback.set({ ...buildFeedback(q, correct, retried), why });
+  }
+
+  protected onPicked(option: string): void {
+    this.picked = option;
   }
 
   protected next(): void {
+    this.picked = null;
     this.feedback.set(null);
     if (!this.quiz.advance()) {
       void this.router.navigate(['/deck', this.deckId(), 'result']);
@@ -74,7 +88,11 @@ export class Quiz {
   }
 }
 
-function buildFeedback(q: QueuedQuestion, correct: boolean, retried: boolean): Feedback {
+function buildFeedback(
+  q: QueuedQuestion,
+  correct: boolean,
+  retried: boolean,
+): Omit<Feedback, 'why'> {
   if (q.type === 'match') {
     return {
       correct,

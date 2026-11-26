@@ -5,6 +5,8 @@ import {
   LexEntry,
   LeggiProgress,
   OpenWord,
+  PillarId,
+  ReadingProfile,
   ReadSummary,
   Token,
   UserText,
@@ -78,6 +80,40 @@ export class LeggiService {
     if (level) return level;
     const read = this._texts().filter((t) => texts[t.id] && t.level);
     return Math.max(MIN_LEVEL, ...read.map((t) => t.level!));
+  });
+
+  /**
+   * Var uppslagen hopar sig: per pelare hur ofta dess ord lästs och slagits upp, och vilka
+   * mazzin de uppslagna formerna hör till. Underlaget till nästa beställda text.
+   */
+  readonly profile = computed<ReadingProfile>(() => {
+    this._texts();
+    const own = this._userTexts();
+    const load: Record<PillarId, { seen: number; looked: number }> = {
+      D1: { seen: 0, looked: 0 },
+      D2: { seen: 0, looked: 0 },
+      D3: { seen: 0, looked: 0 },
+      D4: { seen: 0, looked: 0 },
+    };
+    const decks = new Map<string, number>();
+    for (const [key, word] of Object.entries(this._progress().words)) {
+      // Den inbyggda ordlistan först; annars den egna text där formen står.
+      const entry = Object.hasOwn(this._lexicon, key)
+        ? this._lexicon[key]
+        : own.find((t) => Object.hasOwn(t.lexicon, key))?.lexicon[key];
+      if (!entry || !load[entry.p]) continue;
+      load[entry.p].seen += word.seen;
+      load[entry.p].looked += word.looked;
+      if (entry.deck && word.looked) {
+        decks.set(entry.deck, (decks.get(entry.deck) ?? 0) + word.looked);
+      }
+    }
+    return {
+      pillars: (Object.keys(load) as PillarId[]).map((p) => ({ p, ...load[p] })),
+      decks: [...decks]
+        .map(([deckId, looked]) => ({ deckId, looked }))
+        .sort((a, b) => b.looked - a.looked),
+    };
   });
 
   /**
@@ -228,7 +264,14 @@ export class LeggiService {
         const sentence = this.tokens(id).find((s) => s.some((t) => t.key === key));
         const entry = sentence?.find((t) => t.key === key)?.entry;
         if (sentence && entry) {
-          out.push({ key, entry, looked: state.words[key].looked, sentence });
+          const questions = this.text(id)?.questions?.filter((q) => q.form === key);
+          out.push({
+            key,
+            entry,
+            looked: state.words[key].looked,
+            sentence,
+            ...(questions?.length ? { questions } : {}),
+          });
           break;
         }
       }

@@ -5,8 +5,9 @@
     <div class="ai-card">
       <div class="eyebrow">Koppla in Claude</div>
       <p>
-        Med en egen API-nyckel från Anthropic skriver appen nya texter på din nivå och gör vilken
-        italiensk text som helst läsbar. Utan nyckel fungerar allt annat som vanligt.
+        Med en egen API-nyckel från Anthropic skriver appen nya texter på din nivå, gör vilken
+        italiensk text som helst läsbar och förklarar ett ord eller ett svar när du frågar varför.
+        Utan nyckel fungerar allt annat som vanligt.
       </p>
       <input
         type="password"
@@ -22,7 +23,7 @@
       </button>
       <p class="ai-fine">
         Nyckeln sparas bara i den här webbläsaren och skickas bara till Anthropic. Lägg inte in den
-        på en dator du delar med andra. Varje text dras från ditt Anthropic-konto.
+        på en dator du delar med andra. Varje text och förklaring dras från ditt Anthropic-konto.
       </p>
     </div>
   } @else {
@@ -32,6 +33,9 @@
         Nivå {{ level().n }} av {{ levelCount }} · {{ level().label }}.
         @if (openCount()) {
           Dina öppna ord vävs in.
+        }
+        @if (focus()) {
+          Tät på {{ focus() }} — där slår du upp mest.
         }
       </p>
       <input
@@ -43,8 +47,22 @@
         [disabled]="ai.busy()"
         (input)="topic.set(valueOf($event))"
       />
+      @let last = ai.lastPart();
+      @if (last) {
+        <label class="ai-check">
+          <input
+            type="checkbox"
+            [checked]="follow()"
+            [disabled]="ai.busy()"
+            (change)="follow.set(!follow())"
+          />
+          <span>
+            Fortsätt berättelsen efter <i lang="it">{{ last.title }}</i>
+          </span>
+        </label>
+      }
       <button class="cta gold" type="button" [disabled]="ai.busy()" (click)="write()">
-        Skriv en text åt mig →
+        {{ last && follow() ? 'Skriv nästa del →' : 'Skriv en text åt mig →' }}
       </button>
     </div>
 

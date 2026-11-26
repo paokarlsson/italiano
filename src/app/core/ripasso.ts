@@ -1,6 +1,6 @@
-import { LexEntry, OpenWord, Token } from '../models/leggi.models';
+import { LexEntry, OpenWord, TextQuestion, Token } from '../models/leggi.models';
 import { McQuestion, Pillar, Question, TfQuestion } from '../models/quiz.models';
-import { shuffle } from './utils';
+import { mdBold, shuffle } from './utils';
 
 /** Så många frågor en repetition har som mest. */
 export const RIPASSO_MAX = 6;
@@ -17,6 +17,8 @@ export interface RipassoItem {
   wordKey: string | null;
   /** «word» frågar på ordet självt, «rule» på samma mönster i ett annat ord, «weak» på en svag punkt i gymmet. */
   kind: 'word' | 'rule' | 'weak';
+  /** Varifrån frågan kommer: gymmet, texten där ordet stod, eller byggd ur meningen. */
+  source: 'gym' | 'text' | 'context';
   /** Varför frågan är med — visas ovanför den. */
   why: string;
 }
@@ -92,13 +94,29 @@ function contextQuestion(
   };
 }
 
+/** En fråga som följde med texten, i gymmets form. Den kom utifrån, så allt tvättas. */
+function fromText(q: TextQuestion, n: number): McQuestion {
+  return {
+    type: 'mc',
+    tag: 'ripasso',
+    kind: 'Flerval',
+    q: mdBold(escapeHtml(q.q)),
+    options: q.options,
+    answer: q.options[q.answer],
+    explain: escapeHtml(q.explain),
+    _k: `text_${q.form}_${n}`,
+    statKey: '',
+  };
+}
+
 /**
  * Väljer uppgifter efter det som skaver.
  *
- * Ord repeteras som ord, regler på nya ord: ett uppslag i limmet eller orden (D1, D4) blir en
- * fråga på just det ordet — ur gymmet om det finns en, annars byggd ur meningen där det
- * stod. Ett uppslag i reglerna eller motorn (D2, D3) blir en fråga ur mazzot för samma
- * mönster, helst på ett annat ord, eftersom det är mönstret som ska sitta. Blir rundan kort
+ * Ord repeteras som ord, regler på nya ord. Ett uppslag i limmet eller orden (D1, D4) blir en
+ * fråga på just det ordet: ur gymmet om det finns en, annars den som följde med texten,
+ * annars byggd ur meningen där det stod. Ett uppslag i reglerna eller motorn (D2, D3) blir
+ * en fråga på samma mönster i ett annat ord, eftersom det är mönstret som ska sitta: den
+ * som följde med texten om det finns en, annars en ur mazzot för mönstret. Blir rundan kort
  * fylls den på med svaga punkter ur gymmets statistik.
  */
 export function buildRipasso(input: RipassoInput, max = RIPASSO_MAX): RipassoItem[] {
@@ -124,27 +142,46 @@ export function buildRipasso(input: RipassoInput, max = RIPASSO_MAX): RipassoIte
   for (const word of input.open) {
     if (items.length >= max) break;
     const isPattern = word.entry.p === 'D2' || word.entry.p === 'D3';
+    const lookedUp = `Du slog upp «${word.key}»`;
+    const otherWord = `${lookedUp} — ${word.entry.p === 'D2' ? 'samma regel' : 'samma mönster'}, annat ord`;
+    const own = shuffle(word.questions ?? [])[0];
+    const ownItem = (): RipassoItem => ({
+      question: fromText(own, word.questions!.indexOf(own)),
+      wordKey: word.key,
+      kind: isPattern ? 'rule' : 'word',
+      source: 'text',
+      why: isPattern ? otherWord : lookedUp,
+    });
 
-    if (isPattern && word.entry.deck) {
-      const candidates = pool(word.entry.deck);
-      // Helst ett annat ord än det uppslagna — annars prövas minnet, inte mönstret.
-      const question = take(candidates.filter((q) => !targets(q, word.key))) ?? take(candidates);
-      if (question) {
-        const what = word.entry.p === 'D2' ? 'samma regel' : 'samma mönster';
-        items.push({
-          question,
-          wordKey: word.key,
-          kind: 'rule',
-          why: `Du slog upp «${word.key}» — ${what}, annat ord`,
-        });
+    if (isPattern) {
+      // Textens egen fråga går på just den ändelsen eller regeln — närmare än ett helt mazzo.
+      if (own) {
+        items.push(ownItem());
         continue;
+      }
+      if (word.entry.deck) {
+        const candidates = pool(word.entry.deck);
+        // Helst ett annat ord än det uppslagna — annars prövas minnet, inte mönstret.
+        const question = take(candidates.filter((q) => !targets(q, word.key))) ?? take(candidates);
+        if (question) {
+          items.push({ question, wordKey: word.key, kind: 'rule', source: 'gym', why: otherWord });
+          continue;
+        }
       }
     }
 
-    const question =
-      take(all.filter((q) => targets(q, word.key))) ?? contextQuestion(word, input.lexicon);
+    const gym = take(all.filter((q) => targets(q, word.key)));
+    if (gym) {
+      items.push({ question: gym, wordKey: word.key, kind: 'word', source: 'gym', why: lookedUp });
+      continue;
+    }
+    if (own) {
+      items.push(ownItem());
+      continue;
+    }
+    const question = contextQuestion(word, input.lexicon);
     if (question) {
-      items.push({ question, wordKey: word.key, kind: 'word', why: `Du slog upp «${word.key}»` });
+      items.push({ question, wordKey: word.key, kind: 'word', source: 'context', why: lookedUp });
     }
   }
 
@@ -153,7 +190,13 @@ export function buildRipasso(input: RipassoInput, max = RIPASSO_MAX): RipassoIte
     if (items.length >= max || weak >= MAX_WEAK) break;
     const question = take(all.filter((q) => q.statKey === statKey));
     if (question) {
-      items.push({ question, wordKey: null, kind: 'weak', why: `Svag punkt i gymmet: ${label}` });
+      items.push({
+        question,
+        wordKey: null,
+        kind: 'weak',
+        source: 'gym',
+        why: `Svag punkt i gymmet: ${label}`,
+      });
       weak++;
     }
   }

@@ -104,6 +104,50 @@ describe('buildRipasso', () => {
     }
   });
 
+  it('tar frågan som följde med texten före mazzot när uppslaget är ett mönster', () => {
+    const word: OpenWord = {
+      ...open('soluzione', 'È una soluzione.'),
+      questions: [
+        {
+          form: 'soluzione',
+          q: 'Engelska **tradition** <blir>',
+          options: ['tradizione', 'tradicione', 'traditione', 'tradizzione'],
+          answer: 0,
+          explain: '-tion → -zione & inget annat',
+        },
+      ],
+    };
+    const [item] = build([word]);
+    expect(item).toMatchObject({
+      kind: 'rule',
+      source: 'text',
+      wordKey: 'soluzione',
+      why: 'Du slog upp «soluzione» — samma regel, annat ord',
+    });
+    const q = item.question;
+    // Frågan kom utifrån: markeringen blir fetstil, allt annat oskadliggörs.
+    expect(q.type === 'mc' && q.q).toBe('Engelska <b>tradition</b> &lt;blir&gt;');
+    expect(q.type === 'mc' && q.answer).toBe('tradizione');
+    expect(q.explain).toBe('-tion → -zione &amp; inget annat');
+    expect(q.statKey).toBe('');
+  });
+
+  it('låter gymmets fråga på ordet gå före textens, och textens före den byggda', () => {
+    const questions = (form: string) => [
+      { form, q: `Vad betyder **${form}**?`, options: ['a', 'b', 'c'], answer: 1, explain: '' },
+    ];
+    const items = build([
+      { ...open('anche', 'Ha anche un cane.'), questions: questions('anche') },
+      { ...open('cane', 'Ha anche un cane.'), questions: questions('cane') },
+      open('casa', 'La casa.'),
+    ]);
+    const by = (key: string) => items.find((i) => i.wordKey === key)!;
+    expect(by('anche')).toMatchObject({ kind: 'word', source: 'gym' });
+    expect(by('cane')).toMatchObject({ kind: 'word', source: 'text', why: 'Du slog upp «cane»' });
+    expect(by('cane').question).toMatchObject({ answer: 'b', _k: 'text_cane_0' });
+    expect(by('casa')).toMatchObject({ kind: 'word', source: 'context' });
+  });
+
   it('tar aldrig para ihop-frågor och aldrig samma fråga två gånger', () => {
     const items = build([
       open('soluzione', 'È una soluzione.'),

@@ -73,6 +73,10 @@
         @if (g.note) {
           <div class="lt-g-note">{{ g.note }}</div>
         }
+        @let w = why();
+        @if (w) {
+          <app-perche [prompt]="w" />
+        }
         @if (s && g.deckRef) {
           <a class="lt-g-deck" [routerLink]="['/deck', g.deckRef.deckId]">
             Nöta just det här: {{ g.deckRef.title }} →

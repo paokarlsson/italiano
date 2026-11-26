@@ -36,6 +36,8 @@ export class McQuestionComponent {
   readonly question = input.required<McQuestion>();
   readonly answered = input(false);
   readonly answer = output<boolean>();
+  /** Alternativet som valdes — för den som vill förklara varför det var fel. */
+  readonly picked = output<string>();
 
   protected readonly chosen = signal<string | null>(null);
   protected readonly options = computed(() => shuffle(this.question().options));
@@ -50,6 +52,7 @@ export class McQuestionComponent {
   protected pick(option: string): void {
     if (this.answered()) return;
     this.chosen.set(option);
+    this.picked.emit(option);
     this.answer.emit(option === this.question().answer);
   }
 }

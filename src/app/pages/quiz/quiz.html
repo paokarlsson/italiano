@@ -29,6 +29,7 @@
           <app-mc-question
             [question]="asMc(q)"
             [answered]="!!feedback()"
+            (picked)="onPicked($event)"
             (answer)="onAnswer($event)"
           />
         }
@@ -53,6 +54,9 @@
           <span [innerHTML]="' ' + fb.body"></span>
           @if (fb.retried) {
             <span class="again">→ En till på samma sak strax.</span>
+          }
+          @if (fb.why) {
+            <app-perche [prompt]="fb.why" />
           }
         </div>
 
