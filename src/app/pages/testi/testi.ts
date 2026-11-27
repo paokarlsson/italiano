@@ -75,9 +75,14 @@ export class Testi {
   protected readonly bookTopic = signal('');
   protected readonly bookTopicMax = BOOK_TOPIC_MAX;
   protected readonly levels = LEVELS;
-  /** Nivån boken skrivs på — läsarens tills något annat väljs. */
+  /**
+   * Nivån boken skrivs på: den läsaren väljer, annars originalbokens vid en uppföljare,
+   * annars läsarens egen.
+   */
   private readonly chosenLevel = signal<number | null>(null);
-  protected readonly bookLevel = computed(() => level(this.chosenLevel() ?? this.leggi.level()));
+  protected readonly bookLevel = computed(() =>
+    level(this.chosenLevel() ?? this.afterBook()?.level ?? this.leggi.level()),
+  );
   protected readonly bookSizes = [4, 6, 8, 10] as const;
   protected readonly bookPages = signal<number>(6);
   /** Boken den nya ska vara en uppföljare till — tom för en fristående bok. */
@@ -126,7 +131,7 @@ export class Testi {
   constructor() {
     effect(() => {
       const id = this.uppfoljare();
-      if (id) untracked(() => this.after.set(id));
+      if (id) untracked(() => this.chooseSequel(id));
     });
   }
 
@@ -138,8 +143,14 @@ export class Testi {
 
   /** Väljer en bok att skriva en uppföljare till, och visar beställningen. */
   protected sequelTo(book: StoryData): void {
-    this.after.set(book.id);
+    this.chooseSequel(book.id);
     document.getElementById('ny-bok')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /** Väljer förlagan till en uppföljare — nivån följer med den tills läsaren väljer en annan. */
+  protected chooseSequel(id: string): void {
+    this.after.set(id);
+    this.chosenLevel.set(null);
   }
 
   protected setLevel(n: number): void {
