@@ -41,8 +41,7 @@ export class Suono {
   );
 
   constructor() {
-    // Förbered inloggningen och listorna, så att tryckningarna inte behöver vänta på dem.
-    if (this.drive.canConnect) void this.drive.prepare().catch(() => undefined);
+    // Förbered listorna, så att tryckningarna inte behöver vänta på dem.
     // Priset per tecken kommer med listan över modeller.
     if (this.voice.hasKey()) void this.voice.refresh().catch(() => undefined);
     void this.library.check();
@@ -50,13 +49,6 @@ export class Suono {
 
   protected valueOf(event: Event): string {
     return (event.target as HTMLInputElement | HTMLSelectElement).value;
-  }
-
-  protected connect(): Promise<void> {
-    return this.run(async () => {
-      await this.drive.connect();
-      await this.library.check();
-    });
   }
 
   protected createFolder(): Promise<void> {
@@ -78,15 +70,6 @@ export class Suono {
       this.toast.show('Mappens id är kopierat');
     } catch {
       this.toast.show('Kunde inte kopiera — markera id:t för hand');
-    }
-  }
-
-  protected async clear(): Promise<void> {
-    if (
-      confirm('Ta bort allt ljud ur den här webbläsaren? Det går att hämta eller läsa in igen.')
-    ) {
-      this.audio.stop();
-      await this.store.clear();
     }
   }
 

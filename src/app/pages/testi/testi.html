@@ -1,19 +1,7 @@
 <app-topbar step="Leggi" title="Fler texter" />
 
 <div class="stage">
-  @if (!ai.hasKey()) {
-    <div class="ai-card">
-      <div class="eyebrow">Koppla in Claude</div>
-      <p>
-        Med en egen API-nyckel från Anthropic skriver appen nya texter på din nivå, gör vilken
-        italiensk text som helst läsbar och förklarar ett ord eller ett svar när du frågar varför.
-        Utan nyckel fungerar allt annat som vanligt.
-      </p>
-      <button class="cta gold" type="button" routerLink="/installningar">
-        Lägg in nyckeln under Inställningar →
-      </button>
-    </div>
-  } @else {
+  @if (ai.hasKey()) {
     <div class="ai-card">
       <div class="eyebrow">Ny text</div>
       <p>
@@ -107,7 +95,9 @@
   }
 
   @if (leggi.userTexts().length) {
-    <div class="stat-section-title">Dina texter ({{ leggi.userTexts().length }})</div>
+    <div class="stat-section-title" id="dina-texter">
+      Dina texter ({{ leggi.userTexts().length }})
+    </div>
     @for (text of leggi.userTexts(); track text.id) {
       <div class="ai-row">
         <a [routerLink]="['/leggi', text.id]">

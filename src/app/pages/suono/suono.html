@@ -19,8 +19,8 @@
       } @else if (library.fresh().length) {
         <p>
           Det finns ljud och texter att hämta: {{ library.fresh().length }} paket,
-          {{ megabytes(library.freshBytes()) }}. De sparas i den här webbläsaren och fungerar sedan
-          utan nät.
+          {{ megabytes(library.freshBytes()) }}. De hämtas av sig själva när appen öppnas, utom när
+          webbläsaren ber om att spara data.
         </p>
         <button class="cta gold" type="button" (click)="library.download()">
           Ladda ner · {{ megabytes(library.freshBytes()) }} →
@@ -42,17 +42,9 @@
     </div>
   }
 
-  <div class="ai-card">
-    <div class="eyebrow">Egen röst</div>
-    @if (!voice.hasKey()) {
-      <p>
-        Med en egen API-nyckel från ElevenLabs läser appen in det som saknar ljud: berättaren och
-        replikerna med en kvinnlig och en manlig röst, efter vem som talar.
-      </p>
-      <button class="cta" type="button" routerLink="/installningar">
-        Lägg in nyckeln under Inställningar →
-      </button>
-    } @else {
+  @if (voice.hasKey()) {
+    <div class="ai-card">
+      <div class="eyebrow">Egen röst</div>
       @let p = audio.progress();
       @if (p) {
         <p role="status">Läser in… {{ p.done }} av {{ p.total }}</p>
@@ -77,25 +69,23 @@
       @if (audio.error()) {
         <p class="ai-error" role="alert">{{ audio.error() }}</p>
       }
+      @if (library.pendingClips() && !drive.connected() && drive.canConnect) {
+        <p class="ai-fine">
+          {{ library.pendingClips() }} klipp väntar på att publiceras. Logga in med Google under
+          <a routerLink="/installningar">Inställningar</a>, så kan du publicera dem här.
+        </p>
+      }
       <p class="ai-fine">
         Röster och vad inläsningen har kostat finns under
         <a routerLink="/installningar">Inställningar</a>.
       </p>
-    }
-  </div>
+    </div>
+  }
 
-  @if (drive.canConnect) {
+  @if (drive.connected()) {
     <div class="ai-card">
       <div class="eyebrow">Publicera</div>
-      @if (!drive.connected()) {
-        <p>
-          Logga in med Google för att lägga det du har läst in, och texterna du har läst, i
-          biblioteket. Inloggningen gäller i ungefär en timme.
-        </p>
-        <button class="cta" type="button" [disabled]="busy()" (click)="connect()">
-          Logga in med Google
-        </button>
-      } @else if (!drive.folderId()) {
+      @if (!drive.folderId()) {
         <p>Det finns ingen mapp än. Appen skapar en i din Drive och gör den läsbar för alla.</p>
         <button class="cta" type="button" [disabled]="busy()" (click)="createFolder()">
           Skapa den publika mappen
@@ -138,12 +128,6 @@
 
   @if (error()) {
     <div class="ai-error" role="alert">{{ error() }}</div>
-  }
-
-  @if (store.count()) {
-    <div class="ai-settings">
-      <button type="button" (click)="clear()">Töm ljudet i den här webbläsaren</button>
-    </div>
   }
 
   <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka</button>

@@ -3,9 +3,13 @@ import { RouterLink } from '@angular/router';
 import { AI_MODELS, AiModel, AiService } from '../../core/ai.service';
 import { AiError } from '../../core/ai-text';
 import { AudioService } from '../../core/audio.service';
+import { AudioStore } from '../../core/audio-store';
 import { DataService } from '../../core/data.service';
+import { DriveError, DriveService } from '../../core/drive.service';
+import { LibraryService } from '../../core/library.service';
 import { STOCK_TARGET, SupplyService } from '../../core/supply.service';
 import { ToastService } from '../../core/toast.service';
+import { megabytes } from '../../core/utils';
 import { Permission, VoiceError, VoiceService } from '../../core/voice.service';
 import { Voice } from '../../models/leggi.models';
 import { Topbar } from '../../shared/topbar';
@@ -34,6 +38,10 @@ export class Settings {
   protected readonly supply = inject(SupplyService);
   protected readonly voice = inject(VoiceService);
   protected readonly audio = inject(AudioService);
+  protected readonly store = inject(AudioStore);
+  protected readonly drive = inject(DriveService);
+  protected readonly library = inject(LibraryService);
+  protected readonly megabytes = megabytes;
 
   protected readonly models = AI_MODELS;
   protected readonly stockTarget = STOCK_TARGET;
@@ -50,6 +58,21 @@ export class Settings {
   protected readonly busy = signal(false);
   protected readonly claudeError = signal('');
   protected readonly voiceError = signal('');
+  protected readonly googleError = signal('');
+
+  /**
+   * Google-inloggningen behövs bara för att publicera. Den visas när det finns något att
+   * publicera, när mappen inte är skapad än, eller när man redan är inloggad — en besökare
+   * som bara läser ser den aldrig.
+   */
+  protected readonly showGoogle = computed(
+    () =>
+      this.drive.canConnect &&
+      (this.drive.connected() ||
+        !this.drive.folderId() ||
+        this.library.pendingClips() > 0 ||
+        this.library.pendingTexts().length > 0),
+  );
 
   /** Ungefär vad det kostar att läsa in allt som saknas, i krediter. */
   protected readonly estimate = computed(
@@ -73,6 +96,8 @@ export class Settings {
   );
 
   constructor() {
+    // Ladda inloggningen i förväg, så att tryckningen kan öppna popupen direkt.
+    if (this.showGoogle()) void this.drive.prepare().catch(() => undefined);
     if (this.voice.hasKey()) {
       void this.voice.refresh().catch((e) => this.voiceError.set(message(e)));
     }
@@ -140,6 +165,21 @@ export class Settings {
   protected resetCount(): void {
     if (confirm('Nollställ räkningen av det som lästs in härifrån? Kontot påverkas inte.')) {
       this.voice.resetCount();
+    }
+  }
+
+  protected connectGoogle(): Promise<void> {
+    return this.run(this.googleError, async () => {
+      await this.drive.connect();
+      await this.library.check();
+      this.toast.show('Inloggad med Google');
+    });
+  }
+
+  protected async clearAudio(): Promise<void> {
+    if (confirm('Ta bort allt ljud ur den här webbläsaren? Det hämtas eller läses in igen.')) {
+      this.audio.stop();
+      await this.store.clear();
     }
   }
 

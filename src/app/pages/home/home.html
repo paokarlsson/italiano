@@ -24,45 +24,107 @@
       <div class="eyebrow">{{ r.label }}</div>
       <h2 lang="it">{{ r.text.title }}</h2>
       <p>{{ r.text.nota }}</p>
+      @if (recap(); as rc) {
+        <details class="recap">
+          <summary>Förra gången</summary>
+          <p>{{ rc }}</p>
+        </details>
+      }
       <button class="cta gold" type="button" [routerLink]="['/leggi', r.text.id]">Läs →</button>
     </div>
   }
 
-  <div class="read-row">
-    @for (text of leggi.texts(); track text.id; let i = $index) {
-      <a
-        class="read-dot"
-        [class.done]="leggi.isRead(text.id)"
-        [class.next]="r.kind === 'text' && text.id === r.text.id"
-        [routerLink]="['/leggi', text.id]"
-        [attr.aria-label]="'Text ' + (i + 1) + ': ' + text.title"
-        [title]="text.title"
-        >{{ i + 1 }}</a
-      >
-    }
-  </div>
+  @let s = story();
+  @if (s) {
+    <div class="story">
+      <div class="story-head">
+        <span class="stock-label">Berättelsen · {{ s.read }} av {{ s.total }} lästa</span>
+        <a routerLink="/testi" fragment="dina-texter">alla delar →</a>
+      </div>
+      <div class="read-row">
+        @if (s.before) {
+          <span class="story-gap" [title]="s.before + ' delar före'">…</span>
+        }
+        @for (p of s.items; track p.id) {
+          <a
+            class="read-dot"
+            [class.done]="p.state === 'read'"
+            [class.next]="p.state === 'current'"
+            [class.waiting]="p.state === 'stock'"
+            [routerLink]="['/leggi', p.id]"
+            [attr.aria-label]="'Del ' + p.n + ': ' + p.title"
+            [title]="p.title"
+            >{{ p.n }}</a
+          >
+        }
+        @if (s.after) {
+          <span class="story-gap">+{{ s.after }}</span>
+        } @else if (supply.working() === 'text') {
+          <span
+            class="read-dot coming"
+            title="Skrivs just nu"
+            aria-label="Nästa del skrivs just nu"
+            >{{ s.next }}</span
+          >
+        }
+      </div>
+    </div>
+  }
+
+  @if (basicsDone()) {
+    <details class="basics">
+      <summary>
+        <span class="stock-label"
+          >Grundkursen · {{ leggi.readCount() }} av {{ r.total }} lästa</span
+        >
+      </summary>
+      <div class="read-row">
+        @for (text of leggi.texts(); track text.id; let i = $index) {
+          <a
+            class="read-dot"
+            [class.done]="leggi.isRead(text.id)"
+            [routerLink]="['/leggi', text.id]"
+            [attr.aria-label]="'Text ' + (i + 1) + ': ' + text.title"
+            [title]="text.title"
+            >{{ i + 1 }}</a
+          >
+        }
+      </div>
+    </details>
+  } @else {
+    <div class="read-row">
+      @for (text of leggi.texts(); track text.id; let i = $index) {
+        <a
+          class="read-dot"
+          [class.done]="leggi.isRead(text.id)"
+          [class.next]="r.kind === 'text' && text.id === r.text.id"
+          [routerLink]="['/leggi', text.id]"
+          [attr.aria-label]="'Text ' + (i + 1) + ': ' + text.title"
+          [title]="text.title"
+          >{{ i + 1 }}</a
+        >
+      }
+    </div>
+  }
 
   @let own = leggi.own();
   @if (own !== null) {
     <div class="read-meta">
-      {{ leggi.readCount() }} av {{ r.total }} lästa · {{ own }} % på egen hand
+      @if (!basicsDone()) {
+        {{ leggi.readCount() }} av {{ r.total }} lästa ·
+      }
+      nivå {{ level().n }} av {{ levelCount }} · {{ own }} % på egen hand
       @if (leggi.openWords().length) {
         · {{ leggi.openWords().length }} ord öppna
       }
     </div>
   }
 
-  @if (stock().length || (supply.active() && supply.working())) {
+  @if (supply.active() && supply.working()) {
     <div class="stock-row">
-      <span class="stock-label">På lager</span>
-      @for (text of stock(); track text.id) {
-        <a [routerLink]="['/leggi', text.id]" lang="it">{{ text.title }}</a>
-      }
-      @if (supply.working() === 'text') {
-        <span class="stock-busy">en text skrivs…</span>
-      } @else if (supply.working() === 'deck') {
-        <span class="stock-busy">ett mazzo byggs ut…</span>
-      }
+      <span class="stock-busy">
+        {{ supply.working() === 'text' ? 'nästa del skrivs…' : 'ett mazzo byggs ut…' }}
+      </span>
     </div>
   }
   @if (supply.active() && supply.error()) {
@@ -75,22 +137,13 @@
 
 @if (library.working() === 'download') {
   @let p = library.progress();
-  <div class="lib-card" role="status">
-    <span class="rec-label">Biblioteket</span>
-    <span class="lib-text">
-      Hämtar… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}
-    </span>
+  <div class="lib-status" role="status">
+    Hämtar ljud och texter… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}
   </div>
-} @else if (library.fresh().length) {
-  <div class="lib-card">
-    <span class="rec-label">Biblioteket</span>
-    <span class="lib-text">Ljud och fler texter finns att hämta. Ingen inloggning behövs.</span>
-    <button class="cta gold" type="button" (click)="library.download()">
-      Ladda ner · {{ megabytes(library.freshBytes()) }} →
-    </button>
-    @if (library.error()) {
-      <span class="lib-error" role="alert">{{ library.error() }}</span>
-    }
+} @else if (library.error() && library.fresh().length) {
+  <div class="lib-status lib-error" role="alert">
+    Biblioteket gick inte att hämta: {{ library.error() }}
+    <button type="button" (click)="library.download()">Försök igen</button>
   </div>
 }
 
@@ -101,14 +154,18 @@
       <span>{{ ripasso() }} {{ ripasso() === 1 ? 'fråga' : 'frågor' }} på det som skaver</span>
     </a>
   }
-  <a routerLink="/testi">
-    <b>Fler texter</b>
-    <span>{{ ai.hasKey() ? 'skriv en ny eller klistra in en egen' : 'koppla in Claude' }}</span>
-  </a>
-  <a routerLink="/suono">
-    <b>Ljud</b>
-    <span>{{ audio.count() ? audio.count() + ' klipp i webbläsaren' : 'hämta eller läs in' }}</span>
-  </a>
+  @if (ai.hasKey()) {
+    <a routerLink="/testi">
+      <b>Fler texter</b>
+      <span>skriv en ny eller klistra in en egen</span>
+    </a>
+  }
+  @if (voice.hasKey() || drive.connected()) {
+    <a routerLink="/suono">
+      <b>Ljud</b>
+      <span>läs in och publicera</span>
+    </a>
+  }
 </div>
 
 @if (!hints.dismissed()) {

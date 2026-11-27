@@ -26,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
     ),
     provideAppInitializer(async () => {
       const storage = inject(StorageService);
@@ -54,8 +54,8 @@ export const appConfig: ApplicationConfig = {
       ]);
       // Först nu vet påfyllningen vad som finns på lager.
       supply.start();
-      // Ser efter om biblioteket har något nytt — utan att uppstarten väntar på svaret.
-      void library.check();
+      // Hämtar det som är nytt i biblioteket — utan att uppstarten väntar på svaret.
+      library.startAuto();
     }),
   ],
 };

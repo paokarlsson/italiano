@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LettureData, UserText } from '../models/leggi.models';
 import { decodePack, encodePack } from './audio-pack';
 import { AudioStore } from './audio-store';
@@ -106,6 +106,30 @@ describe('LibraryService', () => {
     // Texten ligger bland de egna som delad, och står i lagret för läsning.
     expect(leggi.text('ai-1')).toMatchObject({ source: 'shared' });
     expect(leggi.stock().map((t) => t.id)).toEqual(['ai-1']);
+  });
+
+  it('hämtar det som är nytt av sig själv', async () => {
+    shelve('pack-0001.itpk', [['ciao', 1]]);
+    await library.sync();
+    expect(library.fresh()).toEqual([]);
+    expect(store.count()).toBe(1);
+
+    // Inget nytt: inget hämtas igen.
+    const download = vi.spyOn(drive, 'download');
+    await library.sync();
+    expect(download).not.toHaveBeenCalled();
+  });
+
+  it('väntar med att hämta när webbläsaren ber om att spara data', async () => {
+    shelve('pack-0001.itpk', [['ciao', 1]]);
+    vi.stubGlobal('navigator', { connection: { saveData: true } });
+    try {
+      await library.sync();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(library.fresh().length).toBe(1);
+    expect(store.count()).toBe(0);
   });
 
   it('hämtar bara det nya nästa gång', async () => {

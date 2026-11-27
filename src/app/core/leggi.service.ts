@@ -127,6 +127,23 @@ export class LeggiService {
       .reverse();
   });
 
+  /**
+   * Den senaste berättelsen: delarna i den ordning de kom, från den senaste del 1 och
+   * framåt. Texter från Claude och ur biblioteket är delar; inklistrade texter är det inte.
+   * En text som saknar delnummer — skriven innan delarna räknades — hör till den berättelse
+   * den kom i.
+   */
+  readonly story = computed(() => {
+    const parts = this._userTexts()
+      .filter((t) => t.source !== 'paste')
+      .reverse();
+    let start = 0;
+    parts.forEach((t, i) => {
+      if (t.part === 1) start = i;
+    });
+    return parts.slice(start);
+  });
+
   /** Så många texter som lästs sammanlagt, omläsningar inräknade. */
   readonly reads = computed(() =>
     Object.values(this._progress().texts).reduce((n, r) => n + r.times, 0),

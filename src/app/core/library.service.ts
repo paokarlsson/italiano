@@ -8,6 +8,8 @@ import { StorageService } from './storage.service';
 import { VoiceService } from './voice.service';
 
 const LIBRARY_KEY = 'it_companion_library_v1';
+/** Så länge sidan ska ha legat i bakgrunden innan biblioteket läses av igen. */
+const RESYNC_MS = 10 * 60 * 1000;
 
 interface LibraryState {
   /** Fil-id för paketen som redan är inlästa här. */
@@ -99,6 +101,34 @@ export class LibraryService {
       /* visas först när någon faktiskt försöker hämta */
     }
   }
+
+  /**
+   * Läser av mappen och hämtar det som är nytt, utan att någon behöver trycka. Hoppar över
+   * hämtningen när webbläsaren ber om att spara data — då finns knappen kvar under Ljud.
+   */
+  async sync(): Promise<void> {
+    if (this.working()) return;
+    this.lastSync = Date.now();
+    await this.check();
+    const saveData = (navigator as { connection?: { saveData?: boolean } }).connection?.saveData;
+    if (this.fresh().length && !saveData) await this.download();
+  }
+
+  /**
+   * Hämtar automatiskt: nu, och när sidan kommer tillbaka i förgrunden efter en stund —
+   * så att det som publicerats sedan sist kommer in utan omladdning.
+   */
+  startAuto(): void {
+    void this.sync();
+    if (typeof document === 'undefined') return;
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && Date.now() - this.lastSync > RESYNC_MS) {
+        void this.sync();
+      }
+    });
+  }
+
+  private lastSync = 0;
 
   /** Hämtar paketen som saknas och läser in dem: klippen i ljudlagret, texterna bland de egna. */
   async download(): Promise<void> {

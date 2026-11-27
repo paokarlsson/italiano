@@ -173,6 +173,26 @@ describe('LeggiService', () => {
     expect(leggi.isRead('ai-1')).toBe(false);
   });
 
+  it('håller den senaste berättelsen, från dess del 1, utan inklistrade texter', () => {
+    const own = (id: string, part: number | undefined, source: UserText['source'] = 'ai') =>
+      leggi.addUserText({ ...text(id, 'Il gatto.', 3), source, createdAt: 1, part, lexicon: {} });
+    expect(leggi.story()).toEqual([]);
+
+    // En gammal berättelse, en inklistrad text och en ny berättelse med en delad del.
+    own('a1', 1);
+    own('a2', 2);
+    own('p1', undefined, 'paste');
+    own('b1', 1);
+    own('b2', 2);
+    own('b3', 3, 'shared');
+    expect(leggi.story().map((t) => t.id)).toEqual(['b1', 'b2', 'b3']);
+
+    // Finns ingen del 1 kvar räknas berättelsen från den första texten.
+    leggi.removeUserText('b1');
+    leggi.removeUserText('a1');
+    expect(leggi.story().map((t) => t.id)).toEqual(['a2', 'b2', 'b3']);
+  });
+
   it('glömmer allt vid nollställning', () => {
     leggi.complete('uno', new Set(['grande']));
     leggi.reset();
