@@ -176,6 +176,24 @@ export interface OwnBook {
   plan: BookChapterPlan[];
   /** Sant för en bok som hämtats ur biblioteket — någon annan beställde den. */
   shared?: boolean;
+  /** Boken den här är en uppföljare till — det som följer med varje sida som bakgrund. */
+  sequel?: BookSequel;
+}
+
+/**
+ * Bakgrunden till en uppföljare: den tidigare boken i korthet, så som den gavs till Claude.
+ * Sparas med boken, så att den håller även om den tidigare boken tas bort.
+ */
+export interface BookSequel {
+  id: string;
+  title: string;
+  sv: string;
+  /** Personerna, på svenska. */
+  cast: string;
+  /** Vad som hände, scen för scen. */
+  scenes: string[];
+  /** Den sista sidan, på italienska — där uppföljaren tar vid. */
+  ending: string[];
 }
 
 /** En plats i följetongen: en sida att läsa eller en låt att lyssna på. */

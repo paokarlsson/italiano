@@ -340,6 +340,7 @@ export class AiService {
       topic: req.topic.trim().slice(0, BOOK_TOPIC_MAX),
       level: Math.min(LEVELS.length, Math.max(1, Math.round(req.level))),
       pages: Math.min(BOOK_MAX_PAGES, Math.max(BOOK_MIN_PAGES, Math.round(req.pages))),
+      sequel: req.sequel ?? null,
     };
     this.series.set(true);
     try {

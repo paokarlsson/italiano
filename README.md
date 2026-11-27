@@ -41,6 +41,10 @@ delar som bygger på samma fyra pelare:
   uppslag för varje ord. En sida som inte håller skrivs en gång till. Boken sparas sida
   för sida och läses som de andra följetongerna; en påbörjad egen bok visas på
   startsidan bredvid den du står i. Stannar den på vägen skrivs resten med _Skriv klart_.
+  En ny bok kan vara en uppföljare till en tidigare — en egen, en hämtad eller en av
+  böckerna i appen: Claude får personerna, scenerna och sista sidan ur den och fortsätter
+  där den slutade. Bakgrunden sparas med uppföljaren, så att den håller även om den
+  tidigare boken tas bort.
   Finns en Gemini-nyckel ritas omslaget när boken är klar. En bok som är skriven klart
   publiceras i biblioteket när du väljer det, med en knapp per bok under _Dina böcker_ —
   en i taget, med sitt omslag, och aldrig med resten under Ljud. En besökare får den bland

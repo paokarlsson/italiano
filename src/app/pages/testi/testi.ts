@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { BOOK_TOPIC_MAX, pagesLeft, plannedCount } from '../../core/ai-book';
+import { BOOK_TOPIC_MAX, pagesLeft, plannedCount, sequelOf } from '../../core/ai-book';
 import { AiResult, AiService, BookResult } from '../../core/ai.service';
 import { coverPrompt } from '../../core/cover';
 import { CoverStore } from '../../core/cover-store';
@@ -71,6 +71,23 @@ export class Testi {
   protected readonly bookLevel = computed(() => level(this.chosenLevel() ?? this.leggi.level()));
   protected readonly bookSizes = [4, 6, 8, 10] as const;
   protected readonly bookPages = signal<number>(6);
+  /** Boken den nya ska vara en uppföljare till — tom för en fristående bok. */
+  protected readonly after = signal('');
+  /** Böckerna det går att skriva en uppföljare till: alla med minst en skriven sida. */
+  protected readonly sequelOptions = computed(() =>
+    this.saga
+      .stories()
+      .filter((s) => this.saga.itemsOf(s).length)
+      .map((s) => ({
+        id: s.id,
+        title: s.title,
+        note: s.own ? (s.own.shared ? 'ur biblioteket' : 'egen') : 'i appen',
+        level: Math.max(...s.chapters.flatMap((c) => c.pages.map((p) => p.level))),
+      })),
+  );
+  protected readonly afterBook = computed(
+    () => this.sequelOptions().find((o) => o.id === this.after()) ?? null,
+  );
   /** Sant när Gemini ritar omslaget till en ny bok av sig själv. */
   protected readonly drawsCover = this.gemini.hasKey;
 
@@ -89,9 +106,22 @@ export class Testi {
         shared: !!book.own?.shared,
         published: this.library.isPublished(book.id),
         publishable: this.library.pendingBooks().includes(book),
+        sequelTo: book.own?.sequel?.title ?? null,
       };
     }),
   );
+
+  /** Den tidigare boken i korthet, när en uppföljare beställs. */
+  private sequelSource() {
+    const story = this.saga.stories().find((s) => s.id === this.after());
+    return story ? sequelOf(story) : null;
+  }
+
+  /** Väljer en bok att skriva en uppföljare till, och visar beställningen. */
+  protected sequelTo(book: StoryData): void {
+    this.after.set(book.id);
+    document.getElementById('ny-bok')?.scrollIntoView({ behavior: 'smooth' });
+  }
 
   protected setLevel(n: number): void {
     this.chosenLevel.set(n);
@@ -137,8 +167,10 @@ export class Testi {
         topic: this.bookTopic(),
         level: this.bookLevel().n,
         pages: this.bookPages(),
+        sequel: this.sequelSource(),
       });
       this.bookTopic.set('');
+      this.after.set('');
       this.bookDone(result);
     });
   }

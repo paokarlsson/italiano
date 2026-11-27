@@ -10,6 +10,7 @@ import {
   pageId,
   pagesLeft,
   RawBookPlan,
+  sequelOf,
   toPage,
   withPage,
 } from './ai-book';
@@ -128,5 +129,38 @@ describe('egen bok', () => {
     expect(prompt).toContain('Ingrid è qui.');
     expect(prompt).toContain('- för långt');
     expect(prompt).toMatch(/får inte förekomma[\s\S]*Passato prossimo/);
+  });
+
+  it('ger en uppföljare den tidigare boken som bakgrund', () => {
+    let first = book();
+    const plan = first.own!.plan;
+    first = withPage(first, toPage(text(['Marco è qui.']), first, plan[0], 1), ['marco']);
+    first = withPage(first, toPage(text(['Mamma è qui.']), first, plan[1], 1), ['mamma']);
+    const sequel = sequelOf(first);
+    expect(sequel).toEqual({
+      id: 'bok-1',
+      title: 'Ciao, bella!',
+      sv: 'En flört i en bar.',
+      cast: 'Marco, man, 42. Ingrid, kvinna, svensk ingenjör.',
+      scenes: ['Marco kommer in.', 'Mamma ringer.'],
+      ending: ['Mamma è qui.'],
+    });
+    // En bok utan egen rollista — som böckerna i appen — får namnen.
+    expect(sequelOf({ ...first, own: undefined }).cast).toBe('Namn i boken: Mamma, Marco.');
+
+    const planPrompt = bookPlanPrompt({ topic: '', level: 2, pages: 4, sequel });
+    expect(planPrompt).toMatch(/uppföljare till «Ciao, bella!»/);
+    expect(planPrompt).toContain('- Marco kommer in.');
+    expect(planPrompt).toContain('Mamma è qui.');
+    expect(planPrompt).toContain('Välj själv vad som händer sedan.');
+
+    const next = newBook('bok-2', { topic: '', level: 2, pages: 3, sequel }, cleanPlan(raw, 3), 9);
+    expect(next.own!.sequel).toEqual(sequel);
+    const pagePrompt = bookPagePrompt({ story: next, chapter: next.own!.plan[0], part: 1 });
+    expect(pagePrompt).toContain('Så slutade den: Mamma ringer.');
+    expect(pagePrompt).not.toContain('- Marco kommer in.');
+    expect(
+      newBook('bok-3', { topic: '', level: 2, pages: 3 }, cleanPlan(raw, 3), 9).own,
+    ).not.toHaveProperty('sequel');
   });
 });
