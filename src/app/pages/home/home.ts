@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { AiService } from '../../core/ai.service';
 import { DataService } from '../../core/data.service';
+import { DriveService } from '../../core/drive.service';
 import { HintService } from '../../core/hint.service';
 import { AudioStore } from '../../core/audio-store';
 import { LeggiService } from '../../core/leggi.service';
@@ -12,6 +13,7 @@ import { RIPASSO_MAX } from '../../core/ripasso';
 import { StatsService } from '../../core/stats.service';
 import { SupplyService } from '../../core/supply.service';
 import { megabytes } from '../../core/utils';
+import { VoiceService } from '../../core/voice.service';
 import { Lettura, UserText } from '../../models/leggi.models';
 
 /** Så många lästa delar som syns före den du står på, och hur många delar fönstret rymmer. */
@@ -33,6 +35,8 @@ export class Home {
   protected readonly supply = inject(SupplyService);
   protected readonly library = inject(LibraryService);
   protected readonly audio = inject(AudioStore);
+  protected readonly voice = inject(VoiceService);
+  protected readonly drive = inject(DriveService);
 
   protected readonly megabytes = megabytes;
 

@@ -221,5 +221,35 @@
     }
   </div>
 
+  @if (showGoogle()) {
+    <div class="stat-section-title">Google · publicera</div>
+    <div class="ai-card">
+      @if (drive.connected()) {
+        <p>Inloggad. Publicera det du har läst in under <a routerLink="/suono">Ljud</a>.</p>
+      } @else {
+        <p>
+          Logga in med Google för att lägga det du har läst in, och texterna du har läst, i
+          biblioteket. Inloggningen gäller i ungefär en timme.
+        </p>
+        <button class="cta" type="button" [disabled]="busy()" (click)="connectGoogle()">
+          Logga in med Google
+        </button>
+      }
+      @if (googleError()) {
+        <p class="ai-error" role="alert">{{ googleError() }}</p>
+      }
+    </div>
+  }
+
+  @if (store.count()) {
+    <div class="stat-section-title">Ljud i den här webbläsaren</div>
+    <div class="ai-card">
+      <p>{{ store.count() }} klipp · {{ megabytes(store.bytes()) }}</p>
+      <p class="ai-fine">
+        <button class="ai-link" type="button" (click)="clearAudio()">Töm ljudet</button>
+      </p>
+    </div>
+  }
+
   <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka</button>
 </div>

@@ -137,22 +137,13 @@
 
 @if (library.working() === 'download') {
   @let p = library.progress();
-  <div class="lib-card" role="status">
-    <span class="rec-label">Biblioteket</span>
-    <span class="lib-text">
-      Hämtar… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}
-    </span>
+  <div class="lib-status" role="status">
+    Hämtar ljud och texter… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}
   </div>
-} @else if (library.fresh().length) {
-  <div class="lib-card">
-    <span class="rec-label">Biblioteket</span>
-    <span class="lib-text">Ljud och fler texter finns att hämta. Ingen inloggning behövs.</span>
-    <button class="cta gold" type="button" (click)="library.download()">
-      Ladda ner · {{ megabytes(library.freshBytes()) }} →
-    </button>
-    @if (library.error()) {
-      <span class="lib-error" role="alert">{{ library.error() }}</span>
-    }
+} @else if (library.error() && library.fresh().length) {
+  <div class="lib-status lib-error" role="alert">
+    Biblioteket gick inte att hämta: {{ library.error() }}
+    <button type="button" (click)="library.download()">Försök igen</button>
   </div>
 }
 
@@ -163,14 +154,18 @@
       <span>{{ ripasso() }} {{ ripasso() === 1 ? 'fråga' : 'frågor' }} på det som skaver</span>
     </a>
   }
-  <a routerLink="/testi">
-    <b>Fler texter</b>
-    <span>{{ ai.hasKey() ? 'skriv en ny eller klistra in en egen' : 'koppla in Claude' }}</span>
-  </a>
-  <a routerLink="/suono">
-    <b>Ljud</b>
-    <span>{{ audio.count() ? audio.count() + ' klipp i webbläsaren' : 'hämta eller läs in' }}</span>
-  </a>
+  @if (ai.hasKey()) {
+    <a routerLink="/testi">
+      <b>Fler texter</b>
+      <span>skriv en ny eller klistra in en egen</span>
+    </a>
+  }
+  @if (voice.hasKey() || drive.connected()) {
+    <a routerLink="/suono">
+      <b>Ljud</b>
+      <span>läs in och publicera</span>
+    </a>
+  }
 </div>
 
 @if (!hints.dismissed()) {

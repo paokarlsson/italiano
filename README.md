@@ -21,8 +21,13 @@ delar som bygger på samma fyra pelare:
 - **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp,
   med en kvinnlig och en manlig röst efter vem som talar. Den som har en egen
   ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
-  klippen och sina lästa texter i en publik mapp på Google Drive, och en besökare hämtar
-  alltihop med ett tryck, utan att logga in någonstans.
+  klippen och sina lästa texter i en publik mapp på Google Drive, och en besökares app
+  hämtar alltihop av sig själv, utan att någon loggar in.
+
+Det som kräver en nyckel eller en inloggning syns bara när den finns. Utan Claude-nyckel
+finns ingen länk till Fler texter, utan ElevenLabs-nyckel eller Google-inloggning ingen
+länk till Ljud. Inställningar syns alltid — det är där nycklarna läggs in.
+
 - **Påfyllning** — med nyckeln inlagd ligger det alltid två olästa texter färdiga, och ett
   mazzo som är genomgånget utan att sitta får nya frågor. Ingenting behöver beställas.
 - **Perché?** — valfritt, samma nyckel. En knapp i uppslaget och under facit i gymmet och
@@ -271,12 +276,17 @@ ordlistorna (`AudioService.wanted`); en form som slutar på apostrof, som «l'»
 - **Paket.** Det som delas ut ligger i paket (`audio-pack.ts`): en fil med klipp och texter
   som beskriver sig själv. Paket läggs till och skrivs aldrig om, så den som redan hämtat
   får bara det nya. Ett paket är högst 4 MB, eftersom Drive tar 5 MB i en enkel uppladdning.
-- **Hämta.** `LibraryService` läser av den publika mappen med en API-nyckel vid uppstart.
-  Finns det något nytt visar startsidan ett kort med storleken och en knapp. Klippen
+- **Hämta.** `LibraryService.sync()` läser av den publika mappen med en API-nyckel vid
+  uppstart, och igen när sidan kommer tillbaka i förgrunden efter tio minuter, och hämtar
+  det som är nytt utan att någon trycker. Under tiden står en rad på startsidan; går det
+  fel står felet där med en knapp för att försöka igen. Ber webbläsaren om att spara data
+  hämtas inget automatiskt, och knappen finns under Ljud i stället. Klippen
   hamnar i ljudlagret, texterna bland de egna som «ur biblioteket», och de räknas in i
   lagret av olästa texter. Ett paket har en röst, så en publicering ger minst ett paket per
   röst.
-- **Publicera.** Efter inloggning med Google laddas ett nytt paket upp med klippen som
+- **Publicera.** Inloggningen med Google ligger under Inställningar och visas bara när det
+  finns något att publicera, när mappen inte är skapad, eller när man redan är inloggad.
+  Inloggad laddar Ljud upp ett nytt paket med klippen som
   lästs in sedan sist och texterna från Claude som har lästs. En text som tagits bort, eller
   inte lästs, följer inte med. Bara den som skapade mappen kan skriva i den.
 
@@ -321,17 +331,18 @@ inloggningen behöver bara fungera för den som publicerar.
 
 **I appen**, på den publicerade sidan:
 
-7. Gå till _Ljud_ och tryck **Logga in med Google**. Välj kontot du lade in som
+7. Gå till _Inställningar_ och tryck **Logga in med Google**. Välj kontot du lade in som
    testanvändare. Google varnar för att appen inte är verifierad — välj att fortsätta.
-8. Tryck **Skapa den publika mappen**. Appen skapar mappen i din Drive, gör den läsbar för
+8. Gå till _Ljud_ och tryck **Skapa den publika mappen**. Appen skapar mappen i din Drive, gör den läsbar för
    alla med länken och visar dess id. Appen måste skapa mappen själv: med scopet
    `drive.file` får den inte skriva i en mapp du har gjort för hand.
 9. Klistra in id:t som `folderId` i `cloud.config.ts` och pusha igen. Först nu hittar andra
    besökare biblioteket.
 
 Därefter: lägg in ElevenLabs-nyckeln under Inställningar och välj röster och modell. Tryck
-sedan **Läs in allt som saknas** och **Publicera** under Ljud. Inloggningen gäller i ungefär en timme; efter det
-loggar du in igen när du ska publicera.
+sedan **Läs in allt som saknas** under Ljud. Logga in med Google under Inställningar och
+tryck **Publicera** under Ljud. Inloggningen gäller i ungefär en timme och bara tills sidan
+laddas om; efter det loggar du in igen när du ska publicera.
 
 Lägg inget annat i mappen än det appen lägger dit, och inget du inte vill dela — allt i den
 är läsbart för vem som helst som har id:t.
