@@ -4,6 +4,7 @@ import letture from '../../../public/data/letture.json';
 import story from '../../../public/data/storie/alba-luca.json';
 import valigia from '../../../public/data/storie/valigia-blu.json';
 import cane from '../../../public/data/storie/cane-di-nessuno.json';
+import bella from '../../../public/data/storie/ciao-bella.json';
 import { LettureData, StoryData, Voice } from '../models/leggi.models';
 import { Pillar } from '../models/quiz.models';
 import { checkPage, plainText } from './story-check';
@@ -13,6 +14,7 @@ import { tokenize } from './tokenize';
 const data = story as StoryData;
 const short = valigia as StoryData;
 const dog = cane as StoryData;
+const bar = bella as StoryData;
 const base = letture as LettureData;
 const pillars = appData as Pillar[];
 
@@ -157,6 +159,7 @@ describe.each([
   { name: 'Alba & Luca', data },
   { name: 'La valigia blu', data: short },
   { name: 'Il cane di nessuno', data: dog },
+  { name: 'Ciao, bella!', data: bar },
 ])('$name', ({ data }) => {
   const pages = data.chapters.flatMap((c) => c.pages);
   const songs = data.chapters.flatMap((c) => c.songs);
@@ -229,6 +232,7 @@ describe.each([
 describe.each([
   { name: 'La valigia blu', story: short },
   { name: 'Il cane di nessuno', story: dog },
+  { name: 'Ciao, bella!', story: bar },
 ])('$name i grundkursen', ({ story: short }) => {
   const pages = short.chapters.flatMap((c) => c.pages);
 

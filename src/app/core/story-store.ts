@@ -8,6 +8,7 @@ const STORY_KEY = 'it_companion_story_v1';
 const STORY_URLS = [
   'data/storie/valigia-blu.json',
   'data/storie/cane-di-nessuno.json',
+  'data/storie/ciao-bella.json',
   'data/storie/alba-luca.json',
 ];
 
