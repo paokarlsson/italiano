@@ -141,7 +141,13 @@
 
       <div class="result-btns">
         @let next = nextText();
-        @if (writeNext()) {
+        @if (next && nextIsNew()) {
+          <button class="cta gold" type="button" [routerLink]="['/leggi', next.id]">
+            Nästa text: {{ next.title }} →
+          </button>
+        } @else if (supply.textComing()) {
+          <button class="cta gold" type="button" disabled>Nästa text skrivs just nu…</button>
+        } @else if (writeNext()) {
           <button class="cta gold" type="button" routerLink="/testi">Ny text →</button>
         } @else if (next) {
           <button class="cta gold" type="button" [routerLink]="['/leggi', next.id]">

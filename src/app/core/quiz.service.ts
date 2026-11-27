@@ -42,6 +42,8 @@ export class QuizService {
   readonly hasRepeats = computed(() => this._asked() > this._plannedCount());
   readonly deck = computed(() => {
     const id = this._deckId();
+    // Mazzot byts ut när det byggs på med nya frågor.
+    this.data.pillars();
     return id ? (this.data.deck(id) ?? null) : null;
   });
   readonly pillar = computed(() => {

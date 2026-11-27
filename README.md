@@ -18,6 +18,8 @@ delar som bygger på samma fyra pelare:
   texter på din nivå, som delar i en berättelse och täta på det du slår upp mest, och gör
   vilken italiensk text som helst läsbar. Varje sådan text kommer med egna frågor till
   repetitionen. Utan nyckel fungerar allt annat som vanligt.
+- **Påfyllning** — med nyckeln inlagd ligger det alltid två olästa texter färdiga, och ett
+  mazzo som är genomgånget utan att sitta får nya frågor. Ingenting behöver beställas.
 - **Perché?** — valfritt, samma nyckel. En knapp i uppslaget och under facit i gymmet och
   repetitionen: Claude förklarar varför formen ser ut som den gör, eller varför svaret var
   fel, när appens egen rad inte räcker.
@@ -57,10 +59,10 @@ samma commit inte körs två gånger.
 
 | Vy          | Route                  | Vad som händer                                                 |
 | ----------- | ---------------------- | -------------------------------------------------------------- |
-| Hem         | `/`                    | Nästa text att läsa, genvägar, och gymmet hopfällt per pelare  |
+| Hem         | `/`                    | Nästa text, lagret, mazzot att satsa på, gymmet per pelare     |
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter        |
-| Fler texter | `/testi`               | Nyckeln, ny text eller nästa del från Claude, egen text        |
+| Fler texter | `/testi`               | Nyckeln, ny text eller nästa del, egen text, påfyllningen      |
 | Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
 | Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
 | Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
@@ -74,8 +76,8 @@ tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsG
 ```
 src/app/
   core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, levels,
-                 profile, ripasso, ai + ai-text + ai-explain, hint, toast, ai-report,
-                 tag-labels, guards
+                 profile, recommend, ripasso, ai + ai-text + ai-explain + ai-deck, supply,
+                 hint, toast, ai-report, tag-labels, guards
   models/        typerna bakom app-data.json och letture.json
   pages/         home, leggi, ripasso, testi, intro, quiz (+ mc/tf/match), result, stats
   shared/        topbar, perche
@@ -84,8 +86,8 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
 
 - **`LeggiService`** håller texterna, ordlistan och vad som hänt med varje ord. Ett
   uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp,
-  eller sitter i en repetition. Nästa text är den första olästa; när allt är läst den med
-  flest öppna ord.
+  eller sitter i en repetition. Nästa text är den första olästa inbyggda, sedan den äldsta
+  olästa i lagret; när allt är läst den inbyggda med flest öppna ord.
 - **`tokenize()`** delar en mening i uppslagbara bitar. Längsta träffen i ordlistan
   vinner, så «ho mangiato» och «c'è» förklaras som en enhet.
 - **`buildRipasso()`** väljer repetitionens frågor. Ord repeteras som ord, regler på nya
@@ -99,6 +101,11 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
   vinna. Är underlaget tunt eller uppslagen jämnt spridda pekas ingenting ut.
 - **`levels.ts`** är stegen en text kan ligga på, 1–7. Första läsningen av en text flyttar
   nivån: 97 % eller mer på egen hand ger ett steg upp, under 85 % ett steg ned.
+- **`recommend()`** väljer mazzot att satsa på. Två saker talar för ett mazzo: uppslag i
+  texterna på former som hör dit, och en tagg som ligger under 60 % i gymmet. Ett mazzo som
+  redan sitter sjunker undan. Finns inget som talar för något föreslås det första som inte
+  är klarat. Ingen AI är inblandad — rådet finns också utan nyckel.
+- **`SupplyService`** är påfyllningen — se _Påfyllning_ nedan.
 - **`AiService`** är kopplingen till Claude; `ai-text.ts` är allt runt en text — prompten,
   svarsformatet och kontrollen av det som kommer tillbaka — och `ai-explain.ts` det som
   sägs när läsaren frågar varför. Se _Fler texter_ och _Perché?_ nedan.
@@ -187,6 +194,28 @@ behövs). Lägg inte in en nyckel på en dator du delar med andra.
 
 Egna texter sparas lokalt och ligger kvar vid «Nollställ allt» — de är innehåll, inte
 framsteg.
+
+### Påfyllning
+
+Med en nyckel inlagd och rutan «Fyll på av sig själv» ikryssad (förvalt) gör
+`SupplyService` två saker i bakgrunden, en i taget, medan appen är öppen:
+
+- **Två texter på lager.** Så fort färre än två texter från Claude är olästa beställs en
+  till, som nästa del i berättelsen. Läskortet och «Nästa text» går vidare till lagret när
+  de inbyggda är lästa. Är lagret tomt står det att nästa text skrivs, och knappen blir
+  levande när den är klar. En text i lagret är skriven på nivån som gällde när den
+  beställdes, så en nivåändring slår igenom först ett par texter senare.
+- **Mazzin som byggs ut.** `decksToExtend()` pekar ut ett mazzo när det har övats en och en
+  halv gång sin egen storlek, övats de senaste två veckorna och ändå ligger under 85 %.
+  Claude får mazzots frågor och läsarens träffsäkerhet per tagg och skriver åtta nya på
+  samma punkt (`ai-deck.ts`). Nästa påbyggnad räknas från den förra — tolv försök till —
+  och ett mazzo får högst 40 tillskrivna frågor. De märks «ny · Claude» i rundan, sparas
+  lokalt och går att ta bort på `/testi`.
+
+Det här drar pengar från kontot utan att någon trycker på något, så det finns spärrar: ett
+fel stoppar påfyllningen tills en text till har lästs eller läsaren ber den försöka igen,
+ett besök får högst tolv beställningar i bakgrunden, och `/testi` visar vad som förbrukats
+härifrån. Frågorna som skrivs till är inte granskade av någon människa.
 
 ### Perché?
 

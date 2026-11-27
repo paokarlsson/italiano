@@ -9,6 +9,8 @@ interface QuestionBase {
   _k: string;
   /** Nyckel som statistiken förs på: `<deckId>::<tag>`. */
   statKey: string;
+  /** Sant på frågor som Claude skrivit till när mazzot tog slut — se core/ai-deck.ts. */
+  ai?: boolean;
 }
 
 export interface McQuestion extends QuestionBase {

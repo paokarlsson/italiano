@@ -17,6 +17,11 @@ export function mdBold(s: string | null | undefined): string {
   return String(s ?? '').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 }
 
+/** Gör text utifrån ofarlig att rita som HTML. */
+export function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 export function trendStr(last5: readonly boolean[]): string {
   return last5.map((b) => (b ? '✓' : '✗')).join(' ');
 }

@@ -46,6 +46,9 @@ export class Intro {
     }));
   });
 
+  /** Antal frågor i mazzot som Claude har skrivit till. */
+  protected readonly added = computed(() => this.deck()?.pool.filter((q) => q.ai).length ?? 0);
+
   protected readonly bold = mdBold;
 
   constructor() {

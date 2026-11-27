@@ -117,6 +117,32 @@
   }
 
   @if (ai.hasKey()) {
+    <div class="ai-card ai-auto">
+      <div class="eyebrow">Påfyllning</div>
+      <label class="ai-check">
+        <input type="checkbox" [checked]="ai.auto()" (change)="toggleAuto()" />
+        <span>Fyll på av sig själv</span>
+      </label>
+      <p class="ai-fine">
+        Påslagen håller appen {{ stockTarget }} olästa texter på lager och skriver nya frågor till
+        ett mazzo du har gått igenom utan att det sitter. Det sker medan appen är öppen och dras
+        från ditt Anthropic-konto utan att du trycker på något.
+      </p>
+      @if (supply.active() && supply.error()) {
+        <p class="ai-fine">
+          Står still: {{ supply.error() }}
+          <button class="ai-link" type="button" (click)="supply.retry()">Försök igen</button>
+        </p>
+      }
+      <p class="ai-fine">
+        Förbrukat härifrån: ca ${{ ai.spent().toFixed(2) }}
+        @if (data.extraCount()) {
+          · {{ data.extraCount() }} frågor tillskrivna i gymmet
+          <button class="ai-link" type="button" (click)="removeExtras()">Ta bort dem</button>
+        }
+      </p>
+    </div>
+
     <div class="ai-settings">
       <label>
         Modell

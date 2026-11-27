@@ -13,6 +13,9 @@
       <div class="rp-why" [class.weak]="item.kind === 'weak'">{{ item.why }}</div>
       <div class="qkind">
         {{ item.question.type === 'tf' ? 'Sant eller falskt' : asMc(item).kind || 'Flerval' }}
+        @if (item.question.ai || item.source === 'text') {
+          <span class="rtag ai" title="Frågan är skriven av Claude och inte granskad">Claude</span>
+        }
       </div>
 
       @if (item.question.type === 'mc') {

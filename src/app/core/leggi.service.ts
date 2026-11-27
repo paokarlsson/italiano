@@ -116,14 +116,27 @@ export class LeggiService {
     };
   });
 
+  /** Lagret: texter från Claude som ännu inte är lästa, i den ordning de skrevs. */
+  readonly stock = computed(() => {
+    const read = this._progress().texts;
+    return this._userTexts()
+      .filter((t) => t.source === 'ai' && !read[t.id])
+      .reverse();
+  });
+
+  /** Så många texter som lästs sammanlagt, omläsningar inräknade. */
+  readonly reads = computed(() =>
+    Object.values(this._progress().texts).reduce((n, r) => n + r.times, 0),
+  );
+
   /**
-   * Nästa inbyggda text: den första olästa. När allt är läst — den med flest öppna ord,
-   * och vid lika den som lästes för längst sedan.
+   * Nästa text: den första olästa inbyggda, sedan den äldsta olästa i lagret. När allt är
+   * läst — den inbyggda med flest öppna ord, och vid lika den som lästes för längst sedan.
    */
   readonly next = computed<Lettura | null>(() => {
     const texts = this._texts();
     const read = this._progress().texts;
-    const unread = texts.find((t) => !read[t.id]);
+    const unread = texts.find((t) => !read[t.id]) ?? this.stock()[0];
     if (unread) return unread;
     const open = new Set(this.openWords());
     let best: Lettura | null = null;
