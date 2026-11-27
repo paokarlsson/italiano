@@ -101,7 +101,9 @@ export class AiService {
   readonly spent = computed(() => this.settings().spent);
   /** Vad som pågår just nu — tomt när inget anrop är igång. */
   readonly status = signal('');
-  readonly busy = computed(() => !!this.status());
+  /** Sant medan en serie texter skrivs — också i pausen mellan två av dem. */
+  private readonly series = signal(false);
+  readonly busy = computed(() => !!this.status() || this.series());
 
   /** Pelaren där uppslagen hopar sig — det nästa text görs tät på. Null när inget sticker ut. */
   readonly focus = computed(() => focusOf(this.leggi.profile()));
@@ -203,6 +205,36 @@ export class AiService {
   }
 
   /**
+   * Skriver flera texter i följd, som delar i samma berättelse: den första fortsätter på den
+   * senaste om `follow` är sant, resten på den som just skrevs. Påfyllningen väntar under
+   * tiden. Går en text fel ligger de som hann skrivas kvar, och felet följer med svaret.
+   */
+  async writeSeries(
+    topic: string,
+    follow: boolean,
+    count: number,
+  ): Promise<{ results: AiResult[]; error: AiError | null }> {
+    if (this.busy()) throw new AiError('api', 'En beställning är redan på väg.');
+    this.series.set(true);
+    const results: AiResult[] = [];
+    try {
+      for (let i = 0; i < count; i++) {
+        const label = count > 1 ? `Text ${i + 1} av ${count} · ` : '';
+        try {
+          results.push(await this.write(topic, follow || i > 0, label));
+        } catch (e) {
+          const error = e instanceof AiError ? e : new AiError('api', 'Något gick fel.');
+          if (!results.length) throw error;
+          return { results, error };
+        }
+      }
+      return { results, error: null };
+    } finally {
+      this.series.set(false);
+    }
+  }
+
+  /**
    * Bygger ut ett mazzo med nya frågor på samma punkt, flest där det går sämst för läsaren.
    * Returnerar hur många som höll för kontrollen och lades till.
    */
@@ -264,7 +296,8 @@ export class AiService {
     label = '',
   ): Promise<AiResult> {
     if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
-    if (this.busy()) throw new AiError('api', 'En beställning är redan på väg.');
+    // En serie skriver sina texter här en i taget — det är bara ett anrop som pågår som stoppar.
+    if (this.status()) throw new AiError('api', 'En beställning är redan på väg.');
     this.status.set(`${label}Skickar… det brukar ta en halv minut`);
     const writing: Progress = (snapshot) =>
       label + (snapshot.includes('"lexicon"') ? 'Slår upp orden…' : 'Skriver texten…');
@@ -388,7 +421,10 @@ export class AiService {
     const stream = client.beta.messages.stream({
       model,
       max_tokens: 32000,
-      system,
+      // Systemprompten — pelarna, nivåerna, mazzin och mallen — är densamma för varje text i
+      // en serie och för kompletteringen, så den cachas och läses sedan till en tiondel av
+      // priset. Är den för kort för modellens cache händer ingenting.
+      system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: prompt }],
       output_config: { effort, format: jsonSchemaOutputFormat(schema) },
       ...fallback(model),
@@ -410,9 +446,20 @@ export class AiService {
   }
 
   /** Räknar ut vad ett anrop kostade på listpriset och lägger det till det förbrukade. */
-  private charge(usage: { input_tokens: number; output_tokens: number }): number {
+  private charge(usage: {
+    input_tokens: number;
+    output_tokens: number;
+    cache_creation_input_tokens?: number | null;
+    cache_read_input_tokens?: number | null;
+  }): number {
     const [input, output] = AI_MODELS.find((m) => m.id === this.settings().model)!.price;
-    const cost = (usage.input_tokens * input + usage.output_tokens * output) / 1_000_000;
+    // Att skriva till cachen kostar 1,25 gånger inpriset, att läsa ur den en tiondel.
+    const cost =
+      (usage.input_tokens * input +
+        (usage.cache_creation_input_tokens ?? 0) * input * 1.25 +
+        (usage.cache_read_input_tokens ?? 0) * input * 0.1 +
+        usage.output_tokens * output) /
+      1_000_000;
     this.update({ spent: this.settings().spent + cost });
     return cost;
   }

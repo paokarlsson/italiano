@@ -96,34 +96,60 @@
         dras från ditt ElevenLabs-konto.
       </p>
     } @else {
-      @for (role of roles; track role.id) {
-        <label class="su-field">
-          {{ role.label }}
-          <select
-            [disabled]="!!audio.progress()"
-            (change)="voice.setVoice(role.id, valueOf($event))"
-          >
-            @for (v of voice.voices(); track v.id) {
-              <option [value]="v.id" [selected]="v.id === voice.voiceId(role.id)">
-                {{ v.name }}
-              </option>
-            } @empty {
-              <option [value]="voice.voiceId(role.id)" selected>
-                {{ voice.voiceId(role.id) || '—' }}
-              </option>
+      @if (missing().length) {
+        <div class="set-note">
+          Nyckeln fungerar för inläsning, men får inte läsa:
+          <ul>
+            @for (m of missing(); track m.id) {
+              <li>
+                <code>{{ m.id }}</code> — {{ m.use }}
+              </li>
             }
-          </select>
-        </label>
+          </ul>
+          Ge nyckeln de behörigheterna hos ElevenLabs och tryck
+          <button class="ai-link" type="button" [disabled]="busy()" (click)="refreshVoices()">
+            Försök igen</button
+          >, eller klistra in röst-ID:n nedan.
+        </div>
+      }
+
+      @for (role of roles; track role.id) {
+        @if (voice.voices().length) {
+          <label class="su-field">
+            {{ role.label }}
+            <select
+              [disabled]="!!audio.progress()"
+              (change)="voice.setVoice(role.id, valueOf($event))"
+            >
+              @for (v of voice.voices(); track v.id) {
+                <option [value]="v.id" [selected]="v.id === voice.voiceId(role.id)">
+                  {{ v.name }}
+                </option>
+              }
+            </select>
+          </label>
+        } @else {
+          <label class="su-field">
+            {{ role.label }} · röst-ID
+            <input
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              [placeholder]="role.id === 'f' ? 'Samantas röst-ID' : 'Danieles röst-ID'"
+              [value]="voice.voiceId(role.id)"
+              [disabled]="!!audio.progress()"
+              (change)="setVoiceId(role.id, $event)"
+            />
+          </label>
+        }
       }
       <label class="su-field">
         Modell
         <select [disabled]="!!audio.progress()" (change)="voice.setModel(valueOf($event))">
-          @for (m of voice.models(); track m.id) {
+          @for (m of voice.modelOptions(); track m.id) {
             <option [value]="m.id" [selected]="m.id === voice.modelId()">
               {{ m.name }}{{ m.rate !== null ? ' (' + perChar(m.rate) + '/tecken)' : '' }}
             </option>
-          } @empty {
-            <option [value]="voice.modelId()" selected>{{ voice.modelId() || '—' }}</option>
           }
         </select>
       </label>

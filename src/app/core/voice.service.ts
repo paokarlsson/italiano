@@ -11,6 +11,21 @@ const LANGUAGE = 'it';
 /** Rösterna som väljs om de finns på kontot och inget annat är valt. */
 const PREFERRED: Record<Voice, string> = { f: 'samanta', m: 'daniele' };
 
+/**
+ * Modellerna att välja bland när nyckeln inte får läsa modellistan. Priset per tecken är
+ * då inte känt. Multilingual v2 är förvald — den läser italienska och är ElevenLabs eget
+ * exempel.
+ */
+export const KNOWN_MODELS: readonly ModelOption[] = [
+  { id: 'eleven_multilingual_v2', name: 'Eleven Multilingual v2', rate: null },
+  { id: 'eleven_v3', name: 'Eleven v3', rate: null },
+  { id: 'eleven_flash_v2_5', name: 'Eleven Flash v2.5', rate: null },
+  { id: 'eleven_turbo_v2_5', name: 'Eleven Turbo v2.5', rate: null },
+];
+
+/** Behörigheterna appen läser med, utöver inläsningen själv. */
+export type Permission = 'voices_read' | 'models_read' | 'user_read';
+
 export interface VoiceOption {
   id: string;
   name: string;
@@ -54,7 +69,15 @@ const EMPTY: VoiceSettings = {
 };
 
 /** Ett fel med en förklaring som går att visa. */
-export class VoiceError extends Error {}
+export class VoiceError extends Error {
+  constructor(
+    message: string,
+    /** «key» om nyckeln inte godkänns, «permission» om den saknar en behörighet. */
+    readonly kind: 'key' | 'permission' | 'other' = 'other',
+  ) {
+    super(message);
+  }
+}
 
 const plain = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase('it');
 
@@ -86,6 +109,11 @@ export class VoiceService {
   readonly voices = signal<VoiceOption[]>([]);
   readonly models = signal<ModelOption[]>([]);
   readonly account = signal<Account | null>(null);
+  /** Behörigheter nyckeln saknar — det som hör till dem går inte att läsa. */
+  readonly missing = signal<Permission[]>([]);
+
+  /** Modellerna att välja bland: kontots, eller de kända när listan inte går att läsa. */
+  readonly modelOptions = computed(() => (this.models().length ? this.models() : KNOWN_MODELS));
 
   /** Krediter per tecken med den valda modellen — null om det inte är känt. */
   readonly rate = computed(
@@ -122,7 +150,11 @@ export class VoiceService {
     return voiceTag(voice, s[voice], s.modelId);
   }
 
-  /** Prövar nyckeln genom att hämta röster och modeller, och sparar den om det går. */
+  /**
+   * Prövar nyckeln genom att hämta röster och modeller, och sparar den om ElevenLabs inte
+   * underkänner den. En nyckel som bara får läsa in tal sparas också — då väljs rösterna
+   * för hand.
+   */
   async saveKey(apiKey: string): Promise<void> {
     const key = apiKey.trim();
     if (!key) throw new VoiceError('Klistra in en nyckel först.');
@@ -133,6 +165,7 @@ export class VoiceService {
   clearKey(): void {
     this.update({ apiKey: '' });
     this.account.set(null);
+    this.missing.set([]);
   }
 
   setVoice(voice: Voice, voiceId: string): void {
@@ -155,20 +188,40 @@ export class VoiceService {
    */
   async refresh(apiKey = this.settings().apiKey): Promise<void> {
     if (!apiKey) return;
+    const missing: Permission[] = [];
+    // En lista som nyckeln inte får läsa är inget fel: det som hör till den väljs för hand.
+    // En nyckel som ElevenLabs underkänner är det.
+    const tolerant = async <T>(permission: Permission, call: Promise<T>): Promise<T | null> => {
+      try {
+        return await call;
+      } catch (e) {
+        if (e instanceof VoiceError && e.kind === 'permission') {
+          missing.push(permission);
+          return null;
+        }
+        throw e;
+      }
+    };
     const [voices, models] = await Promise.all([
-      this.get<{ voices?: { voice_id: string; name?: string }[] }>('/v1/voices', apiKey),
-      this.get<
-        {
-          model_id: string;
-          name?: string;
-          can_do_text_to_speech?: boolean;
-          languages?: { language_id: string }[];
-          model_rates?: { character_cost_multiplier?: number };
-        }[]
-      >('/v1/models', apiKey),
+      tolerant(
+        'voices_read',
+        this.get<{ voices?: { voice_id: string; name?: string }[] }>('/v1/voices', apiKey),
+      ),
+      tolerant(
+        'models_read',
+        this.get<
+          {
+            model_id: string;
+            name?: string;
+            can_do_text_to_speech?: boolean;
+            languages?: { language_id: string }[];
+            model_rates?: { character_cost_multiplier?: number };
+          }[]
+        >('/v1/models', apiKey),
+      ),
     ]);
     this.voices.set(
-      (voices.voices ?? []).map((v) => ({ id: v.voice_id, name: v.name ?? v.voice_id })),
+      (voices?.voices ?? []).map((v) => ({ id: v.voice_id, name: v.name ?? v.voice_id })),
     );
     this.models.set(
       (Array.isArray(models) ? models : [])
@@ -185,16 +238,17 @@ export class VoiceService {
     // En i taget, så att den andra inte får samma röst.
     const f = s.f || this.pick('f', s.m);
     const m = s.m || this.pick('m', f);
-    this.update({ f, m, modelId: s.modelId || (this.models()[0]?.id ?? '') });
-    await this.checkAccount(apiKey);
+    this.update({ f, m, modelId: s.modelId || (this.modelOptions()[0]?.id ?? '') });
+    if (!(await this.checkAccount(apiKey))) missing.push('user_read');
+    this.missing.set(missing);
   }
 
   /**
    * Läser av kontots förbrukning. Tyst om det inte går — en nyckel kan sakna rätt att läsa
-   * kontot, och då visas bara det som räknats härifrån.
+   * kontot, och då visas bara det som räknats härifrån. Returnerar falskt om det inte gick.
    */
-  async checkAccount(apiKey = this.settings().apiKey): Promise<void> {
-    if (!apiKey) return;
+  async checkAccount(apiKey = this.settings().apiKey): Promise<boolean> {
+    if (!apiKey) return false;
     try {
       const sub = await this.get<{
         character_count?: number;
@@ -202,7 +256,7 @@ export class VoiceService {
         next_character_count_reset_unix?: number;
       }>('/v1/user/subscription', apiKey);
       if (typeof sub.character_count !== 'number' || typeof sub.character_limit !== 'number') {
-        return;
+        return false;
       }
       this.account.set({
         used: sub.character_count,
@@ -211,8 +265,10 @@ export class VoiceService {
           ? sub.next_character_count_reset_unix * 1000
           : null,
       });
+      return true;
     } catch {
       this.account.set(null);
+      return false;
     }
   }
 
@@ -272,21 +328,36 @@ export class VoiceService {
       throw new VoiceError('Kom inte fram till ElevenLabs. Kontrollera uppkopplingen.');
     }
     if (res.ok) return res;
-    if (res.status === 401) throw new VoiceError('ElevenLabs godkände inte nyckeln.');
-    if (res.status === 429) {
-      throw new VoiceError('ElevenLabs säger stopp: för många anrop eller slut på krediter.');
-    }
     // Felsvaret brukar säga vad som är fel — ta med det, det är utvecklaren som läser.
+    let status = '';
     let detail = '';
     try {
-      const json = (await res.json()) as { detail?: { message?: string } | string };
-      detail = typeof json.detail === 'string' ? json.detail : (json.detail?.message ?? '');
+      const json = (await res.json()) as {
+        detail?: { status?: string; message?: string } | string;
+      };
+      if (typeof json.detail === 'string') detail = json.detail;
+      else {
+        status = json.detail?.status ?? '';
+        detail = json.detail?.message ?? '';
+      }
     } catch {
       /* inget läsbart svar */
     }
-    throw new VoiceError(
-      `ElevenLabs svarade med ett fel (${res.status}).${detail ? ' ' + detail : ''}`,
-    );
+    const said = detail ? ` ElevenLabs säger: «${detail}»` : '';
+    if (/permission/i.test(status + ' ' + detail)) {
+      const permission = /\b([a-z_]+_(?:read|write)|text_to_speech)\b/.exec(detail)?.[1];
+      throw new VoiceError(
+        permission
+          ? `Nyckeln saknar behörigheten ${permission}.`
+          : `Nyckeln saknar en behörighet.${said}`,
+        'permission',
+      );
+    }
+    if (res.status === 401) throw new VoiceError(`ElevenLabs godkände inte nyckeln.${said}`, 'key');
+    if (res.status === 429) {
+      throw new VoiceError('ElevenLabs säger stopp: för många anrop eller slut på krediter.');
+    }
+    throw new VoiceError(`ElevenLabs svarade med ett fel (${res.status}).${said}`);
   }
 
   private update(patch: Partial<VoiceSettings>): void {

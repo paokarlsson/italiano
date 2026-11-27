@@ -178,6 +178,11 @@ behövs). Lägg inte in en nyckel på en dator du delar med andra.
   mall, och ombeds skriva på läsarens nivå med de senast uppslagna orden invävda. Sticker
   en pelare ut i uppslagen (`focusOf()`) görs texten tät på just den, och mazzin där
   uppslagen hopar sig nämns.
+- **Flera åt gången.** En beställning kan vara 1, 3 eller 5 texter (förvalt 3). De skrivs
+  en i taget som delar i samma berättelse, och den första öppnas när alla är klara; resten
+  ligger på lager. Påfyllningen väntar under tiden. Går en text fel ligger de som hann
+  skrivas kvar. Systemprompten är densamma för alla texter i en serie och cachas, så från
+  den andra texten läses den till en tiondel av priset; kostnaden räknar med det.
 - **Berättelsen.** Varje text från Claude är en del i en berättelse. Med svaret kommer en
   `recap` — två, tre meningar om vad som hänt hittills — och nästa beställning skickar med
   den och förra delen i sin helhet, så att personerna och orden återkommer. Rutan «Fortsätt

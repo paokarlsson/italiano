@@ -48,9 +48,29 @@
           </span>
         </label>
       }
+      <div class="ai-count-label">Hur många?</div>
+      <div class="seg ai-seg" role="group" aria-label="Hur många texter">
+        @for (n of counts; track n) {
+          <button
+            type="button"
+            [class.on]="count() === n"
+            [attr.aria-pressed]="count() === n"
+            [disabled]="ai.busy()"
+            (click)="count.set(n)"
+          >
+            {{ n }}<span class="u">{{ n === 1 ? 'text' : 'texter' }}</span>
+          </button>
+        }
+      </div>
       <button class="cta gold" type="button" [disabled]="ai.busy()" (click)="write()">
-        {{ last && follow() ? 'Skriv nästa del →' : 'Skriv en text åt mig →' }}
+        {{ writeLabel() }}
       </button>
+      @if (count() > 1) {
+        <p class="ai-fine">
+          Texterna blir delar i samma berättelse och skrivs en i taget. Den första öppnas när alla
+          är klara; resten ligger på lager.
+        </p>
+      }
     </div>
 
     <div class="ai-card">
