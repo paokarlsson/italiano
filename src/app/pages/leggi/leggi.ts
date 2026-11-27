@@ -12,6 +12,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { AiService } from '../../core/ai.service';
 import { wordPrompt } from '../../core/ai-explain';
+import { AudioService } from '../../core/audio.service';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
 import { PILLAR_NAMES } from '../../core/profile';
@@ -41,6 +42,7 @@ export class Leggi {
   protected readonly leggi = inject(LeggiService);
   protected readonly ai = inject(AiService);
   protected readonly supply = inject(SupplyService);
+  protected readonly audio = inject(AudioService);
 
   protected readonly text = computed(() => this.leggi.text(this.textId()) ?? null);
   protected readonly tokens = computed(() => this.leggi.tokens(this.textId()));
@@ -48,7 +50,8 @@ export class Leggi {
     const number = this.leggi.number(this.textId());
     if (number) return `Leggi · ${number} / ${this.leggi.texts().length}`;
     const own = this.leggi.userTexts().find((t) => t.id === this.textId());
-    return own?.source === 'paste' ? 'Leggi · din text' : 'Leggi · skriven åt dig';
+    if (own?.source === 'paste') return 'Leggi · din text';
+    return own?.source === 'shared' ? 'Leggi · ur biblioteket' : 'Leggi · skriven åt dig';
   });
 
   /** Ordet som visas i förklaringsrutan. */
@@ -109,10 +112,41 @@ export class Leggi {
   /** Sant när nästa text bör beställas: allt är läst och en nyckel finns. */
   protected readonly writeNext = computed(() => this.leggi.allRead() && this.ai.hasKey());
 
-  // Uppläsning — bara där webbläsaren faktiskt har en italiensk röst.
+  // Webbläsarens egen röst — reserven när en mening saknar ljud. Finns bara där
+  // webbläsaren faktiskt har en italiensk röst.
   private readonly synth = typeof speechSynthesis === 'undefined' ? null : speechSynthesis;
   protected readonly voice = signal<SpeechSynthesisVoice | null>(null);
-  protected readonly speaking = signal(false);
+  private readonly synthSpeaking = signal(false);
+
+  /** Sant om hela texten går att spela med riktigt ljud. */
+  private readonly hasAudio = computed(() => {
+    const text = this.text();
+    return !!text && text.sentences.every((s) => this.audio.can(s.it));
+  });
+  /** Sant om texten går att lyssna på, på det ena eller andra sättet. */
+  protected readonly canListen = computed(() => this.hasAudio() || !!this.voice());
+  protected readonly speaking = computed(() => {
+    const text = this.text();
+    const playing = this.audio.playing();
+    return (
+      this.synthSpeaking() ||
+      this.audio.loading() ||
+      (!!playing && !!text?.sentences.some((s) => s.it === playing))
+    );
+  });
+
+  /** Det valda ordet och meningen det står i, om de går att spela. */
+  protected readonly sound = computed(() => {
+    const token = this.selected();
+    const text = this.text();
+    if (!token?.key || !text) return null;
+    const i = this.tokens().findIndex((sentence) => sentence.includes(token));
+    const sentence = i < 0 ? null : text.sentences[i].it;
+    return {
+      word: this.audio.can(token.key) ? token.key : null,
+      sentence: sentence && this.audio.can(sentence) ? sentence : null,
+    };
+  });
 
   constructor() {
     // Ny text (även via «Nästa text») — börja om från början.
@@ -172,26 +206,36 @@ export class Leggi {
     this.summary.set(this.leggi.complete(this.textId(), this.looked()));
   }
 
-  protected toggleSpeech(): void {
+  protected async toggleSpeech(): Promise<void> {
     const text = this.text();
-    const voice = this.voice();
-    if (!this.synth || !text || !voice) return;
+    if (!text) return;
     if (this.speaking()) {
       this.stopSpeaking();
       return;
     }
+    // Riktigt ljud om hela texten har det; annars webbläsarens röst.
+    if (this.hasAudio() && (await this.audio.play(text.sentences.map((s) => s.it)))) return;
+    const voice = this.voice();
+    if (!this.synth || !voice) return;
     const utterance = new SpeechSynthesisUtterance(text.sentences.map((s) => s.it).join(' '));
     utterance.voice = voice;
     utterance.lang = voice.lang;
     utterance.rate = 0.85;
-    utterance.onend = utterance.onerror = () => this.speaking.set(false);
+    utterance.onend = utterance.onerror = () => this.synthSpeaking.set(false);
     this.synth.cancel();
     this.synth.speak(utterance);
-    this.speaking.set(true);
+    this.synthSpeaking.set(true);
+  }
+
+  /** Spelar ett ord eller en mening ur uppslaget. */
+  protected say(text: string): void {
+    this.stopSpeaking();
+    void this.audio.play([text]);
   }
 
   private stopSpeaking(): void {
+    this.audio.stop();
     this.synth?.cancel();
-    this.speaking.set(false);
+    this.synthSpeaking.set(false);
   }
 }

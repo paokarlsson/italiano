@@ -3,11 +3,14 @@ import { RouterLink } from '@angular/router';
 import { AiService } from '../../core/ai.service';
 import { DataService } from '../../core/data.service';
 import { HintService } from '../../core/hint.service';
+import { AudioStore } from '../../core/audio-store';
 import { LeggiService } from '../../core/leggi.service';
+import { LibraryService } from '../../core/library.service';
 import { recommend } from '../../core/recommend';
 import { RIPASSO_MAX } from '../../core/ripasso';
 import { StatsService } from '../../core/stats.service';
 import { SupplyService } from '../../core/supply.service';
+import { megabytes } from '../../core/utils';
 import { Lettura, UserText } from '../../models/leggi.models';
 
 @Component({
@@ -23,6 +26,10 @@ export class Home {
   protected readonly leggi = inject(LeggiService);
   protected readonly ai = inject(AiService);
   protected readonly supply = inject(SupplyService);
+  protected readonly library = inject(LibraryService);
+  protected readonly audio = inject(AudioStore);
+
+  protected readonly megabytes = megabytes;
 
   protected readonly pillars = this.data.pillars;
 
@@ -76,8 +83,9 @@ export class Home {
     if (number) {
       return `${again ? 'Läs om' : 'Leggi'} · text ${number} av ${this.leggi.texts().length}`;
     }
-    const part = (text as UserText).part;
-    return `Leggi · skriven åt dig${part && part > 1 ? ` · del ${part}` : ''}`;
+    const { part, source } = text as UserText;
+    const from = source === 'shared' ? 'ur biblioteket' : 'skriven åt dig';
+    return `Leggi · ${from}${part && part > 1 ? ` · del ${part}` : ''}`;
   }
 
   protected doneInPillar(pillarIndex: number): number {

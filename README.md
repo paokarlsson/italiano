@@ -18,6 +18,10 @@ delar som bygger på samma fyra pelare:
   texter på din nivå, som delar i en berättelse och täta på det du slår upp mest, och gör
   vilken italiensk text som helst läsbar. Varje sådan text kommer med egna frågor till
   repetitionen. Utan nyckel fungerar allt annat som vanligt.
+- **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp.
+  Den som har en egen ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
+  klippen och sina lästa texter i en publik mapp på Google Drive, och en besökare hämtar
+  alltihop med ett tryck, utan att logga in någonstans.
 - **Påfyllning** — med nyckeln inlagd ligger det alltid två olästa texter färdiga, och ett
   mazzo som är genomgånget utan att sitta får nya frågor. Ingenting behöver beställas.
 - **Perché?** — valfritt, samma nyckel. En knapp i uppslaget och under facit i gymmet och
@@ -63,6 +67,7 @@ samma commit inte körs två gånger.
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter        |
 | Fler texter | `/testi`               | Nyckeln, ny text eller nästa del, egen text, påfyllningen      |
+| Ljud        | `/suono`               | Hämta biblioteket, läs in med egen röst, publicera             |
 | Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
 | Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
 | Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
@@ -77,9 +82,11 @@ tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsG
 src/app/
   core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, levels,
                  profile, recommend, ripasso, ai + ai-text + ai-explain + ai-deck, supply,
+                 audio + audio-store + audio-pack, voice, drive, library, cloud.config,
                  hint, toast, ai-report, tag-labels, guards
   models/        typerna bakom app-data.json och letture.json
-  pages/         home, leggi, ripasso, testi, intro, quiz (+ mc/tf/match), result, stats
+  pages/         home, leggi, ripasso, testi, suono, intro, quiz (+ mc/tf/match), result,
+                 stats
   shared/        topbar, perche
 public/data/     app-data.json — gymmets frågor · letture.json — texterna och ordlistan
 ```
@@ -216,6 +223,90 @@ Det här drar pengar från kontot utan att någon trycker på något, så det fi
 fel stoppar påfyllningen tills en text till har lästs eller läsaren ber den försöka igen,
 ett besök får högst tolv beställningar i bakgrunden, och `/testi` visar vad som förbrukats
 härifrån. Frågorna som skrivs till är inte granskade av någon människa.
+
+### Ljud och bibliotek
+
+Ett klipp slås upp på rösten och på den exakta italienskan det läser upp — inte på texten
+det kom ifrån. Samma mening eller ord ger därför alltid samma klipp, och inget läses in två
+gånger. Det som läses in är varje mening i varje text och varje form i ordlistorna
+(`AudioService.wanted`); en form som slutar på apostrof, som «l'», hoppas över.
+
+- **Uppslaget går billigast först.** `AudioService.clip()` tar klippet ur webbläsaren
+  (`AudioStore`, IndexedDB) om det finns där — hämtat ur biblioteket eller inläst tidigare.
+  Först därefter, och bara med egen nyckel, läser `VoiceService` in det hos ElevenLabs.
+  Ett eget klipp går före ett hämtat.
+- **Läsvyn.** «Lyssna» spelar texten mening för mening med riktigt ljud om hela texten har
+  det, annars med webbläsarens egen italienska röst som förut. Uppslaget har knappar för
+  att höra ordet och meningen.
+- **Rösten** väljs en gång på `/suono`. Listorna över röster och modeller hämtas från
+  kontot, och bara modeller som kan italienska visas. Språket låses till italienska i
+  anropet där modellen tar emot det, så att ett ensamt «come» inte läses på engelska.
+- **Paket.** Det som delas ut ligger i paket (`audio-pack.ts`): en fil med klipp och texter
+  som beskriver sig själv. Paket läggs till och skrivs aldrig om, så den som redan hämtat
+  får bara det nya. Ett paket är högst 4 MB, eftersom Drive tar 5 MB i en enkel uppladdning.
+- **Hämta.** `LibraryService` läser av den publika mappen med en API-nyckel vid uppstart.
+  Finns det något nytt visar startsidan ett kort med storleken och en knapp. Klippen
+  hamnar i ljudlagret, texterna bland de egna som «ur biblioteket», och de räknas in i
+  lagret av olästa texter.
+- **Publicera.** Efter inloggning med Google laddas ett nytt paket upp med klippen som
+  lästs in sedan sist och texterna från Claude som har lästs. En text som tagits bort, eller
+  inte lästs, följer inte med. Bara den som skapade mappen kan skriva i den.
+
+Inget av det här är provat mot de riktiga tjänsterna — bara mot låtsasversioner av dem i en
+webbläsare. Två saker avgör om det fungerar på riktigt och är värda att pröva först: att
+ElevenLabs API går att anropa direkt från en webbsida, och att en publik mapp går att läsa
+med bara en API-nyckel.
+
+### Google
+
+Det här görs en gång. Besökare loggar aldrig in — de läser med API-nyckeln — så
+inloggningen behöver bara fungera för den som publicerar.
+
+**I Google Cloud Console** (`console.cloud.google.com`):
+
+1. Skapa ett projekt.
+2. _APIs & Services → Library_: sök «Google Drive API» och tryck _Enable_.
+3. _OAuth consent screen_ (heter _Google Auth Platform_ i nyare konsol):
+   - användartyp **External**, ett appnamn och din e-postadress;
+   - under scopes (_Data access_): lägg till `https://www.googleapis.com/auth/drive.file`;
+   - under testanvändare (_Audience_): lägg till ditt eget Google-konto.
+
+   Låt appen stå kvar i läget **Testing**. Då kan bara testanvändarna logga in, och det är
+   meningen: du är den enda som publicerar.
+
+4. _Credentials → Create credentials → OAuth client ID_, typ **Web application**. Under
+   _Authorized JavaScript origins_: `https://dittnamn.github.io` (bara adressens början,
+   utan `/italiano`) och `http://localhost:4200` för `npm start`. Inga redirect-adresser
+   behövs. Kopiera **Client ID**.
+5. _Credentials → Create credentials → API key_. Öppna nyckeln och begränsa den:
+   - _Application restrictions_: **Websites**, med `https://dittnamn.github.io/*` och
+     `http://localhost:4200/*`;
+   - _API restrictions_: **Restrict key** → bara **Google Drive API**.
+
+   Kopiera nyckeln. Den kommer att synas i sidans kod, och begränsningarna är det som gör
+   att den inte går att använda någon annanstans.
+
+**I repot:**
+
+6. Klistra in klient-ID:t som `clientId` och API-nyckeln som `apiKey` i
+   `src/app/core/cloud.config.ts`. Pusha, så publiceras sidan.
+
+**I appen**, på den publicerade sidan:
+
+7. Gå till _Ljud_ och tryck **Logga in med Google**. Välj kontot du lade in som
+   testanvändare. Google varnar för att appen inte är verifierad — välj att fortsätta.
+8. Tryck **Skapa den publika mappen**. Appen skapar mappen i din Drive, gör den läsbar för
+   alla med länken och visar dess id. Appen måste skapa mappen själv: med scopet
+   `drive.file` får den inte skriva i en mapp du har gjort för hand.
+9. Klistra in id:t som `folderId` i `cloud.config.ts` och pusha igen. Först nu hittar andra
+   besökare biblioteket.
+
+Därefter: lägg in ElevenLabs-nyckeln på samma sida, välj röst och modell, tryck **Läs in
+allt som saknas** och sedan **Publicera**. Inloggningen gäller i ungefär en timme; efter det
+loggar du in igen när du ska publicera.
+
+Lägg inget annat i mappen än det appen lägger dit, och inget du inte vill dela — allt i den
+är läsbart för vem som helst som har id:t.
 
 ### Perché?
 

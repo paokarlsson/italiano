@@ -1,0 +1,181 @@
+<app-topbar step="Suono" title="Ljud och bibliotek" />
+
+<div class="stage">
+  <div class="ai-card">
+    <div class="eyebrow">I den här webbläsaren</div>
+    @if (store.count()) {
+      <p>{{ store.count() }} klipp · {{ megabytes(store.bytes()) }}</p>
+    } @else {
+      <p>Inget ljud än. Utan ljud läser webbläsarens egen röst, om den har en italiensk.</p>
+    }
+  </div>
+
+  @if (drive.canRead()) {
+    <div class="ai-card">
+      <div class="eyebrow">Biblioteket</div>
+      @if (library.working() === 'download') {
+        @let p = library.progress();
+        <p role="status">Hämtar… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}</p>
+      } @else if (library.fresh().length) {
+        <p>
+          Det finns ljud och texter att hämta: {{ library.fresh().length }} paket,
+          {{ megabytes(library.freshBytes()) }}. De sparas i den här webbläsaren och fungerar sedan
+          utan nät.
+        </p>
+        <button class="cta gold" type="button" (click)="library.download()">
+          Ladda ner · {{ megabytes(library.freshBytes()) }} →
+        </button>
+      } @else if (library.checked()) {
+        <p>
+          @if (library.packs().length) {
+            Allt är hämtat — {{ library.packs().length }} paket.
+          } @else {
+            Biblioteket är tomt än så länge.
+          }
+        </p>
+      } @else {
+        <p>Biblioteket gick inte att läsa av just nu.</p>
+      }
+      @if (library.error()) {
+        <p class="ai-error" role="alert">{{ library.error() }}</p>
+      }
+    </div>
+  }
+
+  <div class="ai-card">
+    <div class="eyebrow">Egen röst</div>
+    @if (!voice.hasKey()) {
+      <p>
+        Med en egen API-nyckel från ElevenLabs läser appen in det som saknar ljud — en mening eller
+        ett ord i taget, och aldrig samma två gånger.
+      </p>
+      <input
+        type="password"
+        autocomplete="off"
+        placeholder="sk_…"
+        aria-label="ElevenLabs API-nyckel"
+        [value]="key()"
+        [disabled]="busy()"
+        (input)="key.set(valueOf($event))"
+      />
+      <button class="cta" type="button" [disabled]="busy()" (click)="saveKey()">
+        Spara nyckeln
+      </button>
+      <p class="ai-fine">
+        Nyckeln sparas bara i den här webbläsaren och skickas bara till ElevenLabs. Varje inläsning
+        dras från ditt ElevenLabs-konto.
+      </p>
+    } @else {
+      <label class="su-field">
+        Röst
+        <select [disabled]="!!audio.progress()" (change)="voice.setVoice(valueOf($event))">
+          @for (v of voice.voices(); track v.id) {
+            <option [value]="v.id" [selected]="v.id === voice.voiceId()">{{ v.name }}</option>
+          } @empty {
+            <option [value]="voice.voiceId()" selected>{{ voice.voiceId() || '—' }}</option>
+          }
+        </select>
+      </label>
+      <label class="su-field">
+        Modell
+        <select [disabled]="!!audio.progress()" (change)="voice.setModel(valueOf($event))">
+          @for (m of voice.models(); track m.id) {
+            <option [value]="m.id" [selected]="m.id === voice.modelId()">{{ m.name }}</option>
+          } @empty {
+            <option [value]="voice.modelId()" selected>{{ voice.modelId() || '—' }}</option>
+          }
+        </select>
+      </label>
+      <p class="ai-fine">
+        Välj en gång och håll fast vid det. Ljud med en annan röst eller modell är en annan
+        inläsning, och det som redan finns återanvänds då inte.
+      </p>
+
+      @let p = audio.progress();
+      @if (p) {
+        <p role="status">Läser in… {{ p.done }} av {{ p.total }}</p>
+        <button class="cta ghost" type="button" (click)="audio.cancel()">Avbryt</button>
+      } @else if (audio.missing().length) {
+        <p>
+          {{ audio.missing().length }} meningar och ord saknar ljud — {{ missingChars() }} tecken.
+        </p>
+        <button class="cta" type="button" [disabled]="!voice.ready()" (click)="audio.fill()">
+          Läs in allt som saknas →
+        </button>
+      } @else {
+        <p>Allt i texterna och ordlistan har ljud.</p>
+      }
+      @if (audio.error()) {
+        <p class="ai-error" role="alert">{{ audio.error() }}</p>
+      }
+      <p class="ai-fine">
+        Inläst härifrån: {{ voice.characters() }} tecken
+        <button class="ai-link" type="button" (click)="removeKey()">Ta bort nyckeln</button>
+      </p>
+    }
+  </div>
+
+  @if (drive.canConnect) {
+    <div class="ai-card">
+      <div class="eyebrow">Publicera</div>
+      @if (!drive.connected()) {
+        <p>
+          Logga in med Google för att lägga det du har läst in, och texterna du har läst, i
+          biblioteket. Inloggningen gäller i ungefär en timme.
+        </p>
+        <button class="cta" type="button" [disabled]="busy()" (click)="connect()">
+          Logga in med Google
+        </button>
+      } @else if (!drive.folderId()) {
+        <p>Det finns ingen mapp än. Appen skapar en i din Drive och gör den läsbar för alla.</p>
+        <button class="cta" type="button" [disabled]="busy()" (click)="createFolder()">
+          Skapa den publika mappen
+        </button>
+      } @else {
+        @if (drive.folderIsLocal()) {
+          <p>
+            Mappen finns, men bara den här webbläsaren känner till den. Lägg in id:t som
+            <code>folderId</code> i <code>src/app/core/cloud.config.ts</code> och publicera om
+            sidan, så hittar alla besökare den.
+          </p>
+          <p class="su-id">
+            <code>{{ drive.folderId() }}</code>
+            <button class="ai-link" type="button" (click)="copyFolderId()">Kopiera</button>
+          </p>
+        }
+        @if (!hasApiKey) {
+          <p class="ai-fine">
+            Ingen API-nyckel är inlagd i <code>cloud.config.ts</code>. Utan den kan en besökare som
+            inte är inloggad inte läsa biblioteket.
+          </p>
+        }
+        @if (library.working() === 'publish') {
+          @let p = library.progress();
+          <p role="status">Publicerar… paket {{ (p?.done ?? 0) + 1 }} av {{ p?.total ?? 1 }}</p>
+        } @else if (hasPending()) {
+          <p>
+            Nytt sedan sist: {{ library.pendingClips() }} klipp och
+            {{ library.pendingTexts().length }}
+            {{ library.pendingTexts().length === 1 ? 'text' : 'texter' }}. Texter följer med när du
+            har läst dem; en text du har tagit bort följer inte med.
+          </p>
+          <button class="cta gold" type="button" (click)="publish()">Publicera →</button>
+        } @else {
+          <p>Inget nytt att publicera.</p>
+        }
+      }
+    </div>
+  }
+
+  @if (error()) {
+    <div class="ai-error" role="alert">{{ error() }}</div>
+  }
+
+  @if (store.count()) {
+    <div class="ai-settings">
+      <button type="button" (click)="clear()">Töm ljudet i den här webbläsaren</button>
+    </div>
+  }
+
+  <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka</button>
+</div>

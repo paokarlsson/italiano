@@ -116,11 +116,14 @@ export class LeggiService {
     };
   });
 
-  /** Lagret: texter från Claude som ännu inte är lästa, i den ordning de skrevs. */
+  /**
+   * Lagret: olästa texter som Claude skrivit åt läsaren eller som hämtats ur biblioteket,
+   * i den ordning de kom.
+   */
   readonly stock = computed(() => {
     const read = this._progress().texts;
     return this._userTexts()
-      .filter((t) => t.source === 'ai' && !read[t.id])
+      .filter((t) => t.source !== 'paste' && !read[t.id])
       .reverse();
   });
 

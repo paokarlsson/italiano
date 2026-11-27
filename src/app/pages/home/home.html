@@ -73,6 +73,27 @@
   }
 }
 
+@if (library.working() === 'download') {
+  @let p = library.progress();
+  <div class="lib-card" role="status">
+    <span class="rec-label">Biblioteket</span>
+    <span class="lib-text">
+      Hämtar… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}
+    </span>
+  </div>
+} @else if (library.fresh().length) {
+  <div class="lib-card">
+    <span class="rec-label">Biblioteket</span>
+    <span class="lib-text">Ljud och fler texter finns att hämta. Ingen inloggning behövs.</span>
+    <button class="cta gold" type="button" (click)="library.download()">
+      Ladda ner · {{ megabytes(library.freshBytes()) }} →
+    </button>
+    @if (library.error()) {
+      <span class="lib-error" role="alert">{{ library.error() }}</span>
+    }
+  </div>
+}
+
 <div class="home-links">
   @if (ripasso()) {
     <a routerLink="/ripasso">
@@ -83,6 +104,10 @@
   <a routerLink="/testi">
     <b>Fler texter</b>
     <span>{{ ai.hasKey() ? 'skriv en ny eller klistra in en egen' : 'koppla in Claude' }}</span>
+  </a>
+  <a routerLink="/suono">
+    <b>Ljud</b>
+    <span>{{ audio.count() ? audio.count() + ' klipp i webbläsaren' : 'hämta eller läs in' }}</span>
   </a>
 </div>
 

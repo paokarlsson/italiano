@@ -47,9 +47,12 @@ export interface Lettura {
   questions?: TextQuestion[];
 }
 
-/** En text som inte följer med appen: skriven av Claude eller inklistrad av läsaren. */
+/**
+ * En text som inte följer med appen: skriven av Claude åt läsaren («ai»), inklistrad av
+ * läsaren («paste»), eller hämtad ur det delade biblioteket («shared»).
+ */
 export interface UserText extends Lettura {
-  source: 'ai' | 'paste';
+  source: 'ai' | 'paste' | 'shared';
   createdAt: number;
   /** Textens egen ordlista — den enda som används när texten läses. */
   lexicon: Record<string, LexEntry>;
