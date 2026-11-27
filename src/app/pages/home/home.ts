@@ -16,7 +16,7 @@ import { StoryStore } from '../../core/story-store';
 import { SupplyService } from '../../core/supply.service';
 import { megabytes } from '../../core/utils';
 import { VoiceService } from '../../core/voice.service';
-import { Lettura, UserText } from '../../models/leggi.models';
+import { Lettura, StoryData, UserText } from '../../models/leggi.models';
 
 /** Så många lästa delar som syns före den du står på, och hur många delar fönstret rymmer. */
 const STORY_BEHIND = 2;
@@ -58,7 +58,7 @@ export class Home {
       return {
         kind: 'song' as const,
         song: step.song,
-        label: `${this.saga.data()?.title} · ${chapterLabel(item.chapter)} · låten`,
+        label: `${item.story.title} · ${chapterLabel(item.chapter)} · låten`,
         total,
       };
     }
@@ -118,9 +118,10 @@ export class Home {
     const r = this.reading();
     if (r?.kind !== 'text') return null;
     // I följetongen: scenen på sidan före, så som planen beskriver den.
-    const items = this.saga.items();
-    const at = items.findIndex((i) => i.id === r.text.id);
-    if (at >= 0) {
+    const item = this.saga.item(r.text.id);
+    if (item) {
+      const items = this.saga.itemsOf(item.story);
+      const at = items.indexOf(item);
       const before = items
         .slice(0, at)
         .reverse()
@@ -133,14 +134,36 @@ export class Home {
   });
 
   /**
-   * Följetongen som kapitel: det du står i öppet, med en prick per sida och låt, och de
-   * andra hopfällda. Null när den inte finns.
+   * Följetongen du står i: den som har nästa olästa sida eller låt, annars den sista. Null
+   * när ingen finns.
+   */
+  private readonly currentSaga = computed(() => {
+    const stories = this.saga.stories();
+    return this.leggi.storyNext()?.story ?? stories.at(-1) ?? null;
+  });
+
+  /**
+   * Följetongen du står i, som kapitel: det du står i öppet, med en prick per sida och låt,
+   * och de andra hopfällda. Null när ingen finns.
    */
   protected readonly sagaView = computed(() => {
-    const data = this.saga.data();
-    if (!data) return null;
+    const data = this.currentSaga();
+    return data ? this.sagaOf(data) : null;
+  });
+
+  /** De andra följetongerna som är lästa till slut — hopfällda, för den som vill läsa om. */
+  protected readonly sagasDone = computed(() =>
+    this.saga
+      .stories()
+      .filter((s) => s !== this.currentSaga())
+      .map((s) => this.sagaOf(s))
+      .filter((s) => s.read === s.total),
+  );
+
+  private sagaOf(data: StoryData) {
     const isRead = (id: string) => this.leggi.isRead(id);
-    const next = this.leggi.storyNext();
+    const all = this.saga.itemsOf(data);
+    const next = all.find((i) => !isRead(i.id)) ?? null;
     const chapters = data.chapters.map((chapter) => {
       const items = [
         ...chapter.pages.map((p) => ({
@@ -165,17 +188,18 @@ export class Home {
         done: items.every((i) => i.read),
       };
     });
-    const current = next ? this.saga.item(next.id)!.chapter.n : (chapters.at(-1)?.n ?? 0);
+    const current = next ? next.chapter.n : (chapters.at(-1)?.n ?? 0);
     return {
+      id: data.id,
       title: data.title,
       sv: data.sv,
       chapters,
       current: chapters.find((c) => c.n === current)!,
       nextId: next?.id ?? null,
-      read: this.leggi.storyRead(),
-      total: this.saga.items().length,
+      read: all.filter((i) => isRead(i.id)).length,
+      total: all.length,
     };
-  });
+  }
 
   /** Grundkursen fälls ihop när den är läst och en berättelse har tagit över. */
   protected readonly basicsDone = computed(
@@ -206,7 +230,7 @@ export class Home {
     const item = this.saga.item(text.id);
     if (item?.kind === 'page') {
       const own = this.saga.adaptation(text.id) ? ' · omskriven åt dig' : '';
-      return `${again ? 'Läs om' : 'Leggi'} · ${this.saga.data()?.title} · ${chapterLabel(item.chapter)}${own}`;
+      return `${again ? 'Läs om' : 'Leggi'} · ${item.story.title} · ${chapterLabel(item.chapter)}${own}`;
     }
     const number = this.leggi.number(text.id);
     if (number) {

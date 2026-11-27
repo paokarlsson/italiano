@@ -70,7 +70,7 @@ export class Leggi {
   protected readonly step = computed(() => {
     const item = this.storyPage();
     if (item) {
-      const where = `${this.story.data()?.title} · ${chapterLabel(item.chapter)}`;
+      const where = `${item.story.title} · ${chapterLabel(item.chapter)}`;
       return `${where} · ${item.page.part}/${item.chapter.pages.length}`;
     }
     const number = this.leggi.number(this.textId());
@@ -127,11 +127,13 @@ export class Leggi {
 
   /**
    * Det som kommer efter en sida i följetongen: nästa sida eller låten. Null utanför
-   * följetongen och efter dess sista sida.
+   * följetongen och efter dess sista sida — och i en följetong som läses varvat med
+   * grundkursen, där nästa text följer läsordningen i stället.
    */
-  protected readonly storyAfter = computed(() =>
-    this.storyPage() ? this.story.after(this.textId()) : null,
-  );
+  protected readonly storyAfter = computed(() => {
+    const item = this.storyPage();
+    return item && !item.story.course ? this.story.after(this.textId()) : null;
+  });
   protected readonly afterSong = computed(() => {
     const after = this.storyAfter();
     return after?.kind === 'song' ? after.song : null;

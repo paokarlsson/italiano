@@ -38,7 +38,7 @@ export class Canzone {
   });
   protected readonly step = computed(() => {
     const item = this.item();
-    return item ? `${this.story.data()?.title} · ${chapterLabel(item.chapter)} · låten` : '';
+    return item ? `${item.story.title} · ${chapterLabel(item.chapter)} · låten` : '';
   });
 
   /** Det som kommer efter låten — nästa kapitels första sida, eller en låt till. */

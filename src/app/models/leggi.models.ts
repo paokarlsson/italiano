@@ -77,7 +77,7 @@ export interface LettureData {
 }
 
 /**
- * En sida i en följetong som följer med appen — Alba & Luca. En vanlig text, med sin plats
+ * En sida i en följetong som följer med appen — Alba & Luca eller La valigia blu. En vanlig text, med sin plats
  * i berättelsen och planen den skrevs efter: scenen och replikerna som inte får tappas.
  * Planen följer med så att Claude kan skriva om sidan åt läsaren utan att rubba handlingen.
  */
@@ -124,6 +124,16 @@ export interface StoryData {
   title: string;
   /** En rad om berättelsen. */
   sv: string;
+  /**
+   * Sant om berättelsen läses varvat med grundkursen: varje sida efter grundkursens texter
+   * på samma nivå. Annars kommer den efter grundkursen.
+   */
+  course?: boolean;
+  /**
+   * Kanon — världen och handlingen — som Claude får när en sida skrivs om åt läsaren.
+   * Utan kanon skrivs sidorna inte om.
+   */
+  canon?: string[];
   names: string[];
   /** Berättelsens ordlista — läggs över appens. */
   lexicon: Record<string, LexEntry>;
@@ -132,8 +142,8 @@ export interface StoryData {
 
 /** En plats i följetongen: en sida att läsa eller en låt att lyssna på. */
 export type StoryItem =
-  | { kind: 'page'; id: string; chapter: StoryChapter; page: StoryPage }
-  | { kind: 'song'; id: string; chapter: StoryChapter; song: StorySong };
+  | { kind: 'page'; id: string; story: StoryData; chapter: StoryChapter; page: StoryPage }
+  | { kind: 'song'; id: string; story: StoryData; chapter: StoryChapter; song: StorySong };
 
 /** En bit av en mening: ett ord eller en fast enhet («c'è», «sono andata»). */
 export interface Token {

@@ -17,6 +17,10 @@ delar som bygger på samma fyra pelare:
   språket på din nivå och med dina öppna ord invävda. Med en ElevenLabs-nyckel läses den
   upp. Planen, kanon och låttexterna ligger i `docs/alba-luca/` och
   `public/data/storie/alba-luca/`.
+- **La valigia blu** — en kort berättelse på de två första nivåerna: Sofia kommer till
+  Bologna och tar fel blå resväska. Sju sidor som läses varvat med grundkursen, var och en
+  efter grundkursens texter på samma nivå, så att den som börjar har en berättelse att
+  följa redan från början. Den läses alltid som den står och skrivs inte om.
 - **Ripasso** — det som skaver. En kort repetition som appen själv plockar ihop ur det du
   slagit upp och det som går trögt i gymmet.
 - **Palestra** — gymmet. 66 mazzi och drygt tusen frågor för den som vill nöta en enskild
@@ -112,8 +116,14 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
   uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp,
   eller sitter i en repetition. Nästa text är den första olästa inbyggda, sedan den äldsta
   olästa i lagret; när allt är läst den inbyggda med flest öppna ord.
+- **Läsordningen** (`readingPath()` i `story.ts`) är grundkursen med _La valigia blu_
+  insprängd, sedan _Alba & Luca_. En följetong med `"course": true` läses varvat med
+  grundkursen: varje sida kommer efter grundkursens texter på sidans nivå. Följetongerna
+  ligger i `public/data/storie/` och räknas upp i `StoryStore`. Bara en följetong med
+  `canon` skrivs om åt läsaren.
 - **Startsidan** har två skeden. Först grundkursen: de 13 inbyggda texterna som en rad,
-  med en knapp per text. När den är läst och en berättelse finns fälls den ihop till en
+  med en knapp per text, och under den följetongen du står i. En följetong som är läst
+  till slut fälls ihop. När den är läst och en berättelse finns fälls den ihop till en
   rad, och berättelsen (`LeggiService.story`, delarna från den senaste del 1) tar platsen
   som ett fönster: de två senast lästa delarna, den du står på och det som ligger på lager.
   Läskortet har «Förra gången» — sammanfattningen Claude skrev av förra delen, bakom ett

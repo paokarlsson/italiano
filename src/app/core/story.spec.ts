@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import appData from '../../../public/data/app-data.json';
 import letture from '../../../public/data/letture.json';
 import story from '../../../public/data/storie/alba-luca.json';
+import valigia from '../../../public/data/storie/valigia-blu.json';
 import { LettureData, StoryData, Voice } from '../models/leggi.models';
 import { Pillar } from '../models/quiz.models';
 import { checkPage, plainText } from './story-check';
@@ -9,6 +10,7 @@ import { storyLexicon } from './story';
 import { tokenize } from './tokenize';
 
 const data = story as StoryData;
+const short = valigia as StoryData;
 const base = letture as LettureData;
 const pillars = appData as Pillar[];
 
@@ -110,8 +112,6 @@ const PLAN: Record<string, { voice: Voice; level: number; locked?: string[] }> =
 
 const pages = data.chapters.flatMap((c) => c.pages);
 const songs = data.chapters.flatMap((c) => c.songs);
-const names = new Set([...base.names, ...data.names]);
-const lexiconOf = (page: (typeof pages)[number]) => storyLexicon(base.lexicon, data, page);
 
 describe('Alba & Luca', () => {
   it('följer sidplanen: id, berättare, nivå och låsta repliker', () => {
@@ -143,16 +143,26 @@ describe('Alba & Luca', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('håller längd, nivå, låsta repliker och frågans form på varje sida', () => {
-    const problems = pages.flatMap((page) => checkPage(page).map((p) => `${page.id}: ${p}`));
-    expect(problems).toEqual([]);
-  });
-
   it('låter ingen säga «ti amo» — utom Lucas tanke på sista sidan', () => {
     for (const page of pages) {
       const text = plainText(page.sentences.map((s) => s.it).join(' '));
       if (page.id !== 'alba-luca-14-2') expect(text, page.id).not.toContain(' ti amo ');
     }
+  });
+});
+
+describe.each([
+  { name: 'Alba & Luca', data },
+  { name: 'La valigia blu', data: short },
+])('$name', ({ data }) => {
+  const pages = data.chapters.flatMap((c) => c.pages);
+  const songs = data.chapters.flatMap((c) => c.songs);
+  const names = new Set([...base.names, ...data.names]);
+  const lexiconOf = (page: (typeof pages)[number]) => storyLexicon(base.lexicon, data, page);
+
+  it('håller längd, nivå, låsta repliker och frågans form på varje sida', () => {
+    const problems = pages.flatMap((page) => checkPage(page).map((p) => `${page.id}: ${p}`));
+    expect(problems).toEqual([]);
   });
 
   it('har ett uppslag för varje ord som inte är ett egennamn', () => {
@@ -210,5 +220,33 @@ describe('Alba & Luca', () => {
       }
       if (song.spotify) expect(song.spotify).toMatch(/^https:\/\/open\.spotify\.com\/track\//);
     }
+  });
+});
+
+describe('La valigia blu', () => {
+  const pages = short.chapters.flatMap((c) => c.pages);
+
+  it('läses varvat med grundkursen och ligger på de två första nivåerna', () => {
+    expect(short.course).toBe(true);
+    expect(short.canon ?? []).toEqual([]);
+    for (const page of pages) expect([1, 2], page.id).toContain(page.level);
+    const levels = pages.map((p) => p.level);
+    expect(levels, 'nivån stiger aldrig tillbaka').toEqual([...levels].sort());
+    expect(levels).toContain(1);
+  });
+
+  it('har sidorna i ordning, utan luckor', () => {
+    short.chapters.forEach((chapter, i) => {
+      expect(chapter.n).toBe(i + 1);
+      chapter.pages.forEach((page, j) => {
+        expect(page.id).toBe(`valigia-blu-${String(chapter.n).padStart(2, '0')}-${j + 1}`);
+        expect(page.chapter).toBe(chapter.n);
+        expect(page.part).toBe(j + 1);
+      });
+    });
+  });
+
+  it('varierar vilket svar som är rätt', () => {
+    expect(new Set(pages.map((p) => p.question.answer)).size).toBe(3);
   });
 });

@@ -53,17 +53,25 @@ export class SupplyService {
   );
 
   /**
-   * Sidan i följetongen som är värd att skriva om: nästa olästa, när läsaren är på väg dit —
+   * Sidan i en följetong som är värd att skriva om: nästa olästa, när läsaren är på väg dit —
    * grundkursen är läst eller följetongen påbörjad. Den skrivs om först när sidan före är
-   * läst, så att den följer hur det gick där. En sida som läses just nu får vara.
+   * läst, så att den följer hur det gick där. En sida som läses just nu får vara. Bara en
+   * följetong med kanon skrivs om; en som läses varvat med grundkursen läses som den står.
    */
   readonly storyPage = computed<string | null>(() => {
-    const next = this.leggi.storyNext();
-    const page = next?.kind === 'page' ? next : (this.story.after(next?.id ?? '') ?? null);
-    if (page?.kind !== 'page') return null;
-    if (!this.leggi.allRead() && !this.leggi.storyRead()) return null;
-    if (this.story.adaptation(page.id) || this.story.failed().has(page.id)) return null;
-    return this.story.reading() === page.id ? null : page.id;
+    const read = this.leggi.progress().texts;
+    for (const story of this.story.stories()) {
+      if (!story.canon?.length || story.course) continue;
+      const items = this.story.itemsOf(story);
+      const next = items.find((item) => !read[item.id]);
+      if (!next) continue;
+      const page = next.kind === 'page' ? next : this.story.after(next.id);
+      if (page?.kind !== 'page') continue;
+      if (!this.leggi.allRead() && !items.some((item) => read[item.id])) return null;
+      if (this.story.adaptation(page.id) || this.story.failed().has(page.id)) return null;
+      return this.story.reading() === page.id ? null : page.id;
+    }
+    return null;
   });
 
   /** Nästa sak att göra: följetongen först, sedan texterna, sedan mazzot som övats senast. */

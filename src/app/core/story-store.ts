@@ -4,8 +4,8 @@ import { StorageService } from './storage.service';
 import { storyItems } from './story';
 
 const STORY_KEY = 'it_companion_story_v1';
-const STORY_URL = 'data/storie/alba-luca.json';
-const CANON_URLS = ['data/storie/alba-luca/varld.md', 'data/storie/alba-luca/handling.md'];
+/** Följetongerna som följer med appen, i läsordning. */
+const STORY_URLS = ['data/storie/valigia-blu.json', 'data/storie/alba-luca.json'];
 
 interface StoredStory {
   /** Sidor som Claude skrivit om åt läsaren, per sid-id. */
@@ -15,34 +15,34 @@ interface StoredStory {
 }
 
 /**
- * Följetongen som följer med appen: sidorna och låtarna som de står, och de sidor som
+ * Följetongerna som följer med appen: sidorna och låtarna som de står, och de sidor som
  * Claude har skrivit om åt läsaren. Utan nyckel finns bara de förra, och det räcker.
  */
 @Injectable({ providedIn: 'root' })
 export class StoryStore {
   private readonly storage = inject(StorageService);
 
-  private readonly _data = signal<StoryData | null>(null);
+  private readonly _stories = signal<readonly StoryData[]>([]);
   private readonly _adapted = signal<Record<string, UserText>>({});
   private readonly _failed = signal<ReadonlySet<string>>(new Set());
-  private canon: Promise<string> | null = null;
+  private readonly canon = new Map<string, Promise<string>>();
 
-  readonly data = this._data.asReadonly();
+  /** Följetongerna, i läsordning. */
+  readonly stories = this._stories.asReadonly();
   readonly adapted = this._adapted.asReadonly();
   readonly failed = this._failed.asReadonly();
   /** Sidan som är öppen just nu — den skrivs inte om under läsningen. */
   readonly reading = signal<string | null>(null);
-  /** Allt i läsordning: kapitlets sidor, sedan dess låtar. */
-  readonly items = computed(() => storyItems(this._data()));
+  /** Allt i alla följetonger: per följetong kapitlets sidor, sedan dess låtar. */
+  readonly items = computed(() => this._stories().flatMap(storyItems));
   private readonly index = computed(() => new Map(this.items().map((item) => [item.id, item])));
 
   async load(): Promise<void> {
-    const [res, raw] = await Promise.all([
-      fetch(STORY_URL).catch(() => null),
+    const [stories, raw] = await Promise.all([
+      Promise.all(STORY_URLS.map((url) => this.fetchStory(url))),
       this.storage.get(STORY_KEY),
     ]);
-    // Berättelsen är ett tillägg — saknas den läser appen vidare utan.
-    if (res?.ok) this.hydrate((await res.json()) as StoryData);
+    this.hydrate(stories.filter((s): s is StoryData => !!s));
     try {
       const stored = JSON.parse(raw ?? '{}') as StoredStory;
       this._adapted.set(stored.adapted ?? {});
@@ -52,9 +52,14 @@ export class StoryStore {
     }
   }
 
-  /** Lägger in berättelsen. Anropas av load() — och direkt av tester. */
-  hydrate(data: StoryData | null): void {
-    this._data.set(data);
+  /** Lägger in följetongerna. Anropas av load() — och direkt av tester. */
+  hydrate(stories: readonly StoryData[]): void {
+    this._stories.set(stories);
+  }
+
+  /** En följetongs sidor och låtar i läsordning. */
+  itemsOf(story: StoryData): StoryItem[] {
+    return this.items().filter((item) => item.story === story);
   }
 
   item(id: string): StoryItem | undefined {
@@ -71,11 +76,12 @@ export class StoryStore {
     return item?.kind === 'song' ? item.song : undefined;
   }
 
-  /** Det som kommer efter en plats i följetongen, eller null efter den sista. */
+  /** Det som kommer efter en plats i följetongen, eller null efter dess sista. */
   after(id: string): StoryItem | null {
-    const items = this.items();
-    const i = items.findIndex((item) => item.id === id);
-    return i >= 0 ? (items[i + 1] ?? null) : null;
+    const item = this.item(id);
+    if (!item) return null;
+    const items = this.itemsOf(item.story);
+    return items[items.indexOf(item) + 1] ?? null;
   }
 
   /** Den omskrivna sidan, om det finns en. */
@@ -94,21 +100,35 @@ export class StoryStore {
     this.save();
   }
 
-  /** Kanon — världen och handlingen — som en text att ge Claude. Hämtas en gång. */
-  loadCanon(): Promise<string> {
-    this.canon ??= Promise.all(
-      CANON_URLS.map(async (url) => {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Kunde inte läsa ${url} (${res.status})`);
-        return res.text();
-      }),
-    )
-      .then((parts) => parts.join('\n\n'))
-      .catch((e) => {
-        this.canon = null;
-        throw e;
-      });
-    return this.canon;
+  /** En följetongs kanon — världen och handlingen — som en text att ge Claude. Hämtas en gång. */
+  loadCanon(story: StoryData): Promise<string> {
+    let canon = this.canon.get(story.id);
+    if (!canon) {
+      canon = Promise.all(
+        (story.canon ?? []).map(async (url) => {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`Kunde inte läsa ${url} (${res.status})`);
+          return res.text();
+        }),
+      )
+        .then((parts) => parts.join('\n\n'))
+        .catch((e) => {
+          this.canon.delete(story.id);
+          throw e;
+        });
+      this.canon.set(story.id, canon);
+    }
+    return canon;
+  }
+
+  /** En följetong är ett tillägg — saknas den läser appen vidare utan. */
+  private async fetchStory(url: string): Promise<StoryData | null> {
+    try {
+      const res = await fetch(url);
+      return res.ok ? ((await res.json()) as StoryData) : null;
+    } catch {
+      return null;
+    }
   }
 
   private save(): void {
