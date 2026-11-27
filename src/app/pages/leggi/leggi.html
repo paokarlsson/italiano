@@ -144,6 +144,15 @@
     }
 
     @if (s) {
+      @if (bookDone(); as done) {
+        <a class="fine-banner" [routerLink]="['/fine', done.id]">
+          <span class="fine-banner-word" lang="it">Fine.</span>
+          <span>
+            Du har läst hela <i lang="it">{{ done.title }}</i
+            >. Baksidan, ditt omdöme och vad du kan göra nu →
+          </span>
+        </a>
+      }
       <div class="lt-done">
         <div class="lt-own">{{ s.own }}<span>%</span></div>
         <div class="lt-own-label">på egen hand · {{ s.words }} ord, {{ s.looked }} uppslag</div>
@@ -172,7 +181,11 @@
         @let next = nextText();
         @let song = afterSong();
         @let page = afterPage();
-        @if (song) {
+        @if (bookDone(); as done) {
+          <button class="cta gold" type="button" [routerLink]="['/fine', done.id]">
+            Fine — boken är slut →
+          </button>
+        } @else if (song) {
           <button class="cta gold" type="button" [routerLink]="['/canzone', song.id]">
             Låten: {{ song.title }} →
           </button>

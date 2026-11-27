@@ -1,5 +1,6 @@
 import {
   BookChapterPlan,
+  BookReview,
   BookSequel,
   BookPagePlan,
   OwnBook,
@@ -86,7 +87,7 @@ const SEQUEL_SCENES = 40;
  * En tidigare bok i korthet, som bakgrund till en uppföljare: personerna, scenerna i
  * ordning och den sista sidan. Fungerar för böckerna som följer med appen och för egna.
  */
-export function sequelOf(story: StoryData): BookSequel {
+export function sequelOf(story: StoryData, review?: BookReview | null): BookSequel {
   const pages = story.chapters.flatMap((c) => c.pages);
   const last = pages.at(-1);
   const names = story.names.map((n) => n.charAt(0).toLocaleUpperCase('it') + n.slice(1));
@@ -100,7 +101,14 @@ export function sequelOf(story: StoryData): BookSequel {
       .filter((s): s is string => !!s)
       .slice(-SEQUEL_SCENES),
     ending: last ? last.sentences.map((s) => s.it) : [],
+    ...(review ? { review: reviewLine(review) } : {}),
   };
+}
+
+/** Omdömet som en rad: «4 av 5 — mer Gino!». */
+export function reviewLine(review: BookReview): string {
+  const note = review.note.trim();
+  return `${review.stars} av 5${note ? ` — ${note}` : ''}`;
 }
 
 /** Den tidigare boken som ett stycke att ge Claude. */
@@ -115,6 +123,12 @@ function sequelBlock(s: BookSequel, full: boolean): string[] {
       : [`Så slutade den: ${s.scenes.at(-1) ?? ''}`]),
     ...(s.ending.length ? ['Den sista sidan:', ...s.ending] : []),
     '</tidigare-bok>',
+    ...(full && s.review
+      ? [
+          `Läsarens omdöme om den: ${s.review}`,
+          'Ta fasta på det som läsaren gillade, och på det läsaren saknade.',
+        ]
+      : []),
   ];
 }
 

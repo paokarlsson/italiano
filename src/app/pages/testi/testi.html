@@ -72,7 +72,7 @@
         aria-label="Uppföljare till"
         [value]="after()"
         [disabled]="ai.busy()"
-        (change)="after.set(valueOf($event))"
+        (change)="chooseSequel(valueOf($event))"
       >
         <option value="">Ingen — en ny, fristående bok</option>
         @for (o of sequelOptions(); track o.id) {
@@ -82,8 +82,8 @@
       @if (afterBook(); as a) {
         <p class="ai-fine">
           Claude får personerna, scenerna och sista sidan ur <i lang="it">{{ a.title }}</i> och
-          fortsätter där den slutade. Den låg på nivå {{ a.level }}. Skriv vad som ska hända nu,
-          eller lämna rutan tom.
+          fortsätter där den slutade. Nivån är förvald efter den — nivå {{ a.level }}. Skriv vad som
+          ska hända nu, eller lämna rutan tom.
         </p>
       }
       <textarea
@@ -118,6 +118,10 @@
       <p class="ai-fine">
         Nivå {{ bookLevel().n }} · {{ bookLevel().label }} — {{ bookLevel().scope }} Högst
         {{ bookLevel().maxWords }} ord per mening.
+        @if (afterBook()?.level === bookLevel().n) {
+          Samma som i <i lang="it">{{ afterBook()!.title }}</i
+          >.
+        }
         @if (bookLevel().n === level().n) {
           Det är din nivå just nu.
         }
@@ -192,6 +196,12 @@
               nivå {{ b.level }} · {{ b.read }} av {{ b.written }} lästa
               @if (b.left) {
                 · {{ b.written }} av {{ b.planned }} sidor skrivna
+              }
+              @if (b.stars) {
+                ·
+                <span class="ai-stars" [attr.aria-label]="b.stars + ' av 5'">{{
+                  '★★★★★'.slice(0, b.stars)
+                }}</span>
               }
               @if (b.sequelTo) {
                 · uppföljare till <i lang="it">{{ b.sequelTo }}</i>

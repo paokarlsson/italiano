@@ -52,6 +52,14 @@ export class Canzone {
     return after?.kind === 'song' ? after.song : null;
   });
 
+  /** Boken, när låten var det sista som återstod i den. */
+  protected readonly bookDone = computed(() => {
+    const item = this.item();
+    if (!item) return null;
+    const all = this.story.itemsOf(item.story);
+    return all.every((i) => this.leggi.isRead(i.id)) ? item.story : null;
+  });
+
   constructor() {
     // En låt räknas som hörd när den har öppnats — den har inget att svara på.
     effect(() => {

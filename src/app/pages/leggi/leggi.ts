@@ -143,6 +143,17 @@ export class Leggi {
     return after?.kind === 'page' ? after.page : null;
   });
 
+  /**
+   * Boken sidan hör till, när allt i den är läst — så att slutet syns. Räknas först när
+   * sidan själv är läst, alltså efter frågan.
+   */
+  protected readonly bookDone = computed(() => {
+    const item = this.storyPage();
+    if (!item || !this.summary()) return null;
+    const all = this.story.itemsOf(item.story);
+    return all.every((i) => this.leggi.isRead(i.id)) ? item.story : null;
+  });
+
   /** Vart det går härnäst — aldrig tillbaka till samma text. */
   protected readonly nextText = computed(() => {
     const next = this.leggi.next();
