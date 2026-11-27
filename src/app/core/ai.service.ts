@@ -9,6 +9,7 @@ import {
   RawDeckQuestions,
 } from './ai-deck';
 import { EXPLAIN_SYSTEM } from './ai-explain';
+import { adaptProblems, adaptPrompt, storySystem } from './ai-story';
 import {
   AiError,
   assembleText,
@@ -31,6 +32,7 @@ import { focusOf } from './profile';
 import { deckStats } from './recommend';
 import { StatsService } from './stats.service';
 import { StorageService } from './storage.service';
+import { StoryStore } from './story-store';
 
 const AI_KEY = 'it_companion_ai_v1';
 
@@ -92,6 +94,7 @@ export class AiService {
   private readonly data = inject(DataService);
   private readonly leggi = inject(LeggiService);
   private readonly stats = inject(StatsService);
+  private readonly story = inject(StoryStore);
 
   private readonly settings = signal<AiSettings>(EMPTY);
 
@@ -169,17 +172,9 @@ export class AiService {
    */
   async write(topic: string, follow = true, label = ''): Promise<AiResult> {
     const level = this.leggi.level();
-    const weave = this.leggi
-      .openWordDetails()
-      .slice(0, WEAVE_MAX)
-      .map((w) => ({ form: w.key, sv: w.entry.sv }));
+    const weave = this.weave();
     const avoid = [...this.leggi.texts(), ...this.leggi.userTexts()].map((t) => t.title);
-
-    const focus = this.focus();
-    const deckLabel = (id: string) => {
-      const deck = this.data.deck(id);
-      return deck ? `${id} ${deck.title}${deck.hint ? ` (${deck.hint})` : ''}` : id;
-    };
+    const focus = this.focusRequest();
     const last = follow ? this.lastPart() : null;
     const part = last ? (last.part ?? 1) + 1 : 1;
 
@@ -189,7 +184,7 @@ export class AiService {
         weave,
         topic,
         avoid,
-        focus: focus && { p: focus.p, decks: focus.deckIds.map(deckLabel) },
+        focus,
         story: last && {
           part,
           recap: last.recap ?? '',
@@ -202,6 +197,67 @@ export class AiService {
       weave.map((w) => w.form),
       label,
     );
+  }
+
+  /**
+   * Skriver om en sida i följetongen åt läsaren: på läsarens nivå, med de öppna orden
+   * invävda och tät på pelaren där uppslagen hopar sig — men med samma scen, berättare,
+   * låsta repliker och grammatik som sidan har i planen. Håller omskrivningen inte efter ett
+   * andra försök läses sidan som den står, och ingen ny beställs för den.
+   */
+  async adapt(pageId: string, label = ''): Promise<{ text: UserText | null; cost: number }> {
+    const item = this.story.item(pageId);
+    if (item?.kind !== 'page') throw new AiError('bad-shape', 'Sidan finns inte i berättelsen.');
+    const { page, chapter } = item;
+    const canon = await this.story.loadCanon().catch(() => {
+      throw new AiError('network', 'Berättelsens kanon gick inte att hämta.');
+    });
+    const reader = this.leggi.level();
+    const weave = this.weave();
+    const items = this.story.items();
+    const before = items
+      .slice(
+        0,
+        items.findIndex((i) => i.id === pageId),
+      )
+      .reverse()
+      .find((i) => i.kind === 'page');
+    const prev = before && this.leggi.text(before.id);
+    const request = {
+      page,
+      chapter,
+      reader,
+      weave,
+      focus: this.focusRequest(),
+      previous: prev && { title: prev.title, sentences: prev.sentences.map((s) => s.it) },
+    };
+    const system = storySystem(this.system(null, [], true), canon);
+    const meta = { source: 'ai' as const, level: reader, part: page.part };
+    const forms = weave.map((w) => w.form);
+
+    let cost = 0;
+    let problems: string[] = [];
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const result = await this.compose(
+        adaptPrompt({ ...request, problems }),
+        'medium',
+        meta,
+        forms,
+        `${label}${attempt ? 'Försöker igen · ' : ''}`,
+        system,
+      );
+      cost += result.cost;
+      const text: UserText = { ...result.text, id: pageId, narrator: page.narrator };
+      delete text.recap;
+      problems = adaptProblems(text, page, reader);
+      if (!problems.length && !result.missing.length) {
+        this.story.setAdapted(pageId, text);
+        return { text, cost };
+      }
+      if (result.missing.length) problems.push(`ord utan uppslag: ${result.missing.join(', ')}`);
+    }
+    this.story.markFailed(pageId);
+    return { text: null, cost };
   }
 
   /**
@@ -288,12 +344,27 @@ export class AiService {
     });
   }
 
+  /** Skriver en text och lägger den bland läsarens egna. */
   private async produce(
     prompt: string,
     effort: Effort,
     meta: { source: 'ai' | 'paste'; level: number | null; original?: string; part?: number },
     weave: string[] = [],
     label = '',
+  ): Promise<AiResult> {
+    const result = await this.compose(prompt, effort, meta, weave, label);
+    this.leggi.addUserText(result.text);
+    return result;
+  }
+
+  /** Skriver en text, med en komplettering om ord saknar uppslag — utan att spara den. */
+  private async compose(
+    prompt: string,
+    effort: Effort,
+    meta: { source: 'ai' | 'paste'; level: number | null; original?: string; part?: number },
+    weave: string[] = [],
+    label = '',
+    systemText?: string,
   ): Promise<AiResult> {
     if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
     // En serie skriver sina texter här en i taget — det är bara ett anrop som pågår som stoppar.
@@ -302,7 +373,7 @@ export class AiService {
     const writing: Progress = (snapshot) =>
       label + (snapshot.includes('"lexicon"') ? 'Slår upp orden…' : 'Skriver texten…');
     try {
-      const system = this.system(meta.level, weave);
+      const system = systemText ?? this.system(meta.level, weave);
       const opts = {
         deckIds: new Set(this.data.pillars().flatMap((p) => p.decks.map((d) => d.deckId))),
       };
@@ -335,7 +406,6 @@ export class AiService {
         cost += second.cost;
       }
 
-      this.leggi.addUserText(text);
       return { text, cost, missing, faithful };
     } catch (error) {
       throw await describe(error);
@@ -469,8 +539,16 @@ export class AiService {
    * som möjligt utan att gå över, och helst utan orden som ska vävas in — annars skriver
    * Claude gärna om mallen i stället för att hitta på något nytt.
    */
-  private system(level: number | null, weave: readonly string[]): string {
+  private system(level: number | null, weave: readonly string[], fixed = false): string {
     const all = this.leggi.texts();
+    // Följetongen har en fast mall, så att systemprompten med kanon cachas mellan sidorna.
+    if (fixed) {
+      const text = all.at(-1)!;
+      return systemPrompt(
+        this.data.pillars(),
+        exampleFrom(text, this.leggi.tokens(text.id), this.leggi.knownNames()),
+      );
+    }
     const within = all.filter((t) => level === null || (t.level ?? 1) <= level);
     const pool = within.length ? within : all;
     const forms = new Set(weave);
@@ -486,6 +564,24 @@ export class AiService {
       this.data.pillars(),
       exampleFrom(text, this.leggi.tokens(text.id), this.leggi.knownNames()),
     );
+  }
+
+  /** De öppna orden att väva in, mest uppslagna först. */
+  private weave(): { form: string; sv: string }[] {
+    return this.leggi
+      .openWordDetails()
+      .slice(0, WEAVE_MAX)
+      .map((w) => ({ form: w.key, sv: w.entry.sv }));
+  }
+
+  /** Pelaren där uppslagen hopar sig, med mazzin utskrivna — som en beställning vill ha den. */
+  private focusRequest() {
+    const focus = this.focus();
+    const deckLabel = (id: string) => {
+      const deck = this.data.deck(id);
+      return deck ? `${id} ${deck.title}${deck.hint ? ` (${deck.hint})` : ''}` : id;
+    };
+    return focus && { p: focus.p, decks: focus.deckIds.map(deckLabel) };
   }
 
   private update(patch: Partial<AiSettings>): void {

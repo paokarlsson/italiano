@@ -16,6 +16,8 @@ import { AudioService, Cue } from '../../core/audio.service';
 import { textParts, WORD_VOICE } from '../../core/speech';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
+import { chapterLabel } from '../../core/story';
+import { StoryStore } from '../../core/story-store';
 import { PILLAR_NAMES } from '../../core/profile';
 import { SupplyService } from '../../core/supply.service';
 import { shuffle } from '../../core/utils';
@@ -44,10 +46,33 @@ export class Leggi {
   protected readonly ai = inject(AiService);
   protected readonly supply = inject(SupplyService);
   protected readonly audio = inject(AudioService);
+  private readonly story = inject(StoryStore);
 
-  protected readonly text = computed(() => this.leggi.text(this.textId()) ?? null);
-  protected readonly tokens = computed(() => this.leggi.tokens(this.textId()));
+  // Texten som den var när den öppnades: en sida i följetongen som skrivs om under tiden
+  // byts inte ut mitt i läsningen.
+  protected readonly text = computed(() => {
+    const id = this.textId();
+    return untracked(() => this.leggi.text(id)) ?? null;
+  });
+  protected readonly tokens = computed(() => {
+    const id = this.textId();
+    return untracked(() => this.leggi.tokens(id));
+  });
+  /** Platsen i följetongen, om texten är en sida där. */
+  protected readonly storyPage = computed(() => {
+    const item = this.story.item(this.textId());
+    return item?.kind === 'page' ? item : null;
+  });
+  /** Sant om sidan är omskriven åt läsaren. */
+  protected readonly adapted = computed(
+    () => !!this.storyPage() && this.text() !== this.story.page(this.textId()),
+  );
   protected readonly step = computed(() => {
+    const item = this.storyPage();
+    if (item) {
+      const where = `${this.story.data()?.title} · ${chapterLabel(item.chapter)}`;
+      return `${where} · ${item.page.part}/${item.chapter.pages.length}`;
+    }
     const number = this.leggi.number(this.textId());
     if (number) return `Leggi · ${number} / ${this.leggi.texts().length}`;
     const own = this.leggi.userTexts().find((t) => t.id === this.textId());
@@ -98,6 +123,22 @@ export class Leggi {
       sentence: text.sentences[i].it,
       entry: token.entry,
     });
+  });
+
+  /**
+   * Det som kommer efter en sida i följetongen: nästa sida eller låten. Null utanför
+   * följetongen och efter dess sista sida.
+   */
+  protected readonly storyAfter = computed(() =>
+    this.storyPage() ? this.story.after(this.textId()) : null,
+  );
+  protected readonly afterSong = computed(() => {
+    const after = this.storyAfter();
+    return after?.kind === 'song' ? after.song : null;
+  });
+  protected readonly afterPage = computed(() => {
+    const after = this.storyAfter();
+    return after?.kind === 'page' ? after.page : null;
   });
 
   /** Vart det går härnäst — aldrig tillbaka till samma text. */
@@ -159,6 +200,10 @@ export class Leggi {
   });
 
   constructor() {
+    // Sidan som läses skrivs inte om under tiden.
+    effect(() => this.story.reading.set(this.storyPage() ? this.textId() : null));
+    inject(DestroyRef).onDestroy(() => this.story.reading.set(null));
+
     // Ny text (även via «Nästa text») — börja om från början.
     effect(() => {
       const text = this.text();
@@ -213,7 +258,7 @@ export class Leggi {
     if (this.chosen()) return;
     this.chosen.set(option);
     this.selected.set(null);
-    this.summary.set(this.leggi.complete(this.textId(), this.looked()));
+    this.summary.set(this.leggi.complete(this.textId(), this.looked(), this.tokens()));
   }
 
   protected async toggleSpeech(): Promise<void> {

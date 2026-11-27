@@ -1,0 +1,2107 @@
+{
+  "id": "alba-luca",
+  "title": "Alba & Luca",
+  "sv": "En översättare och en kock på den liguriska kusten, från september till mars — en följetong i fjorton låtar.",
+  "names": [
+    "alba",
+    "boccadasse",
+    "davide",
+    "elin",
+    "ferrante",
+    "genova",
+    "göteborg",
+    "nervi",
+    "rino",
+    "sill",
+    "sturla",
+    "svezia"
+  ],
+  "lexicon": {
+    "adesso": {
+      "p": "D1",
+      "sv": "nu",
+      "deck": "D1.9"
+    },
+    "ai": {
+      "p": "D1",
+      "sv": "vid, till",
+      "note": "a + i · vicino ai libri = nära böckerna",
+      "deck": "D1.6"
+    },
+    "all'": {
+      "p": "D1",
+      "sv": "till",
+      "note": "a + l' — framför vokal",
+      "deck": "D1.6"
+    },
+    "alla": {
+      "p": "D1",
+      "sv": "till, på",
+      "note": "a + la",
+      "deck": "D1.6"
+    },
+    "alla fine": {
+      "p": "D1",
+      "sv": "till slut",
+      "note": "a + la fine — fine = slut",
+      "deck": "D1.6"
+    },
+    "almeno": {
+      "p": "D1",
+      "sv": "åtminstone",
+      "deck": "D1.9"
+    },
+    "ancora": {
+      "p": "D1",
+      "sv": "fortfarande, ännu",
+      "deck": "D1.9"
+    },
+    "che": {
+      "p": "D1",
+      "sv": "som, att",
+      "note": "binder ihop satser: la donna che sorride = kvinnan som ler · così … che = så … att",
+      "deck": "D1.7"
+    },
+    "come": {
+      "p": "D1",
+      "sv": "som, liksom",
+      "note": "come sempre = som alltid",
+      "deck": "D1.8"
+    },
+    "come stai": {
+      "p": "D1",
+      "sv": "hur mår du",
+      "note": "stare om hur man mår: sto, stai, sta",
+      "deck": "D4.14"
+    },
+    "così": {
+      "p": "D1",
+      "sv": "så, sådan",
+      "note": "una cosa così = något sådant",
+      "deck": "D1.9"
+    },
+    "da anni": {
+      "p": "D1",
+      "sv": "på flera år",
+      "note": "da + tid = sedan, på",
+      "deck": "D1.5"
+    },
+    "dalla": {
+      "p": "D1",
+      "sv": "från, genom",
+      "note": "da + la",
+      "deck": "D1.6"
+    },
+    "del": {
+      "p": "D1",
+      "sv": "av, …s",
+      "note": "di + il",
+      "deck": "D1.6"
+    },
+    "delle": {
+      "p": "D1",
+      "sv": "av, …s",
+      "note": "di + le · l'odore delle pagine = sidornas doft",
+      "deck": "D1.6"
+    },
+    "dello": {
+      "p": "D1",
+      "sv": "av, …s",
+      "note": "di + lo · è dello zio = är farbroderns",
+      "deck": "D1.6"
+    },
+    "dopo": {
+      "p": "D1",
+      "sv": "efter, därpå",
+      "note": "il giovedì dopo = torsdagen därpå",
+      "deck": "D1.5"
+    },
+    "ed": {
+      "p": "D1",
+      "sv": "och",
+      "note": "e blir ed före vokal: ed è",
+      "deck": "D1.1"
+    },
+    "già": {
+      "p": "D1",
+      "sv": "redan",
+      "deck": "D1.9"
+    },
+    "gli": {
+      "p": "D1",
+      "sv": "(åt) honom",
+      "note": "indirekt objekt: gli dà = ger honom",
+      "deck": "D1.10"
+    },
+    "la guardo": {
+      "p": "D1",
+      "sv": "jag tittar på henne",
+      "note": "la = henne — pronomen, inte artikel, och står före verbet",
+      "deck": "D1.10"
+    },
+    "la leggo": {
+      "p": "D1",
+      "sv": "jag läser den",
+      "note": "la = den (dikten) — står före verbet",
+      "deck": "D1.10"
+    },
+    "le": {
+      "p": "D1",
+      "sv": "bestämd artikel, feminin plural",
+      "note": "le barche = båtarna",
+      "deck": "D1.4"
+    },
+    "le chiedo": {
+      "p": "D1",
+      "sv": "jag frågar henne",
+      "note": "le = (åt) henne — indirekt objekt",
+      "deck": "D1.10"
+    },
+    "le dico": {
+      "p": "D1",
+      "sv": "säger jag till henne",
+      "note": "le = (åt) henne — indirekt objekt",
+      "deck": "D1.10"
+    },
+    "lei": {
+      "p": "D1",
+      "sv": "hon",
+      "deck": "D1.3"
+    },
+    "mai": {
+      "p": "D1",
+      "sv": "aldrig",
+      "note": "non … mai = aldrig · står mellan avere och participet",
+      "deck": "D1.9"
+    },
+    "mi": {
+      "p": "D1",
+      "sv": "mig",
+      "note": "objektspronomen — står före verbet: mi guarda = tittar på mig",
+      "deck": "D1.10"
+    },
+    "negli occhi": {
+      "p": "D1",
+      "sv": "i ögonen",
+      "note": "in + gli = negli · occhio → occhi",
+      "deck": "D1.6"
+    },
+    "nel": {
+      "p": "D1",
+      "sv": "i",
+      "note": "in + il",
+      "deck": "D1.6"
+    },
+    "nemmeno": {
+      "p": "D1",
+      "sv": "inte ens",
+      "note": "non … nemmeno io = inte ens jag",
+      "deck": "D1.9"
+    },
+    "o": {
+      "p": "D1",
+      "sv": "eller",
+      "deck": "D1.1"
+    },
+    "perché": {
+      "p": "D1",
+      "sv": "varför · för att",
+      "note": "samma ord frågar och svarar",
+      "deck": "D1.7"
+    },
+    "più": {
+      "p": "D1",
+      "sv": "mer, längre",
+      "note": "più a est = längre österut · non … più = inte längre",
+      "deck": "D1.9"
+    },
+    "quella": {
+      "p": "D1",
+      "sv": "den där",
+      "note": "feminin · questa = den här"
+    },
+    "questo": {
+      "p": "D1",
+      "sv": "det här, den här",
+      "note": "maskulin · questa = feminin"
+    },
+    "su": {
+      "p": "D1",
+      "sv": "på",
+      "deck": "D1.5"
+    },
+    "sui": {
+      "p": "D1",
+      "sv": "på",
+      "note": "su + i",
+      "deck": "D1.6"
+    },
+    "sul": {
+      "p": "D1",
+      "sv": "på, mot",
+      "note": "su + il",
+      "deck": "D1.6"
+    },
+    "sulla": {
+      "p": "D1",
+      "sv": "på, längs",
+      "note": "su + la",
+      "deck": "D1.6"
+    },
+    "suo": {
+      "p": "D1",
+      "sv": "hans, hennes",
+      "note": "rättar sig efter saken, inte efter ägaren"
+    },
+    "tra": {
+      "p": "D1",
+      "sv": "mellan",
+      "deck": "D1.5"
+    },
+    "accento": {
+      "p": "D2",
+      "sv": "accent, brytning",
+      "note": "accent → accento"
+    },
+    "appartamento": {
+      "p": "D2",
+      "sv": "lägenhet",
+      "note": "apartment → appartamento · -ment → -mento",
+      "deck": "D2.7"
+    },
+    "balcone": {
+      "p": "D2",
+      "sv": "balkong",
+      "note": "balcony → balcone"
+    },
+    "editore": {
+      "p": "D2",
+      "sv": "förlag",
+      "note": "falsk vän: editore = förläggare, förlag — inte redaktör",
+      "deck": "D2.11"
+    },
+    "momento": {
+      "p": "D2",
+      "sv": "ögonblick",
+      "note": "moment → momento · -ment → -mento",
+      "deck": "D2.7"
+    },
+    "personale": {
+      "p": "D2",
+      "sv": "personal",
+      "note": "personnel → personale · -al → -ale",
+      "deck": "D2.3"
+    },
+    "telefono": {
+      "p": "D2",
+      "sv": "telefon",
+      "note": "telephone → telefono"
+    },
+    "villaggio": {
+      "p": "D2",
+      "sv": "by",
+      "note": "village → villaggio · -age → -aggio"
+    },
+    "abbiamo parlato": {
+      "p": "D3",
+      "sv": "vi har pratat",
+      "note": "avere + parl·ato (parlare)",
+      "deck": "D3.11"
+    },
+    "abita": {
+      "p": "D3",
+      "sv": "bor",
+      "note": "abit·a — -a = han/hon (abitare)",
+      "deck": "D3.7"
+    },
+    "alza": {
+      "p": "D3",
+      "sv": "lyfter",
+      "note": "alz·a — -a = han/hon (alzare) · alzare gli occhi = titta upp",
+      "deck": "D3.7"
+    },
+    "anni": {
+      "p": "D3",
+      "sv": "år",
+      "note": "ann·i — plural av anno · avere … anni = vara … år gammal",
+      "deck": "D3.2"
+    },
+    "aperta": {
+      "p": "D3",
+      "sv": "öppen",
+      "note": "apert·a — feminin av aperto, particip av aprire",
+      "deck": "D3.3"
+    },
+    "apre": {
+      "p": "D3",
+      "sv": "öppnar",
+      "note": "apr·e — -e = han/hon (aprire)",
+      "deck": "D3.8"
+    },
+    "barche": {
+      "p": "D3",
+      "sv": "båtar",
+      "note": "barc·he — barca → barche: -ca blir -che",
+      "deck": "D3.2"
+    },
+    "bevo": {
+      "p": "D3",
+      "sv": "jag dricker",
+      "note": "bev·o — -o = jag (bere, stam bev-)",
+      "deck": "D3.10"
+    },
+    "caldi": {
+      "p": "D3",
+      "sv": "varma",
+      "note": "cald·i — maskulin plural av caldo",
+      "deck": "D3.3"
+    },
+    "capisce": {
+      "p": "D3",
+      "sv": "förstår",
+      "note": "cap·isc·e — -ire-verb med -isc- (capire)",
+      "deck": "D3.8"
+    },
+    "case": {
+      "p": "D3",
+      "sv": "hus",
+      "note": "cas·e — plural av casa",
+      "deck": "D3.2"
+    },
+    "cerco": {
+      "p": "D3",
+      "sv": "jag letar efter",
+      "note": "cerc·o — -o = jag (cercare)",
+      "deck": "D3.7"
+    },
+    "che è successo": {
+      "p": "D3",
+      "sv": "vad har hänt",
+      "note": "che = vad · essere + successo, particip av succedere",
+      "deck": "D3.12"
+    },
+    "chiede": {
+      "p": "D3",
+      "sv": "frågar",
+      "note": "chied·e — -e = han/hon (chiedere)",
+      "deck": "D3.8"
+    },
+    "chiedo": {
+      "p": "D3",
+      "sv": "jag frågar, ber om",
+      "note": "chied·o — -o = jag (chiedere)",
+      "deck": "D3.8"
+    },
+    "chiudo": {
+      "p": "D3",
+      "sv": "jag stänger",
+      "note": "chiud·o — -o = jag (chiudere)",
+      "deck": "D3.8"
+    },
+    "ci ha guardato": {
+      "p": "D3",
+      "sv": "har tittat på oss",
+      "note": "ci = oss · avere + guard·ato (guardare)",
+      "deck": "D3.11"
+    },
+    "colorate": {
+      "p": "D3",
+      "sv": "färgglada",
+      "note": "color·ate — feminin plural, rättar sig efter case",
+      "deck": "D3.3"
+    },
+    "compro": {
+      "p": "D3",
+      "sv": "jag köper",
+      "note": "compr·o — -o = jag (comprare)",
+      "deck": "D3.7"
+    },
+    "confusa": {
+      "p": "D3",
+      "sv": "förvirrad",
+      "note": "confus·a — feminin av confuso · confused → confuso",
+      "deck": "D3.3"
+    },
+    "cucchiaini": {
+      "p": "D3",
+      "sv": "teskedar",
+      "note": "cucchiain·i — plural av cucchiaino",
+      "deck": "D3.2"
+    },
+    "dico": {
+      "p": "D3",
+      "sv": "jag säger",
+      "note": "oregelbundet: dire · dico, dici, dice",
+      "deck": "D3.10"
+    },
+    "diventa": {
+      "p": "D3",
+      "sv": "blir",
+      "note": "divent·a — -a = han/hon (diventare) · diventare rossa = rodna",
+      "deck": "D3.7"
+    },
+    "dividono": {
+      "p": "D3",
+      "sv": "de delar",
+      "note": "divid·ono — -ono = de (dividere)",
+      "deck": "D3.8"
+    },
+    "dormono": {
+      "p": "D3",
+      "sv": "sover",
+      "note": "dorm·ono — -ono = de (dormire)",
+      "deck": "D3.8"
+    },
+    "dà": {
+      "p": "D3",
+      "sv": "ger",
+      "note": "oregelbundet: dare · do, dai, dà — accenten skiljer det från da",
+      "deck": "D3.10"
+    },
+    "fresca": {
+      "p": "D3",
+      "sv": "sval",
+      "note": "fresc·a — feminin av fresco",
+      "deck": "D3.3"
+    },
+    "gatta": {
+      "p": "D3",
+      "sv": "katt (hona)",
+      "note": "gatt·a — -a = hona · gatto = hanne",
+      "deck": "D3.1"
+    },
+    "gatti": {
+      "p": "D3",
+      "sv": "katter",
+      "note": "gatt·i — plural av gatto",
+      "deck": "D3.2"
+    },
+    "grigia": {
+      "p": "D3",
+      "sv": "grå",
+      "note": "grigi·a — feminin av grigio",
+      "deck": "D3.3"
+    },
+    "guarda": {
+      "p": "D3",
+      "sv": "tittar",
+      "note": "guard·a — -a = han/hon (guardare)",
+      "deck": "D3.7"
+    },
+    "guardo": {
+      "p": "D3",
+      "sv": "jag tittar på",
+      "note": "guard·o — -o = jag (guardare)",
+      "deck": "D3.7"
+    },
+    "ho bruciato": {
+      "p": "D3",
+      "sv": "jag har bränt",
+      "note": "avere + bruci·ato (bruciare)",
+      "deck": "D3.11"
+    },
+    "ho dimenticato": {
+      "p": "D3",
+      "sv": "jag har glömt",
+      "note": "avere + dimentic·ato (dimenticare)",
+      "deck": "D3.11"
+    },
+    "ho sorriso": {
+      "p": "D3",
+      "sv": "jag har lett",
+      "note": "avere + sorriso — oregelbundet particip av sorridere",
+      "deck": "D3.11"
+    },
+    "l'ho detto": {
+      "p": "D3",
+      "sv": "har jag sagt det",
+      "note": "l' = lo (det) före ho · avere + detto (dire)",
+      "deck": "D3.11"
+    },
+    "legge": {
+      "p": "D3",
+      "sv": "läser",
+      "note": "legg·e — -e = han/hon (leggere) · också artigt «Lei»: läser ni",
+      "deck": "D3.8"
+    },
+    "libri": {
+      "p": "D3",
+      "sv": "böcker",
+      "note": "libr·i — plural av libro",
+      "deck": "D3.2"
+    },
+    "mando": {
+      "p": "D3",
+      "sv": "jag skickar",
+      "note": "mand·o — -o = jag (mandare)",
+      "deck": "D3.7"
+    },
+    "mando via": {
+      "p": "D3",
+      "sv": "jag skjuter bort",
+      "note": "mand·o via — mandare via = skicka iväg",
+      "deck": "D3.7"
+    },
+    "mangia": {
+      "p": "D3",
+      "sv": "äter",
+      "note": "mangi·a — -a = han/hon (mangiare)",
+      "deck": "D3.7"
+    },
+    "metto": {
+      "p": "D3",
+      "sv": "jag lägger",
+      "note": "mett·o — -o = jag (mettere)",
+      "deck": "D3.8"
+    },
+    "mi fa paura": {
+      "p": "D3",
+      "sv": "skrämmer mig",
+      "note": "ordagrant «gör mig rädsla» — fa = fare",
+      "deck": "D3.10"
+    },
+    "mi siedo": {
+      "p": "D3",
+      "sv": "jag sätter mig",
+      "note": "reflexivt och oregelbundet: sedersi — mi + -o = jag",
+      "deck": "D3.13"
+    },
+    "minuti": {
+      "p": "D3",
+      "sv": "minuter",
+      "note": "minut·i — plural av minuto",
+      "deck": "D3.2"
+    },
+    "ordina": {
+      "p": "D3",
+      "sv": "beställer",
+      "note": "ordin·a — -a = han/hon (ordinare)",
+      "deck": "D3.7"
+    },
+    "pagine": {
+      "p": "D3",
+      "sv": "sidor",
+      "note": "pagin·e — plural av pagina",
+      "deck": "D3.2"
+    },
+    "pago": {
+      "p": "D3",
+      "sv": "jag betalar",
+      "note": "pag·o — -o = jag (pagare)",
+      "deck": "D3.7"
+    },
+    "passano": {
+      "p": "D3",
+      "sv": "går",
+      "note": "pass·ano — -ano = de (passare) · om tid: passano tre settimane",
+      "deck": "D3.7"
+    },
+    "penso": {
+      "p": "D3",
+      "sv": "jag tänker",
+      "note": "pens·o — -o = jag (pensare) · pensare a = tänka på",
+      "deck": "D3.7"
+    },
+    "pescatori": {
+      "p": "D3",
+      "sv": "fiskare",
+      "note": "pescator·i — plural av pescatore",
+      "deck": "D3.2"
+    },
+    "poesie": {
+      "p": "D3",
+      "sv": "dikter",
+      "note": "poesi·e — plural av poesia · libro di poesie = diktsamling",
+      "deck": "D3.2"
+    },
+    "ride": {
+      "p": "D3",
+      "sv": "skrattar",
+      "note": "rid·e — -e = han/hon (ridere)",
+      "deck": "D3.8"
+    },
+    "rido": {
+      "p": "D3",
+      "sv": "jag skrattar",
+      "note": "rid·o — -o = jag (ridere)",
+      "deck": "D3.8"
+    },
+    "ringrazio": {
+      "p": "D3",
+      "sv": "jag tackar",
+      "note": "ringrazi·o — -o = jag (ringraziare)",
+      "deck": "D3.7"
+    },
+    "rispondo": {
+      "p": "D3",
+      "sv": "jag svarar",
+      "note": "rispond·o — -o = jag (rispondere)",
+      "deck": "D3.8"
+    },
+    "rossa": {
+      "p": "D3",
+      "sv": "röd",
+      "note": "ross·a — feminin av rosso",
+      "deck": "D3.3"
+    },
+    "sassi": {
+      "p": "D3",
+      "sv": "stenar",
+      "note": "sass·i — plural av sasso",
+      "deck": "D3.2"
+    },
+    "scendo": {
+      "p": "D3",
+      "sv": "jag går ner",
+      "note": "scend·o — -o = jag (scendere)",
+      "deck": "D3.8"
+    },
+    "scrivo": {
+      "p": "D3",
+      "sv": "jag skriver",
+      "note": "scriv·o — -o = jag (scrivere)",
+      "deck": "D3.8"
+    },
+    "sente": {
+      "p": "D3",
+      "sv": "känner",
+      "note": "sent·e — -e = han/hon (sentire) · sentire l'odore = känna doften",
+      "deck": "D3.8"
+    },
+    "sentire": {
+      "p": "D3",
+      "sv": "känna",
+      "note": "grundform på -ire",
+      "deck": "D3.4"
+    },
+    "sentito": {
+      "p": "D3",
+      "sv": "hört",
+      "note": "avere + sent·ito (sentire)",
+      "deck": "D3.11"
+    },
+    "sento": {
+      "p": "D3",
+      "sv": "jag känner",
+      "note": "sent·o — -o = jag (sentire: känna, höra)",
+      "deck": "D3.8"
+    },
+    "settimane": {
+      "p": "D3",
+      "sv": "veckor",
+      "note": "settiman·e — plural av settimana",
+      "deck": "D3.2"
+    },
+    "si apre": {
+      "p": "D3",
+      "sv": "öppnas",
+      "note": "reflexivt: aprirsi — ordagrant «öppnar sig»",
+      "deck": "D3.13"
+    },
+    "si muove": {
+      "p": "D3",
+      "sv": "rör sig",
+      "note": "reflexivt: muoversi",
+      "deck": "D3.13"
+    },
+    "si siede": {
+      "p": "D3",
+      "sv": "sätter sig",
+      "note": "reflexivt och oregelbundet: sedersi — si + -e = han/hon",
+      "deck": "D3.13"
+    },
+    "so": {
+      "p": "D3",
+      "sv": "jag vet",
+      "note": "oregelbundet: sapere · so, sai, sa",
+      "deck": "D4.13"
+    },
+    "sola": {
+      "p": "D3",
+      "sv": "ensam",
+      "note": "sol·a — feminin av solo",
+      "deck": "D3.3"
+    },
+    "sorride": {
+      "p": "D3",
+      "sv": "ler",
+      "note": "sorrid·e — -e = han/hon (sorridere)",
+      "deck": "D3.8"
+    },
+    "spiega": {
+      "p": "D3",
+      "sv": "förklarar",
+      "note": "spieg·a — -a = han/hon (spiegare)",
+      "deck": "D3.7"
+    },
+    "stanca": {
+      "p": "D3",
+      "sv": "trött",
+      "note": "stanc·a — feminin av stanco",
+      "deck": "D3.3"
+    },
+    "sto bene": {
+      "p": "D3",
+      "sv": "jag mår bra",
+      "note": "stare om hur man mår: sto = jag",
+      "deck": "D4.14"
+    },
+    "succede": {
+      "p": "D3",
+      "sv": "händer",
+      "note": "succed·e — -e = det (succedere)",
+      "deck": "D3.8"
+    },
+    "suona": {
+      "p": "D3",
+      "sv": "ringer",
+      "note": "suon·a — -a = han/hon/den (suonare)",
+      "deck": "D3.7"
+    },
+    "torno": {
+      "p": "D3",
+      "sv": "jag går tillbaka",
+      "note": "torn·o — -o = jag (tornare)",
+      "deck": "D3.7"
+    },
+    "ultima": {
+      "p": "D3",
+      "sv": "sista",
+      "note": "ultim·a — feminin av ultimo",
+      "deck": "D3.3"
+    },
+    "ultimo": {
+      "p": "D3",
+      "sv": "sista",
+      "note": "ultim·o — maskulin",
+      "deck": "D3.3"
+    },
+    "vado via": {
+      "p": "D3",
+      "sv": "jag går därifrån",
+      "note": "oregelbundet: andare · andare via = gå iväg",
+      "deck": "D3.10"
+    },
+    "vecchi": {
+      "p": "D3",
+      "sv": "gamla",
+      "note": "vecchi — plural av vecchio · här: gamla människor",
+      "deck": "D3.2"
+    },
+    "visto": {
+      "p": "D3",
+      "sv": "sett",
+      "note": "avere + visto — oregelbundet particip av vedere",
+      "deck": "D3.11"
+    },
+    "voglio": {
+      "p": "D3",
+      "sv": "jag vill",
+      "note": "oregelbundet: volere · voglio, vuoi, vuole",
+      "deck": "D3.10"
+    },
+    "vuole": {
+      "p": "D3",
+      "sv": "vill",
+      "note": "oregelbundet: volere · voglio, vuoi, vuole",
+      "deck": "D3.10"
+    },
+    "ad alta voce": {
+      "p": "D4",
+      "sv": "högt",
+      "note": "ordagrant «med hög röst» · a blir ad före vokal"
+    },
+    "altro": {
+      "p": "D4",
+      "sv": "andra",
+      "note": "l'altro = den andra"
+    },
+    "aria": {
+      "p": "D4",
+      "sv": "luft"
+    },
+    "bicchiere": {
+      "p": "D4",
+      "sv": "glas",
+      "note": "ett dricksglas · un bicchiere di vino = ett glas vin",
+      "deck": "D4.18"
+    },
+    "bocca": {
+      "p": "D4",
+      "sv": "mun",
+      "deck": "D4.4"
+    },
+    "braccio": {
+      "p": "D4",
+      "sv": "arm",
+      "note": "sotto il braccio = under armen",
+      "deck": "D4.4"
+    },
+    "bugia": {
+      "p": "D4",
+      "sv": "lögn"
+    },
+    "cognome": {
+      "p": "D4",
+      "sv": "efternamn",
+      "note": "co- + nome (namn)"
+    },
+    "computer": {
+      "p": "D4",
+      "sv": "dator",
+      "note": "lånord från engelskan"
+    },
+    "conto": {
+      "p": "D4",
+      "sv": "nota",
+      "note": "il conto = notan på restaurang"
+    },
+    "cosa": {
+      "p": "D4",
+      "sv": "sak",
+      "note": "una cosa così = något sådant",
+      "deck": "D4.7"
+    },
+    "costa": {
+      "p": "D4",
+      "sv": "kust",
+      "note": "coast → costa"
+    },
+    "cucina": {
+      "p": "D4",
+      "sv": "kök"
+    },
+    "cuoco": {
+      "p": "D4",
+      "sv": "kock"
+    },
+    "davvero": {
+      "p": "D4",
+      "sv": "verkligen, på riktigt"
+    },
+    "delle dieci": {
+      "p": "D4",
+      "sv": "klockan tio",
+      "note": "il treno delle dieci = tåget klockan tio",
+      "deck": "D4.5"
+    },
+    "dentro": {
+      "p": "D4",
+      "sv": "inuti",
+      "note": "dentro di me = inom mig",
+      "deck": "D4.6"
+    },
+    "dieci": {
+      "p": "D4",
+      "sv": "tio"
+    },
+    "dietro": {
+      "p": "D4",
+      "sv": "bakom",
+      "deck": "D4.6"
+    },
+    "dolce": {
+      "p": "D4",
+      "sv": "efterrätt",
+      "note": "dolce = söt · il dolce = efterrätten"
+    },
+    "est": {
+      "p": "D4",
+      "sv": "öster",
+      "note": "a est = österut"
+    },
+    "faccia": {
+      "p": "D4",
+      "sv": "ansikte, min",
+      "note": "fare una faccia = göra en min",
+      "deck": "D4.4"
+    },
+    "faro": {
+      "p": "D4",
+      "sv": "fyr"
+    },
+    "felice": {
+      "p": "D4",
+      "sv": "glad, lycklig"
+    },
+    "file": {
+      "p": "D4",
+      "sv": "fil",
+      "note": "lånord från engelskan"
+    },
+    "finestra": {
+      "p": "D4",
+      "sv": "fönster"
+    },
+    "finestrino": {
+      "p": "D4",
+      "sv": "tågfönster",
+      "note": "finestra + -ino = litet fönster: på tåg och bil"
+    },
+    "francese": {
+      "p": "D4",
+      "sv": "fransk, fransyska"
+    },
+    "frase": {
+      "p": "D4",
+      "sv": "mening"
+    },
+    "fuori": {
+      "p": "D4",
+      "sv": "ute",
+      "deck": "D4.6"
+    },
+    "giallo": {
+      "p": "D4",
+      "sv": "deckare",
+      "note": "ordagrant «gul» — efter de gula omslagen"
+    },
+    "giovedì": {
+      "p": "D4",
+      "sv": "torsdag",
+      "note": "il giovedì = på torsdagarna",
+      "deck": "D4.5"
+    },
+    "gli occhi": {
+      "p": "D4",
+      "sv": "ögonen",
+      "note": "gli = artikel framför vokal i plural · occhio → occhi",
+      "deck": "D4.4"
+    },
+    "italiano": {
+      "p": "D4",
+      "sv": "italienska",
+      "note": "in italiano = på italienska"
+    },
+    "lanterna": {
+      "p": "D4",
+      "sv": "lykta · la Lanterna = Genuas fyr",
+      "note": "stadens symbol"
+    },
+    "le sei": {
+      "p": "D4",
+      "sv": "klockan sex",
+      "note": "le (ore) sei — klockslag tar le",
+      "deck": "D4.5"
+    },
+    "lontano": {
+      "p": "D4",
+      "sv": "långt borta",
+      "deck": "D4.6"
+    },
+    "luce": {
+      "p": "D4",
+      "sv": "ljus"
+    },
+    "mamma": {
+      "p": "D4",
+      "sv": "mamma",
+      "deck": "D4.3"
+    },
+    "maniman": {
+      "p": "D4",
+      "sv": "ifall att",
+      "note": "genuesiska, ett gammalt ord — Alba har det från sin mamma"
+    },
+    "mano": {
+      "p": "D4",
+      "sv": "hand",
+      "note": "in mano = i handen",
+      "deck": "D4.4"
+    },
+    "mattina": {
+      "p": "D4",
+      "sv": "morgon",
+      "deck": "D4.5"
+    },
+    "meno": {
+      "p": "D4",
+      "sv": "minst, mindre",
+      "note": "la cosa meno italiana = det minst italienska",
+      "deck": "D4.16"
+    },
+    "mercato": {
+      "p": "D4",
+      "sv": "marknad"
+    },
+    "mezza": {
+      "p": "D4",
+      "sv": "halv",
+      "note": "mezza svedese = halvsvensk"
+    },
+    "miele": {
+      "p": "D4",
+      "sv": "honung"
+    },
+    "nero": {
+      "p": "D4",
+      "sv": "svart",
+      "deck": "D4.11"
+    },
+    "niente": {
+      "p": "D4",
+      "sv": "ingenting",
+      "note": "non … niente = ingenting",
+      "deck": "D4.12"
+    },
+    "nome": {
+      "p": "D4",
+      "sv": "namn"
+    },
+    "nove": {
+      "p": "D4",
+      "sv": "nio"
+    },
+    "odore": {
+      "p": "D4",
+      "sv": "doft, lukt",
+      "note": "odor → odore"
+    },
+    "ottobre": {
+      "p": "D4",
+      "sv": "oktober",
+      "deck": "D4.5"
+    },
+    "ovest": {
+      "p": "D4",
+      "sv": "väster",
+      "note": "a ovest = västerut"
+    },
+    "panchina": {
+      "p": "D4",
+      "sv": "bänk"
+    },
+    "pezzo": {
+      "p": "D4",
+      "sv": "bit"
+    },
+    "piano": {
+      "p": "D4",
+      "sv": "tyst, sakta",
+      "note": "piano = lågt, långsamt"
+    },
+    "piatto": {
+      "p": "D4",
+      "sv": "tallrik"
+    },
+    "poesia": {
+      "p": "D4",
+      "sv": "dikt"
+    },
+    "porta": {
+      "p": "D4",
+      "sv": "dörr"
+    },
+    "porto": {
+      "p": "D4",
+      "sv": "hamn",
+      "note": "port → porto"
+    },
+    "qualcosa": {
+      "p": "D4",
+      "sv": "något",
+      "deck": "D4.12"
+    },
+    "quasi": {
+      "p": "D4",
+      "sv": "nästan",
+      "deck": "D4.12"
+    },
+    "quattrocentottanta": {
+      "p": "D4",
+      "sv": "fyrahundraåttio",
+      "note": "quattrocento + ottanta"
+    },
+    "ragazzina": {
+      "p": "D4",
+      "sv": "liten flicka",
+      "note": "ragazza + -ina = liten"
+    },
+    "resto": {
+      "p": "D4",
+      "sv": "rest",
+      "note": "tutto il resto = allt annat"
+    },
+    "risotto": {
+      "p": "D4",
+      "sv": "risotto"
+    },
+    "sei": {
+      "p": "D4",
+      "sv": "sex",
+      "note": "samma form som sei = du är — sammanhanget avgör"
+    },
+    "sorriso": {
+      "p": "D4",
+      "sv": "leende"
+    },
+    "sotto": {
+      "p": "D4",
+      "sv": "under",
+      "deck": "D4.6"
+    },
+    "spiaggia": {
+      "p": "D4",
+      "sv": "strand",
+      "deck": "D4.9"
+    },
+    "stesso": {
+      "p": "D4",
+      "sv": "samma",
+      "note": "lo stesso libro = samma bok"
+    },
+    "strano": {
+      "p": "D4",
+      "sv": "konstig"
+    },
+    "svedese": {
+      "p": "D4",
+      "sv": "svensk, svenska",
+      "note": "in svedese = på svenska"
+    },
+    "tovagliolo": {
+      "p": "D4",
+      "sv": "servett"
+    },
+    "traduttrice": {
+      "p": "D4",
+      "sv": "översättare (kvinna)",
+      "note": "-trice = kvinnlig form av -tore: traduttore → traduttrice"
+    },
+    "trattoria": {
+      "p": "D4",
+      "sv": "trattoria, enkel restaurang",
+      "note": "ofta familjedriven"
+    },
+    "trentaquattro": {
+      "p": "D4",
+      "sv": "trettiofyra",
+      "note": "trenta + quattro"
+    },
+    "trentun": {
+      "p": "D4",
+      "sv": "trettioett",
+      "note": "trentuno blir trentun före ett substantiv"
+    },
+    "troppo": {
+      "p": "D4",
+      "sv": "för mycket",
+      "deck": "D4.16"
+    },
+    "tutti": {
+      "p": "D4",
+      "sv": "alla",
+      "deck": "D4.12"
+    },
+    "vecchio": {
+      "p": "D4",
+      "sv": "gammal",
+      "deck": "D4.10"
+    },
+    "venerdì": {
+      "p": "D4",
+      "sv": "fredag",
+      "deck": "D4.5"
+    },
+    "venti": {
+      "p": "D4",
+      "sv": "tjugo"
+    },
+    "vero": {
+      "p": "D4",
+      "sv": "sant"
+    },
+    "vetro": {
+      "p": "D4",
+      "sv": "glas",
+      "note": "glaset i ett fönster — ett dricksglas heter bicchiere",
+      "deck": "D4.18"
+    },
+    "vicino": {
+      "p": "D4",
+      "sv": "nära",
+      "note": "vicino a = nära",
+      "deck": "D4.6"
+    },
+    "viso": {
+      "p": "D4",
+      "sv": "ansikte",
+      "deck": "D4.4"
+    },
+    "volta": {
+      "p": "D4",
+      "sv": "gång",
+      "note": "ogni volta = varje gång"
+    },
+    "zio": {
+      "p": "D4",
+      "sv": "farbror",
+      "note": "zio = farbror eller morbror",
+      "deck": "D4.3"
+    }
+  },
+  "chapters": [
+    {
+      "n": 0,
+      "title": "Prologo",
+      "sv": "Prolog",
+      "pages": [
+        {
+          "id": "alba-luca-00-1",
+          "chapter": 0,
+          "part": 1,
+          "title": "Alba",
+          "sv": "Alba",
+          "nota": "Bara è och ha. «Ha trentun anni» — på italienska har man sin ålder.",
+          "level": 1,
+          "narrator": "f",
+          "scene": "31 år, översättare, från Göteborg, mammans efternamn, liten lägenhet i Boccadasse, katten Sill.",
+          "sentences": [
+            {
+              "it": "Questa è Alba.",
+              "sv": "Det här är Alba."
+            },
+            {
+              "it": "Alba ha trentun anni ed è traduttrice.",
+              "sv": "Alba är trettioett år och översättare."
+            },
+            {
+              "it": "È di Göteborg, in Svezia.",
+              "sv": "Hon är från Göteborg, i Sverige."
+            },
+            {
+              "it": "Ma ha il cognome della mamma: Ferrante.",
+              "sv": "Men hon har sin mammas efternamn: Ferrante."
+            },
+            {
+              "it": "Ha un piccolo appartamento a Boccadasse.",
+              "sv": "Hon har en liten lägenhet i Boccadasse."
+            },
+            {
+              "it": "Il balcone è sul mare.",
+              "sv": "Balkongen vetter mot havet."
+            },
+            {
+              "it": "Alba ha anche una gatta grigia, Sill.",
+              "sv": "Alba har också en grå katt, Sill."
+            }
+          ],
+          "question": {
+            "sv": "Vad heter Albas katt?",
+            "options": ["Elin", "Sill", "Teresa"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "alba-luca-00-2",
+          "chapter": 0,
+          "part": 2,
+          "title": "Luca",
+          "sv": "Luca",
+          "nota": "«Da Rino» = hos Rino. Många trattorior heter efter den som startade dem.",
+          "level": 1,
+          "narrator": "m",
+          "scene": "34 år, kock, Trattoria da Rino i Nervi; trattorian var hans farbror Rinos.",
+          "sentences": [
+            {
+              "it": "Questo è Luca.",
+              "sv": "Det här är Luca."
+            },
+            {
+              "it": "Luca ha trentaquattro anni ed è cuoco.",
+              "sv": "Luca är trettiofyra år och kock."
+            },
+            {
+              "it": "È di Nervi, vicino a Genova.",
+              "sv": "Han är från Nervi, nära Genua."
+            },
+            {
+              "it": "Ha una piccola trattoria vicino al porto.",
+              "sv": "Han har en liten trattoria nära hamnen."
+            },
+            {
+              "it": "È la Trattoria da Rino.",
+              "sv": "Den heter Trattoria da Rino."
+            },
+            {
+              "it": "Il nome è dello zio, Rino.",
+              "sv": "Namnet är hans farbrors, Rinos."
+            },
+            {
+              "it": "Adesso la trattoria è di Luca.",
+              "sv": "Nu är trattorian Lucas."
+            },
+            {
+              "it": "Luca ha sempre un sorriso per tutti.",
+              "sv": "Luca har alltid ett leende till alla."
+            }
+          ],
+          "question": {
+            "sv": "Vems namn bär trattorian?",
+            "options": ["Lucas pappas", "En gammal poets", "Lucas farbrors"],
+            "answer": 2
+          },
+          "lexicon": {
+            "da": {
+              "p": "D1",
+              "sv": "hos",
+              "note": "da + person = hos: da Rino = hos Rino",
+              "deck": "D1.5"
+            }
+          }
+        },
+        {
+          "id": "alba-luca-00-3",
+          "chapter": 0,
+          "part": 3,
+          "title": "La costa",
+          "sv": "Kusten",
+          "nota": "Vanliga verb i presens (lavora, abita) och c'è = det finns. La Lanterna är Genuas fyr — kom ihåg den.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Boccadasse och Nervi, havet, tåget som tar tio minuter, fyren Lanterna långt borta.",
+          "locked": ["Lanterna"],
+          "sentences": [
+            {
+              "it": "Boccadasse è un vecchio villaggio di pescatori.",
+              "sv": "Boccadasse är en gammal fiskeby."
+            },
+            {
+              "it": "Ci sono barche, case colorate e molti gatti.",
+              "sv": "Där finns båtar, färgglada hus och många katter."
+            },
+            {
+              "it": "Nervi è più a est, sulla costa.",
+              "sv": "Nervi ligger längre österut, längs kusten."
+            },
+            {
+              "it": "Alba abita a Boccadasse, Luca lavora a Nervi.",
+              "sv": "Alba bor i Boccadasse, Luca arbetar i Nervi."
+            },
+            {
+              "it": "In treno, Nervi è a dieci minuti.",
+              "sv": "Med tåg ligger Nervi tio minuter bort."
+            },
+            {
+              "it": "La sera il mare è nero e tranquillo.",
+              "sv": "På kvällen är havet svart och lugnt."
+            },
+            {
+              "it": "Lontano, a ovest, c'è una luce: la Lanterna.",
+              "sv": "Långt borta i väster finns ett ljus: Lanterna."
+            },
+            {
+              "it": "È il faro di Genova.",
+              "sv": "Det är Genuas fyr."
+            }
+          ],
+          "question": {
+            "sv": "Hur lång tid tar tåget till Nervi?",
+            "options": ["Tio minuter", "En timme", "Tre minuter"],
+            "answer": 0
+          }
+        }
+      ],
+      "songs": []
+    },
+    {
+      "n": 1,
+      "title": "Prima di te",
+      "sv": "Före dig",
+      "pages": [
+        {
+          "id": "alba-luca-01-1",
+          "chapter": 1,
+          "part": 1,
+          "title": "L'ultima frase",
+          "sv": "Sista meningen",
+          "nota": "«Mi fa paura» = det skrämmer mig, ordagrant «det gör mig rädsla». «Un giallo» är en deckare — efter de gula omslagen.",
+          "level": 3,
+          "narrator": "f",
+          "scene": "Hon skickar in översättningen och känner ingenting. Det är det som skrämmer henne.",
+          "sentences": [
+            {
+              "it": "È venerdì sera e scrivo l'ultima frase.",
+              "sv": "Det är fredag kväll och jag skriver sista meningen."
+            },
+            {
+              "it": "È un giallo di quattrocentottanta pagine: sei settimane di lavoro.",
+              "sv": "Det är en deckare på fyrahundraåttio sidor: sex veckors arbete."
+            },
+            {
+              "it": "Mando il file all'editore e chiudo il computer.",
+              "sv": "Jag skickar filen till förlaget och stänger datorn."
+            },
+            {
+              "it": "Di solito, alla fine, sono felice o almeno stanca.",
+              "sv": "Vanligtvis är jag glad till slut, eller åtminstone trött."
+            },
+            {
+              "it": "Stasera non sento niente.",
+              "sv": "I kväll känner jag ingenting."
+            },
+            {
+              "it": "Guardo il mare dalla finestra, e non succede niente.",
+              "sv": "Jag ser på havet genom fönstret, och ingenting händer."
+            },
+            {
+              "it": "Non è il lavoro che mi fa paura.",
+              "sv": "Det är inte arbetet som skrämmer mig."
+            },
+            {
+              "it": "È questo: non sento più niente.",
+              "sv": "Det är det här: jag känner ingenting längre."
+            }
+          ],
+          "question": {
+            "sv": "Vad skrämmer Alba?",
+            "options": [
+              "Att arbetet är för svårt",
+              "Att förlaget inte svarar",
+              "Att hon inte känner något längre"
+            ],
+            "answer": 2
+          }
+        },
+        {
+          "id": "alba-luca-01-2",
+          "chapter": 1,
+          "part": 2,
+          "title": "Sto bene",
+          "sv": "Jag mår bra",
+          "nota": "«Mi siedo» = jag sätter mig — reflexivt och oregelbundet (sedersi). «Sto bene» = jag mår bra: stare används om hur man mår.",
+          "level": 3,
+          "narrator": "f",
+          "scene": "Balkongen, te med för mycket honung, Elin ringer.",
+          "locked": ["Sto bene"],
+          "sentences": [
+            {
+              "it": "Domenica mattina mi siedo sul balcone con un tè.",
+              "sv": "På söndagsmorgonen sätter jag mig på balkongen med en kopp te."
+            },
+            {
+              "it": "Metto troppo miele nel tè, come sempre.",
+              "sv": "Jag tar för mycket honung i teet, som alltid."
+            },
+            {
+              "it": "Lo dico ogni volta: è perfetto.",
+              "sv": "Jag säger det varje gång: det är perfekt."
+            },
+            {
+              "it": "Sotto il balcone le barche dormono sui sassi.",
+              "sv": "Nedanför balkongen sover båtarna på stenarna."
+            },
+            {
+              "it": "Poi il telefono suona: è mia sorella, Elin.",
+              "sv": "Sedan ringer telefonen: det är min syster, Elin."
+            },
+            {
+              "it": "«Come stai?» mi chiede in svedese.",
+              "sv": "”Hur mår du?” frågar hon på svenska.",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Sto bene», rispondo.",
+              "sv": "”Jag mår bra”, svarar jag.",
+              "speakers": ["f"]
+            },
+            {
+              "it": "È quasi vero, ed è quasi una bugia.",
+              "sv": "Det är nästan sant, och det är nästan en lögn."
+            }
+          ],
+          "question": {
+            "sv": "Vad säger Alba till Elin?",
+            "options": [
+              "Att hon ska komma hem",
+              "Att hon mår bra",
+              "Att hon har för mycket arbete"
+            ],
+            "answer": 1
+          }
+        },
+        {
+          "id": "alba-luca-01-3",
+          "chapter": 1,
+          "part": 3,
+          "title": "Il gelato",
+          "sv": "Glassen",
+          "nota": "«Gli dà» = ger honom: gli är honom som indirekt objekt. «Mi alzo», «si muove» — reflexiva verb.",
+          "level": 3,
+          "narrator": "f",
+          "scene": "Stranden på kvällen, två gamla som delar en glass, något drar till och hon skjuter bort det.",
+          "sentences": [
+            {
+              "it": "La sera scendo alla spiaggia.",
+              "sv": "På kvällen går jag ner till stranden."
+            },
+            {
+              "it": "Il mare è già freddo, ma i sassi sono ancora caldi.",
+              "sv": "Havet är redan kallt, men stenarna är fortfarande varma."
+            },
+            {
+              "it": "Mi siedo vicino a due vecchi su una panchina.",
+              "sv": "Jag sätter mig nära två gamla på en bänk."
+            },
+            {
+              "it": "Dividono un gelato con due cucchiaini.",
+              "sv": "De delar på en glass med två skedar."
+            },
+            {
+              "it": "Lei gli dà l'ultimo pezzo e lui ride.",
+              "sv": "Hon ger honom sista biten och han skrattar."
+            },
+            {
+              "it": "Qualcosa si muove dentro di me.",
+              "sv": "Något rör sig inom mig."
+            },
+            {
+              "it": "Non lo voglio sentire, e lo mando via.",
+              "sv": "Jag vill inte känna det, och jag skjuter bort det."
+            },
+            {
+              "it": "Mi alzo e torno a casa, dietro il mio vetro.",
+              "sv": "Jag reser mig och går hem, bakom mitt glas."
+            }
+          ],
+          "question": {
+            "sv": "Vad gör de två gamla på bänken?",
+            "options": ["De delar en glass", "De matar katterna", "De läser en bok"],
+            "answer": 0
+          }
+        }
+      ],
+      "songs": [
+        {
+          "id": "alba-luca-01-canzone",
+          "chapter": 1,
+          "part": 4,
+          "title": "Prima di te",
+          "sv": "Före dig",
+          "nota": "Refrängen ur Lontanos låt — autentisk text, inte förenklad för nivån.",
+          "spotify": "https://open.spotify.com/track/4XRiWNM3Aa51Rl3PzwqJ0k",
+          "lines": [
+            {
+              "it": "Prima di te",
+              "sv": "Före dig"
+            },
+            {
+              "it": "Guardavo il mare e non sentivo niente",
+              "sv": "Jag såg på havet och kände ingenting"
+            },
+            {
+              "it": "Prima di te",
+              "sv": "Före dig"
+            },
+            {
+              "it": "Ero presente ma non c'ero mai",
+              "sv": "Jag var närvarande men aldrig där"
+            },
+            {
+              "it": "Come un vetro fra me e il mondo",
+              "sv": "Som ett glas mellan mig och världen"
+            },
+            {
+              "it": "Pulito, chiuso, sicuro",
+              "sv": "Rent, stängt, tryggt"
+            },
+            {
+              "it": "Prima di te",
+              "sv": "Före dig"
+            },
+            {
+              "it": "Non sapevo cosa mancava",
+              "sv": "Jag visste inte vad som fattades"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Qualcosa nell'aria",
+      "sv": "Något i luften",
+      "pages": [
+        {
+          "id": "alba-luca-02-1",
+          "chapter": 2,
+          "part": 1,
+          "title": "Il mercato",
+          "sv": "Marknaden",
+          "nota": "Berättelsen går i presens: compro, rido, porta. Passato prossimo (non ho mai visto) för det som redan har hänt.",
+          "level": 4,
+          "narrator": "m",
+          "scene": "Torsdagsmarknaden, kvinnan som luktar på en gammal diktsamling.",
+          "sentences": [
+            {
+              "it": "È giovedì mattina, al mercato di Nervi.",
+              "sv": "Det är torsdag morgon, på marknaden i Nervi."
+            },
+            {
+              "it": "Compro il pesce per la trattoria, come sempre.",
+              "sv": "Jag köper fisk till trattorian, som alltid."
+            },
+            {
+              "it": "Vicino ai libri c'è una donna.",
+              "sv": "Vid böckerna står en kvinna."
+            },
+            {
+              "it": "Apre un vecchio libro di poesie.",
+              "sv": "Hon öppnar en gammal diktsamling."
+            },
+            {
+              "it": "Poi porta il libro al viso e sente l'odore delle pagine.",
+              "sv": "Sedan lyfter hon boken mot ansiktet och luktar på sidorna."
+            },
+            {
+              "it": "Rido piano. Lei non mi sente.",
+              "sv": "Jag skrattar tyst. Hon hör mig inte."
+            },
+            {
+              "it": "Non ho mai visto una cosa così.",
+              "sv": "Jag har aldrig sett något sådant."
+            }
+          ],
+          "question": {
+            "sv": "Vad gör kvinnan med boken?",
+            "options": ["Hon luktar på sidorna", "Hon köper den åt Luca", "Hon läser en dikt högt"],
+            "answer": 0
+          },
+          "lexicon": {
+            "porta": {
+              "p": "D3",
+              "sv": "bär, lyfter",
+              "note": "port·a — -a = han/hon (portare)",
+              "deck": "D3.7"
+            }
+          }
+        },
+        {
+          "id": "alba-luca-02-2",
+          "chapter": 2,
+          "part": 2,
+          "title": "Il risotto",
+          "sv": "Risotton",
+          "nota": "Passato prossimo: «ho bruciato» = avere + particip på -ato. «È successo» tar essere — successo är particip av succedere.",
+          "level": 4,
+          "narrator": "m",
+          "scene": "Han bränner risotton för första gången på flera år. Davide frågar.",
+          "locked": ["Che è successo?"],
+          "sentences": [
+            {
+              "it": "La sera, in cucina, penso ancora alla donna con il libro.",
+              "sv": "På kvällen, i köket, tänker jag fortfarande på kvinnan med boken."
+            },
+            {
+              "it": "Non so perché, ma ho sorriso tutto il giorno.",
+              "sv": "Jag vet inte varför, men jag har lett hela dagen."
+            },
+            {
+              "it": "Alle nove sento un odore strano.",
+              "sv": "Klockan nio känner jag en konstig lukt."
+            },
+            {
+              "it": "Ho bruciato il risotto.",
+              "sv": "Jag har bränt risotton."
+            },
+            {
+              "it": "Non ho bruciato un risotto da anni.",
+              "sv": "Jag har inte bränt en risotto på flera år."
+            },
+            {
+              "it": "Davide mi guarda dalla porta, con un piatto in mano.",
+              "sv": "Davide tittar på mig från dörren, med en tallrik i handen."
+            },
+            {
+              "it": "«Che è successo?» mi chiede.",
+              "sv": "”Vad har hänt?” frågar han.",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Non rispondo, perché non lo so nemmeno io.",
+              "sv": "Jag svarar inte, för jag vet det inte ens själv."
+            }
+          ],
+          "question": {
+            "sv": "Vad händer med risotton?",
+            "options": ["Davide tappar den", "Gästerna skickar tillbaka den", "Luca bränner den"],
+            "answer": 2
+          }
+        },
+        {
+          "id": "alba-luca-02-3",
+          "chapter": 2,
+          "part": 3,
+          "title": "Giovedì",
+          "sv": "Torsdag",
+          "nota": "«Si apre» = öppnas, ordagrant «öppnar sig». «Ho dimenticato» = jag har glömt: avere + particip.",
+          "level": 4,
+          "narrator": "m",
+          "scene": "Två torsdagar utan henne, sedan kommer hon in i trattorian med boken.",
+          "sentences": [
+            {
+              "it": "Il giovedì dopo torno al mercato.",
+              "sv": "Torsdagen därpå går jag tillbaka till marknaden."
+            },
+            {
+              "it": "Cerco la donna vicino ai libri, ma lei non c'è.",
+              "sv": "Jag letar efter kvinnan vid böckerna, men hon är inte där."
+            },
+            {
+              "it": "Torno anche il giovedì dopo. Niente.",
+              "sv": "Jag går dit torsdagen efter också. Ingenting."
+            },
+            {
+              "it": "Passano tre settimane.",
+              "sv": "Det går tre veckor."
+            },
+            {
+              "it": "Poi, giovedì nove ottobre, la porta della trattoria si apre.",
+              "sv": "Sedan, torsdagen den nionde oktober, öppnas dörren till trattorian."
+            },
+            {
+              "it": "È lei.",
+              "sv": "Det är hon."
+            },
+            {
+              "it": "Ha un libro sotto il braccio, lo stesso libro.",
+              "sv": "Hon har en bok under armen, samma bok."
+            },
+            {
+              "it": "E io, per un momento, ho dimenticato tutto il resto.",
+              "sv": "Och jag har för ett ögonblick glömt allt annat."
+            }
+          ],
+          "question": {
+            "sv": "Vad har kvinnan med sig när hon kommer in?",
+            "options": ["En korg med fisk", "Samma bok under armen", "En karta över Nervi"],
+            "answer": 1
+          }
+        }
+      ],
+      "songs": [
+        {
+          "id": "alba-luca-02-canzone",
+          "chapter": 2,
+          "part": 4,
+          "title": "Qualcosa nell'aria",
+          "sv": "Något i luften",
+          "nota": "Refrängen ur Lontanos låt — autentisk text, inte förenklad för nivån.",
+          "spotify": "https://open.spotify.com/track/6OF1YGxN0fWMxmBX0vWzCk",
+          "lines": [
+            {
+              "it": "Qualcosa nell'aria",
+              "sv": "Något i luften"
+            },
+            {
+              "it": "Qualcosa che non ha un nome ancora",
+              "sv": "Något som ännu inte har något namn"
+            },
+            {
+              "it": "Qualcosa nell'aria",
+              "sv": "Något i luften"
+            },
+            {
+              "it": "Come il sole prima della sera",
+              "sv": "Som solen innan kvällen"
+            },
+            {
+              "it": "Non è amore — non lo so cos'è",
+              "sv": "Det är inte kärlek — jag vet inte vad det är"
+            },
+            {
+              "it": "Ma penso a te, e non ti conosco",
+              "sv": "Men jag tänker på dig, och jag känner dig inte"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Le prime parole",
+      "sv": "De första orden",
+      "pages": [
+        {
+          "id": "alba-luca-03-1",
+          "chapter": 3,
+          "part": 1,
+          "title": "Il dolce",
+          "sv": "Efterrätten",
+          "nota": "«La guardo» = jag tittar på henne: la är här ett pronomen, inte en artikel. «Lo faccio» = jag gör det.",
+          "level": 4,
+          "narrator": "m",
+          "scene": "Hon sitter vid bordet nära köket med vin och boken. Han bär ut efterrätten själv, vilket han aldrig gör.",
+          "sentences": [
+            {
+              "it": "Lei si siede al tavolo vicino alla cucina.",
+              "sv": "Hon sätter sig vid bordet nära köket."
+            },
+            {
+              "it": "Ordina un bicchiere di vino e apre il libro.",
+              "sv": "Hon beställer ett glas vin och öppnar boken."
+            },
+            {
+              "it": "Mangia piano e legge, sola e tranquilla.",
+              "sv": "Hon äter långsamt och läser, ensam och lugn."
+            },
+            {
+              "it": "Dalla cucina la guardo, tra un piatto e l'altro.",
+              "sv": "Från köket tittar jag på henne, mellan två tallrikar."
+            },
+            {
+              "it": "Alla fine porto il dolce io.",
+              "sv": "Till slut bär jag ut efterrätten själv."
+            },
+            {
+              "it": "Non lo faccio mai: il dolce lo porta Davide.",
+              "sv": "Det gör jag aldrig: efterrätten bär Davide ut."
+            },
+            {
+              "it": "Davide mi guarda con la bocca aperta.",
+              "sv": "Davide tittar på mig med öppen mun."
+            },
+            {
+              "it": "Metto il piatto sul suo tavolo e lei alza gli occhi.",
+              "sv": "Jag ställer tallriken på hennes bord och hon tittar upp."
+            }
+          ],
+          "question": {
+            "sv": "Vad gör Luca som han aldrig brukar göra?",
+            "options": ["Bär ut efterrätten själv", "Dricker vin i köket", "Stänger tidigt"],
+            "answer": 0
+          },
+          "lexicon": {
+            "porto": {
+              "p": "D3",
+              "sv": "jag bär (ut)",
+              "note": "port·o — -o = jag (portare)",
+              "deck": "D3.7"
+            },
+            "porta": {
+              "p": "D3",
+              "sv": "bär (ut)",
+              "note": "port·a — -a = han/hon (portare)",
+              "deck": "D3.7"
+            }
+          }
+        },
+        {
+          "id": "alba-luca-03-2",
+          "chapter": 3,
+          "part": 2,
+          "title": "Svedese",
+          "sv": "Svenska",
+          "nota": "«Che cosa legge?» — Lei (ni) är det artiga tilltalet och böjs som han/hon. Maniman är genuesiska för «ifall att»; Alba har det från sin mamma.",
+          "level": 4,
+          "narrator": "f",
+          "scene": "Han frågar vad hon läser, gissar på accenten, och hon skrattar. Servetten på väggen.",
+          "locked": [
+            "Francese?",
+            "Svedese.",
+            "Qui il mare non chiede niente.",
+            "Lo ringrazio.",
+            "maniman"
+          ],
+          "sentences": [
+            {
+              "it": "«Che cosa legge?» mi chiede il cuoco.",
+              "sv": "”Vad läser ni?” frågar kocken.",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Rispondo in italiano, ma lui non capisce il mio accento.",
+              "sv": "Jag svarar på italienska, men han kan inte placera min accent."
+            },
+            {
+              "it": "«Francese?» «Svedese.»",
+              "sv": "”Fransyska?” ”Svenska.”",
+              "speakers": ["m", "f"]
+            },
+            {
+              "it": "Fa una faccia così confusa che rido davvero.",
+              "sv": "Han ser så förvirrad ut att jag skrattar på riktigt."
+            },
+            {
+              "it": "Poi gli chiedo: «E quella poesia sul tovagliolo?»",
+              "sv": "Sedan frågar jag honom: ”Och den där dikten på servetten?”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Lui non lo sa, allora la leggo io, ad alta voce.",
+              "sv": "Han vet inte, så jag läser den själv, högt."
+            },
+            {
+              "it": "«Qui il mare non chiede niente. Lo ringrazio.»",
+              "sv": "”Här begär havet ingenting. Jag tackar det.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Poi dico maniman, e lui ride: «Come mia nonna!»",
+              "sv": "Sedan säger jag maniman, och han skrattar: ”Som min nonna!”",
+              "speakers": ["m"]
+            }
+          ],
+          "question": {
+            "sv": "Vilket land gissar Luca först på?",
+            "options": ["Sverige", "Frankrike", "Spanien"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "alba-luca-03-3",
+          "chapter": 3,
+          "part": 3,
+          "title": "Gli occhi",
+          "sv": "Ögonen",
+          "nota": "«Ho mai sentito» = jag har någonsin hört: mai står mellan avere och participet. «Le chiedo», «le dico» — le = åt henne.",
+          "level": 4,
+          "narrator": "m",
+          "scene": "Kaffe efter sex, att hon är halvsvensk, ögonen.",
+          "locked": [
+            "Non bevo caffè dopo le sei.",
+            "È la cosa meno italiana che ho mai sentito.",
+            "Questo spiega l'accento, ma non gli occhi."
+          ],
+          "sentences": [
+            {
+              "it": "Le chiedo se vuole un caffè.",
+              "sv": "Jag frågar henne om hon vill ha en kaffe."
+            },
+            {
+              "it": "«Non bevo caffè dopo le sei.»",
+              "sv": "”Jag dricker inte kaffe efter sex.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«È la cosa meno italiana che ho mai sentito», le dico.",
+              "sv": "”Det är det minst italienska jag någonsin har hört”, säger jag till henne.",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Lei ride e spiega: è mezza svedese.",
+              "sv": "Hon skrattar och förklarar: hon är halvsvensk."
+            },
+            {
+              "it": "La guardo negli occhi.",
+              "sv": "Jag ser henne i ögonen."
+            },
+            {
+              "it": "«Questo spiega l'accento, ma non gli occhi.»",
+              "sv": "”Det förklarar accenten, men inte ögonen.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "L'ho detto davvero?",
+              "sv": "Sa jag det verkligen?"
+            },
+            {
+              "it": "Lei diventa rossa e guarda il suo bicchiere.",
+              "sv": "Hon rodnar och tittar ner i sitt glas."
+            }
+          ],
+          "question": {
+            "sv": "Varför har Alba en accent som Luca inte kan placera?",
+            "options": ["Hon har bott i Frankrike", "Hon är halvsvensk", "Hon kommer från Milano"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "alba-luca-03-4",
+          "chapter": 3,
+          "part": 4,
+          "title": "Il treno delle dieci",
+          "sv": "Tåget klockan tio",
+          "nota": "«Abbiamo parlato» = vi har pratat: passato prossimo för det som just har hänt. «Il treno delle dieci» = tåget klockan tio.",
+          "level": 4,
+          "narrator": "f",
+          "scene": "Hon rodnar, betalar och går. På tåget ler hon.",
+          "sentences": [
+            {
+              "it": "È troppo, e troppo presto.",
+              "sv": "Det är för mycket, och för tidigt."
+            },
+            {
+              "it": "Sento il viso caldo, come una ragazzina.",
+              "sv": "Jag känner hur ansiktet hettar, som på en liten flicka."
+            },
+            {
+              "it": "Chiedo il conto, pago e vado via.",
+              "sv": "Jag ber om notan, betalar och går."
+            },
+            {
+              "it": "Abbiamo parlato venti minuti, e il personale ci ha guardato.",
+              "sv": "Vi har pratat i tjugo minuter, och personalen har tittat på oss."
+            },
+            {
+              "it": "Fuori l'aria è fresca.",
+              "sv": "Ute är luften sval."
+            },
+            {
+              "it": "Prendo il treno delle dieci per Sturla.",
+              "sv": "Jag tar tåget klockan tio till Sturla."
+            },
+            {
+              "it": "Nel vetro del finestrino vedo una donna che sorride.",
+              "sv": "I tågfönstrets glas ser jag en kvinna som ler."
+            },
+            {
+              "it": "Sono io.",
+              "sv": "Det är jag."
+            }
+          ],
+          "question": {
+            "sv": "Vem ser Alba i tågfönstret?",
+            "options": ["Fyren Lanterna", "Luca på perrongen", "Sig själv, när hon ler"],
+            "answer": 2
+          }
+        }
+      ],
+      "songs": [
+        {
+          "id": "alba-luca-03-canzone",
+          "chapter": 3,
+          "part": 5,
+          "title": "Le prime parole",
+          "sv": "De första orden",
+          "nota": "Refrängen ur Lontanos låt — autentisk text, inte förenklad för nivån.",
+          "spotify": "https://open.spotify.com/track/4GB0zMFK1WCQyxdq0EIA55",
+          "lines": [
+            {
+              "it": "Le prime parole",
+              "sv": "De första orden"
+            },
+            {
+              "it": "Non sai ancora cosa diventeranno",
+              "sv": "Du vet ännu inte vad de ska bli"
+            },
+            {
+              "it": "Le prime parole",
+              "sv": "De första orden"
+            },
+            {
+              "it": "Sono sempre un po' strane, un po' belle",
+              "sv": "De är alltid lite konstiga, lite vackra"
+            },
+            {
+              "it": "Come un passo nel buio",
+              "sv": "Som ett steg i mörkret"
+            },
+            {
+              "it": "Che trova il pavimento",
+              "sv": "som hittar golvet"
+            },
+            {
+              "it": "Le prime parole",
+              "sv": "De första orden"
+            },
+            {
+              "it": "E già non voglio che finisca",
+              "sv": "Och redan vill jag inte att det tar slut"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

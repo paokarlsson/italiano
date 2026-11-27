@@ -5,3 +5,7 @@ package-lock.json
 
 # Prototypen ligger kvar precis som den skrevs — den ska inte formateras om
 /docs/original-prototype.html
+
+# Alba & Luca: planen, låttexterna och kanon ligger kvar som de skrevs
+/docs/alba-luca/
+/public/data/storie/alba-luca/

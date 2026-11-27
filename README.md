@@ -9,6 +9,14 @@ delar som bygger på samma fyra pelare:
 - **Leggi** — vägen. Korta texter som nästan helt består av kärnan. Du läser, trycker på
   det du inte ser igenom och får ordet förklarat genom sin pelare. En fråga om innehållet
   avslutar texten. Det enda appen mäter är hur stor del du läste på egen hand.
+- **Alba & Luca** — följetongen. En kärlekshistoria i Genua i 14 kapitel, ett per låt på
+  albumet _Alba & Luca_ (Lontano), där grammatiken följer handlingen: dåtid när personerna
+  börjar minnas, framtid när de vågar tänka framåt. Efter varje kapitel kommer låtens
+  refräng med svenska under. Följetongen följer med appen, utan ljud. Med en Claude-nyckel
+  skrivs varje sida om efter hur det gick på den förra — samma scen och repliker, men
+  språket på din nivå och med dina öppna ord invävda. Med en ElevenLabs-nyckel läses den
+  upp. Planen, kanon och låttexterna ligger i `docs/alba-luca/` och
+  `public/data/storie/alba-luca/`.
 - **Ripasso** — det som skaver. En kort repetition som appen själv plockar ihop ur det du
   slagit upp och det som går trögt i gymmet.
 - **Palestra** — gymmet. 66 mazzi och drygt tusen frågor för den som vill nöta en enskild
@@ -71,6 +79,7 @@ samma commit inte körs två gånger.
 | ----------- | ---------------------- | --------------------------------------------------------------- |
 | Hem         | `/`                    | Nästa text, berättelsen, mazzot att satsa på, gymmet per pelare |
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet                |
+| Canzone     | `/canzone/:songId`     | Låten efter ett kapitel i följetongen: refrängen it/sv          |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter         |
 | Fler texter | `/testi`               | Ny text eller nästa del, egen text, dina texter                 |
 | Ljud        | `/suono`               | Hämta biblioteket, läs in med egen röst, publicera              |

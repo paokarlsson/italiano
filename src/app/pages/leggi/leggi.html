@@ -5,6 +5,9 @@
 
   <div class="stage">
     <p class="lt-nota">{{ t.nota }}</p>
+    @if (adapted()) {
+      <p class="lt-adapted">Omskriven åt dig, på nivå {{ t.level }}</p>
+    }
 
     <div class="lt-tools">
       @if (canListen()) {
@@ -153,7 +156,10 @@
           </p>
         }
         @if (ai.hasKey() && s.levelShift) {
-          <p>Nästa skrivna text blir lite {{ s.levelShift > 0 ? 'svårare' : 'lättare' }}.</p>
+          <p>
+            {{ storyPage() ? 'Nästa sida skrivs' : 'Nästa skrivna text blir' }} lite
+            {{ s.levelShift > 0 ? 'svårare' : 'lättare' }}.
+          </p>
         }
         @if (s.lookedKeys.length) {
           <p>
@@ -164,7 +170,19 @@
 
       <div class="result-btns">
         @let next = nextText();
-        @if (next && nextIsNew()) {
+        @let song = afterSong();
+        @let page = afterPage();
+        @if (song) {
+          <button class="cta gold" type="button" [routerLink]="['/canzone', song.id]">
+            Låten: {{ song.title }} →
+          </button>
+        } @else if (page && supply.pageComing(page.id)) {
+          <button class="cta gold" type="button" disabled>Nästa sida skrivs om åt dig…</button>
+        } @else if (page) {
+          <button class="cta gold" type="button" [routerLink]="['/leggi', page.id]">
+            Nästa sida: {{ page.title }} →
+          </button>
+        } @else if (next && nextIsNew()) {
           <button class="cta gold" type="button" [routerLink]="['/leggi', next.id]">
             Nästa text: {{ next.title }} →
           </button>

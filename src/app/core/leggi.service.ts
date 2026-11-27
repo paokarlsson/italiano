@@ -8,17 +8,24 @@ import {
   PillarId,
   ReadingProfile,
   ReadSummary,
+  StoryItem,
+  StorySong,
   Token,
   UserText,
 } from '../models/leggi.models';
 import { levelShift, MAX_LEVEL, MIN_LEVEL } from './levels';
 import { StorageService } from './storage.service';
+import { storyLexicon } from './story';
+import { StoryStore } from './story-store';
 import { tokenize } from './tokenize';
 
 const LEGGI_KEY = 'it_companion_leggi_v1';
 const TEXTS_KEY = 'it_companion_texts_v1';
 
 const EMPTY: LeggiProgress = { texts: {}, words: {} };
+
+/** Det som står på tur: en text att läsa, eller en låt i följetongen. */
+export type Step = { kind: 'text'; text: Lettura } | { kind: 'song'; song: StorySong };
 
 /**
  * Läsningen: texterna, ordlistan och vad som hänt med varje ord.
@@ -29,13 +36,15 @@ const EMPTY: LeggiProgress = { texts: {}, words: {} };
 @Injectable({ providedIn: 'root' })
 export class LeggiService {
   private readonly storage = inject(StorageService);
+  private readonly storyStore = inject(StoryStore);
 
   private readonly _texts = signal<Lettura[]>([]);
   private readonly _userTexts = signal<UserText[]>([]);
   private readonly _progress = signal<LeggiProgress>(EMPTY);
   private _lexicon: Record<string, LexEntry> = {};
   private names: string[] = [];
-  private readonly tokenCache = new Map<string, Token[][]>();
+  /** Texten som delades och bitarna den gav — en omskriven sida är en annan text. */
+  private readonly tokenCache = new Map<string, { text: Lettura; tokens: Token[][] }>();
 
   /** De inbyggda texterna, i läsordning. */
   readonly texts = this._texts.asReadonly();
@@ -89,6 +98,8 @@ export class LeggiService {
   readonly profile = computed<ReadingProfile>(() => {
     this._texts();
     const own = this._userTexts();
+    const story = this.storyStore.data();
+    const adapted = Object.values(this.storyStore.adapted());
     const load: Record<PillarId, { seen: number; looked: number }> = {
       D1: { seen: 0, looked: 0 },
       D2: { seen: 0, looked: 0 },
@@ -100,7 +111,9 @@ export class LeggiService {
       // Den inbyggda ordlistan först; annars den egna text där formen står.
       const entry = Object.hasOwn(this._lexicon, key)
         ? this._lexicon[key]
-        : own.find((t) => Object.hasOwn(t.lexicon, key))?.lexicon[key];
+        : story && Object.hasOwn(story.lexicon, key)
+          ? story.lexicon[key]
+          : [...own, ...adapted].find((t) => Object.hasOwn(t.lexicon, key))?.lexicon[key];
       if (!entry || !load[entry.p]) continue;
       load[entry.p].seen += word.seen;
       load[entry.p].looked += word.looked;
@@ -149,14 +162,29 @@ export class LeggiService {
     Object.values(this._progress().texts).reduce((n, r) => n + r.times, 0),
   );
 
+  /** Det första i följetongen som inte är läst — en sida eller en låt. Null när allt är det. */
+  readonly storyNext = computed<StoryItem | null>(() => {
+    const read = this._progress().texts;
+    return this.storyStore.items().find((item) => !read[item.id]) ?? null;
+  });
+
+  /** Antal lästa sidor och hörda låtar i följetongen. */
+  readonly storyRead = computed(() => {
+    const read = this._progress().texts;
+    return this.storyStore.items().filter((item) => read[item.id]).length;
+  });
+
   /**
-   * Nästa text: den första olästa inbyggda, sedan den äldsta olästa i lagret. När allt är
-   * läst — den inbyggda med flest öppna ord, och vid lika den som lästes för längst sedan.
+   * Nästa text: den första olästa inbyggda, sedan följetongen, sedan den äldsta olästa i
+   * lagret. När allt är läst — den inbyggda med flest öppna ord, och vid lika den som
+   * lästes för längst sedan.
    */
   readonly next = computed<Lettura | null>(() => {
     const texts = this._texts();
     const read = this._progress().texts;
-    const unread = texts.find((t) => !read[t.id]) ?? this.stock()[0];
+    const page = this.storyStore.items().find((item) => item.kind === 'page' && !read[item.id]);
+    const unread =
+      texts.find((t) => !read[t.id]) ?? (page && this.text(page.id)) ?? this.stock()[0];
     if (unread) return unread;
     const open = new Set(this.openWords());
     let best: Lettura | null = null;
@@ -169,6 +197,17 @@ export class LeggiService {
       }
     }
     return best;
+  });
+
+  /** Det som står på tur — som `next`, men med följetongens låtar på sina platser. */
+  readonly step = computed<Step | null>(() => {
+    const read = this._progress().texts;
+    const story = this.storyNext();
+    if (story?.kind === 'song' && this._texts().every((t) => read[t.id])) {
+      return { kind: 'song', song: story.song };
+    }
+    const text = this.next();
+    return text ? { kind: 'text', text } : null;
   });
 
   async load(): Promise<void> {
@@ -213,8 +252,14 @@ export class LeggiService {
     return this.names;
   }
 
+  /** En text — inbyggd, en sida i följetongen (omskriven åt läsaren om den är det), eller egen. */
   text(id: string): Lettura | undefined {
-    return this._texts().find((t) => t.id === id) ?? this._userTexts().find((t) => t.id === id);
+    return (
+      this._texts().find((t) => t.id === id) ??
+      this.storyStore.adaptation(id) ??
+      this.storyStore.page(id) ??
+      this._userTexts().find((t) => t.id === id)
+    );
   }
 
   /** Textens plats bland de inbyggda, från 1 — eller 0 för en egen text. */
@@ -228,19 +273,22 @@ export class LeggiService {
 
   /** Texten delad i meningar och uppslagbara bitar. */
   tokens(id: string): Token[][] {
-    let cached = this.tokenCache.get(id);
-    if (!cached) {
-      const text = this.text(id);
-      const lexicon = this.lexiconFor(id);
-      cached = text ? text.sentences.map((s) => tokenize(s.it, lexicon)) : [];
-      this.tokenCache.set(id, cached);
-    }
-    return cached;
+    const text = this.text(id);
+    if (!text) return [];
+    const cached = this.tokenCache.get(id);
+    if (cached?.text === text) return cached.tokens;
+    const lexicon = this.lexiconFor(id);
+    const tokens = text.sentences.map((s) => tokenize(s.it, lexicon));
+    this.tokenCache.set(id, { text, tokens });
+    return tokens;
   }
 
-  /** Bokför en läst text: vilka ord som stod i den och vilka av dem som slogs upp. */
-  complete(id: string, looked: ReadonlySet<string>): ReadSummary {
-    const keys = this.keys(id);
+  /**
+   * Bokför en läst text: vilka ord som stod i den och vilka av dem som slogs upp. `tokens`
+   * är texten som den lästes — en sida i följetongen kan ha skrivits om sedan dess.
+   */
+  complete(id: string, looked: ReadonlySet<string>, tokens?: Token[][]): ReadSummary {
+    const keys = tokens ? keysOf(tokens) : this.keys(id);
     const distinct = [...new Set(keys)];
     const before = this._progress();
     const text = this.text(id);
@@ -282,6 +330,17 @@ export class LeggiService {
       settledKeys,
       levelShift: shift,
     };
+  }
+
+  /** Bokför en låt i följetongen som hörd — den har inga ord att räkna. */
+  markHeard(id: string): void {
+    const before = this._progress();
+    const prev = before.texts[id];
+    const texts = {
+      ...before.texts,
+      [id]: { at: Date.now(), words: 0, looked: 0, times: (prev?.times ?? 0) + 1 },
+    };
+    this.saveProgress({ ...before, texts });
   }
 
   /** De öppna orden med uppslag och sammanhang, mest uppslagna först. */
@@ -348,14 +407,16 @@ export class LeggiService {
    * ord förklarat i sitt sammanhang, och «l'» kan vara ett pronomen i stället för en artikel.
    */
   private lexiconFor(id: string): Record<string, LexEntry> {
-    return this._userTexts().find((t) => t.id === id)?.lexicon ?? this._lexicon;
+    const own = this._userTexts().find((t) => t.id === id) ?? this.storyStore.adaptation(id);
+    if (own) return own.lexicon;
+    const page = this.storyStore.page(id);
+    const story = this.storyStore.data();
+    return page && story ? storyLexicon(this._lexicon, story, page) : this._lexicon;
   }
 
   /** Alla uppslagbara bitar i texten, i ordning och med upprepningar. */
   private keys(id: string): string[] {
-    return this.tokens(id)
-      .flat()
-      .flatMap((t) => (t.key ? [t.key] : []));
+    return keysOf(this.tokens(id));
   }
 
   private saveProgress(progress: LeggiProgress): void {
@@ -366,4 +427,9 @@ export class LeggiService {
   private saveUserTexts(): void {
     void this.storage.set(TEXTS_KEY, JSON.stringify(this._userTexts()));
   }
+}
+
+/** Alla uppslagbara bitar, i ordning och med upprepningar. */
+function keysOf(tokens: Token[][]): string[] {
+  return tokens.flat().flatMap((t) => (t.key ? [t.key] : []));
 }
