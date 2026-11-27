@@ -4,9 +4,12 @@ import { pagesLeft } from './ai-book';
 import {
   bookPacks,
   coverPacks,
+  Cover,
   decodePack,
   encodePack,
   packName,
+  Pack,
+  PACK_MAX_BYTES,
   packNumber,
   splitPacks,
 } from './audio-pack';
@@ -109,7 +112,8 @@ export class LibraryService {
       .sort((a, b) => a.createdAt - b.createdAt);
   });
   /**
-   * Egna böcker som är skrivna klart men inte publicerade än, äldst först. En bok som
+   * Egna böcker som är skrivna klart men inte publicerade än, äldst först. De publiceras en
+   * i taget, med publishBook(), när läsaren väljer det — aldrig med resten. En bok som
    * hämtats ur biblioteket publiceras inte igen.
    */
   readonly pendingBooks = computed(() => {
@@ -127,13 +131,34 @@ export class LibraryService {
       .sort((a, b) => a.own!.createdAt - b.own!.createdAt);
   });
 
+  /** Boken som publiceras just nu. */
+  readonly publishing = signal<string | null>(null);
+
   /** Sant om texten eller boken är publicerad härifrån. */
   isPublished(id: string): boolean {
     return this.state().published.includes(id);
   }
 
-  /** Egna omslag som inte ligger i något paket än. */
-  readonly pendingCovers = computed(() => this.covers.pending());
+  /**
+   * Egna omslag som inte ligger i något paket än. Omslaget till en egen bok som inte är
+   * publicerad väntar på boken.
+   */
+  readonly pendingCovers = computed(() => {
+    const held = this.heldBooks();
+    return Object.entries(this.covers.covers()).filter(([book, c]) => !c.pub && !held.has(book))
+      .length;
+  });
+
+  /** Egna böcker som inte är publicerade — deras omslag följer med boken, inte före. */
+  private readonly heldBooks = computed(() => {
+    const published = new Set(this.state().published);
+    return new Set(
+      this.stories
+        .books()
+        .filter((b) => !b.own?.shared && !published.has(b.id))
+        .map((b) => b.id),
+    );
+  });
   /** Egna klipp som inte ligger i något paket än, med båda rösterna. */
   readonly pendingClips = computed(
     () => this.store.pending(this.voice.tag('f')) + this.store.pending(this.voice.tag('m')),
@@ -224,10 +249,56 @@ export class LibraryService {
 
   /**
    * Publicerar det som är nytt: klippen som lästs in sedan sist, texterna som har lästs och
-   * omslagen som skapats.
+   * omslagen som skapats. Egna böcker följer inte med — de publiceras en i taget.
    * Kräver inloggning och en mapp. Returnerar antalet paket som laddades upp.
    */
-  async publish(): Promise<number> {
+  publish(): Promise<number> {
+    return this.send(async () => {
+      // Ett paket har en röst. Texterna följer med det första paketet.
+      let texts = this.pendingTexts();
+      const packs: Pack[] = [];
+      for (const voice of ['f', 'm'] as const) {
+        const tag = this.voice.tag(voice);
+        const clips = await this.store.unpublished(tag);
+        if (!clips.length) continue;
+        packs.push(...splitPacks(tag, clips, texts));
+        texts = [];
+      }
+      if (texts.length) packs.push(...splitPacks(this.voice.tag('f'), [], texts));
+      const held = this.heldBooks();
+      packs.push(...coverPacks(this.covers.unpublished().filter((c) => !held.has(c.book))));
+      return packs;
+    });
+  }
+
+  /**
+   * Publicerar en egen bok som är skriven klart, med sitt omslag om det finns ett som inte
+   * är publicerat. Returnerar sant när boken ligger i mappen.
+   */
+  async publishBook(id: string): Promise<boolean> {
+    const book = this.pendingBooks().find((b) => b.id === id);
+    if (!book || this.working()) return false;
+    this.publishing.set(id);
+    try {
+      const sent = await this.send(async () => {
+        const cover: Cover[] = this.covers.unpublished().filter((c) => c.book === id);
+        const [pack] = bookPacks([book]);
+        // Omslaget i samma paket som boken, om det ryms — annars i ett eget efter.
+        return cover.length && encodePack({ ...pack, covers: cover }).byteLength <= PACK_MAX_BYTES
+          ? [{ ...pack, covers: cover }]
+          : [pack, ...coverPacks(cover)];
+      });
+      return sent > 0 && this.isPublished(id);
+    } finally {
+      this.publishing.set(null);
+    }
+  }
+
+  /**
+   * Laddar upp paketen som `build` ger, med löpnummer efter det som redan ligger i mappen.
+   * Varje paket bokförs när det är uppladdat. Returnerar antalet paket som kom upp.
+   */
+  private async send(build: () => Promise<Pack[]>): Promise<number> {
     if (this.working()) return 0;
     this.working.set('publish');
     this.error.set('');
@@ -237,20 +308,7 @@ export class LibraryService {
       this.packs.set(files.filter((f) => packNumber(f.name) !== null));
       this.checked.set(true);
       let number = Math.max(0, ...this.packs().map((p) => packNumber(p.name) ?? 0));
-
-      // Ett paket har en röst. Texterna följer med det första paketet.
-      let texts = this.pendingTexts();
-      const packs = [];
-      for (const voice of ['f', 'm'] as const) {
-        const tag = this.voice.tag(voice);
-        const clips = await this.store.unpublished(tag);
-        if (!clips.length) continue;
-        packs.push(...splitPacks(tag, clips, texts));
-        texts = [];
-      }
-      if (texts.length) packs.push(...splitPacks(this.voice.tag('f'), [], texts));
-      packs.push(...bookPacks(this.pendingBooks()));
-      packs.push(...coverPacks(this.covers.unpublished()));
+      const packs = await build();
       this.progress.set({ done: 0, total: packs.length });
       let done = 0;
       for (const pack of packs) {

@@ -8,6 +8,7 @@ import { GeminiService } from '../../core/gemini.service';
 import { StoryStore } from '../../core/story-store';
 import { AiError, PASTE_MAX_CHARS } from '../../core/ai-text';
 import { LeggiService } from '../../core/leggi.service';
+import { DriveService } from '../../core/drive.service';
 import { LibraryService } from '../../core/library.service';
 import { level, LEVELS } from '../../core/levels';
 import { PILLAR_NAMES } from '../../core/profile';
@@ -31,6 +32,9 @@ export class Testi {
   private readonly gemini = inject(GeminiService);
   private readonly covers = inject(CoverStore);
   protected readonly library = inject(LibraryService);
+  protected readonly drive = inject(DriveService);
+  /** Sant när det går att publicera: inloggad, och med en mapp att lägga paketen i. */
+  protected readonly canPublish = computed(() => this.drive.connected() && !!this.drive.folderId());
 
   protected readonly levelCount = LEVELS.length;
   protected readonly pasteMax = PASTE_MAX_CHARS;
@@ -84,6 +88,7 @@ export class Testi {
         level: book.own?.level ?? 1,
         shared: !!book.own?.shared,
         published: this.library.isPublished(book.id),
+        publishable: this.library.pendingBooks().includes(book),
       };
     }),
   );
@@ -140,6 +145,20 @@ export class Testi {
 
   protected continueBook(book: StoryData): Promise<void> {
     return this.run(async () => this.bookDone(await this.ai.continueBook(book.id)));
+  }
+
+  /** Publicerar en bok i biblioteket, efter en fråga — ett publicerat paket går inte att ta bort. */
+  protected async publishBook(book: StoryData): Promise<void> {
+    const ok = confirm(
+      `Publicera «${book.title}» i biblioteket? Alla som hämtar biblioteket får boken, och den går inte att ta tillbaka.`,
+    );
+    if (!ok) return;
+    this.error.set('');
+    if (await this.library.publishBook(book.id)) {
+      this.toast.show(`«${book.title}» är publicerad`);
+    } else if (this.library.error()) {
+      this.error.set(this.library.error());
+    }
   }
 
   protected deleteBook(book: StoryData): void {

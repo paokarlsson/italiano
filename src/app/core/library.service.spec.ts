@@ -276,23 +276,39 @@ describe('LibraryService', () => {
     };
   };
 
-  it('publicerar egna böcker när de är skrivna klart, och hämtar andras', async () => {
+  it('publicerar en egen bok i taget, med sitt omslag, och hämtar andras', async () => {
     const stories = TestBed.inject(StoryStore);
+    const covers = TestBed.inject(CoverStore);
     stories.saveBook(book('bok-klar'));
     stories.saveBook(book('bok-halv', 2));
-    // Bara den som är skriven klart.
+    await covers.put({ book: 'bok-klar', mime: 'image/png', bytes: new Uint8Array([7]) }, false);
+    await covers.put({ book: 'valigia-blu', mime: 'image/png', bytes: new Uint8Array([8]) }, false);
+    // Bara den som är skriven klart kan publiceras, och dess omslag väntar på den.
+    expect(library.pendingBooks().map((b) => b.id)).toEqual(['bok-klar']);
+    expect(library.pendingCovers()).toBe(1);
+    expect(await library.publishBook('bok-halv')).toBe(false);
+
+    // Publicera allt tar inte med böckerna, och inte heller omslaget till en opublicerad bok.
+    expect(await library.publish()).toBe(1);
+    const first = decodePack(drive.files.get('id-pack-0001.itpk')!.bytes);
+    expect(first.books).toBeUndefined();
+    expect(first.covers?.map((c) => c.book)).toEqual(['valigia-blu']);
     expect(library.pendingBooks().map((b) => b.id)).toEqual(['bok-klar']);
 
-    expect(await library.publish()).toBe(1);
-    const [file] = [...drive.files.values()];
-    expect(decodePack(file.bytes).books?.map((b) => b.id)).toEqual(['bok-klar']);
+    // Boken publiceras för sig, med omslaget i samma paket.
+    expect(await library.publishBook('bok-klar')).toBe(true);
+    const second = decodePack(drive.files.get('id-pack-0002.itpk')!.bytes);
+    expect(second.books?.map((b) => b.id)).toEqual(['bok-klar']);
+    expect(second.covers?.map((c) => c.book)).toEqual(['bok-klar']);
     expect(library.pendingBooks()).toEqual([]);
+    expect(library.pendingCovers()).toBe(0);
     expect(library.isPublished('bok-klar')).toBe(true);
+    expect(library.publishing()).toBeNull();
 
     // Någon annans bok i mappen: den hämtas, märkt som hämtad — en som redan finns rörs inte,
     // och inte heller en trasig eller en med samma id som en egen.
-    drive.files.set('id-pack-0002.itpk', {
-      name: 'pack-0002.itpk',
+    drive.files.set('id-pack-0003.itpk', {
+      name: 'pack-0003.itpk',
       bytes: encodePack({
         voice: '',
         clips: [],

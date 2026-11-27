@@ -42,8 +42,9 @@ delar som bygger på samma fyra pelare:
   för sida och läses som de andra följetongerna; en påbörjad egen bok visas på
   startsidan bredvid den du står i. Stannar den på vägen skrivs resten med _Skriv klart_.
   Finns en Gemini-nyckel ritas omslaget när boken är klar. En bok som är skriven klart
-  publiceras i biblioteket med nästa tryck på _Publicera_ under Ljud, och en besökare får
-  den bland sina böcker, märkt «ur biblioteket».
+  publiceras i biblioteket när du väljer det, med en knapp per bok under _Dina böcker_ —
+  en i taget, med sitt omslag, och aldrig med resten under Ljud. En besökare får den bland
+  sina böcker, märkt «ur biblioteket».
 - **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp,
   med en kvinnlig och en manlig röst efter vem som talar. Den som har en egen
   ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
