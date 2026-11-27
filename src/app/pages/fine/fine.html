@@ -1,0 +1,119 @@
+@let b = book();
+@let s = summary();
+<app-topbar step="Fine" [title]="b?.title ?? 'Boken'" />
+
+@if (b && s) {
+  <div class="stage">
+    <div class="fine-back" [class.unfinished]="!s.done">
+      @if (cover(); as c) {
+        <img class="fine-cover" [src]="c" [alt]="'Omslaget till ' + b.title" />
+      }
+      <div class="fine-word" lang="it">{{ s.done ? 'Fine.' : 'Quasi…' }}</div>
+      <h2 class="fine-title" lang="it">{{ b.title }}</h2>
+      @if (b.sv) {
+        <p class="fine-blurb">{{ b.sv }}</p>
+      }
+      @if (b.own?.sequel; as q) {
+        <p class="fine-meta">
+          Uppföljare till <i lang="it">{{ q.title }}</i>
+        </p>
+      }
+
+      <div class="fine-stats">
+        <div>
+          <b>{{ s.pages }}</b
+          ><span>{{ s.pages === 1 ? 'sida' : 'sidor' }}</span>
+        </div>
+        <div>
+          <b>{{ s.words }}</b
+          ><span>ord</span>
+        </div>
+        <div>
+          <b>{{ s.own }}<small>%</small></b
+          ><span>på egen hand</span>
+        </div>
+      </div>
+      <p class="fine-meta">
+        @if (s.done) {
+          Läst {{ span()
+          }}{{ s.songs ? ', med ' + s.songs + (s.songs === 1 ? ' låt' : ' låtar') : '' }} ·
+          {{ s.looked }} uppslag.
+        } @else {
+          {{ s.read }} av {{ s.total }} lästa · {{ s.looked }} uppslag hittills.
+        }
+      </p>
+    </div>
+
+    @if (!s.done) {
+      @if (resume(); as r) {
+        <button class="cta gold" type="button" [routerLink]="r.link">
+          Läs vidare: {{ r.label }} →
+        </button>
+      }
+    } @else {
+      <div class="ai-card fine-review">
+        <div class="eyebrow">Ditt omdöme</div>
+        <div class="fine-stars" role="group" aria-label="Betyg">
+          @for (n of stars; track n) {
+            <button
+              type="button"
+              [class.on]="(review()?.stars ?? 0) >= n"
+              [attr.aria-label]="n + ' av 5'"
+              [attr.aria-pressed]="review()?.stars === n"
+              (click)="rate(n)"
+            >
+              ★
+            </button>
+          }
+        </div>
+        @if (review()) {
+          <textarea
+            rows="2"
+            maxlength="280"
+            placeholder="En rad om boken, om du vill — vad var bäst, vad saknades?"
+            aria-label="Vad tyckte du?"
+            [value]="noteText()"
+            (input)="setNote($event)"
+            (blur)="saveNote()"
+          ></textarea>
+          @if (b.own && ai.hasKey()) {
+            <p class="ai-fine">Omdömet följer med om du beställer en uppföljare.</p>
+          }
+        } @else {
+          <p class="ai-fine">Hur var den? Tryck på en stjärna.</p>
+        }
+      </div>
+
+      <div class="result-btns">
+        @if (ai.hasKey()) {
+          <button
+            class="cta gold"
+            type="button"
+            routerLink="/testi"
+            [queryParams]="{ uppfoljare: b.id }"
+            fragment="ny-bok"
+          >
+            Skriv en uppföljare →
+          </button>
+        }
+        @if (nextBook(); as n) {
+          <button class="cta" [class.gold]="!ai.hasKey()" type="button" [routerLink]="n.link">
+            Nästa bok: {{ n.title }} →
+          </button>
+        }
+        <button class="cta ghost" type="button" (click)="share()">Dela att du har läst den</button>
+        @if (publishable()) {
+          <button class="cta" type="button" [disabled]="!!library.working()" (click)="publish()">
+            Publicera i biblioteket
+          </button>
+        }
+        <button class="cta ghost" type="button" routerLink="/">Till startsidan</button>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="stage">
+    <p>Boken finns inte.</p>
+    <button class="cta ghost" type="button" routerLink="/">Till startsidan</button>
+  </div>
+}

@@ -193,6 +193,12 @@
               @if (b.left) {
                 · {{ b.written }} av {{ b.planned }} sidor skrivna
               }
+              @if (b.stars) {
+                ·
+                <span class="ai-stars" [attr.aria-label]="b.stars + ' av 5'">{{
+                  '★★★★★'.slice(0, b.stars)
+                }}</span>
+              }
               @if (b.sequelTo) {
                 · uppföljare till <i lang="it">{{ b.sequelTo }}</i>
               }

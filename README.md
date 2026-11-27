@@ -25,6 +25,12 @@ delar som bygger på samma fyra pelare:
   kliché han kan, tills mamma ringer. Sju sidor var, som läses varvat med grundkursen —
   varje sida efter grundkursens texter på samma nivå — så att den som börjar har något att
   följa redan från början. De läses alltid som de står och skrivs inte om.
+- **Fine** — när en bok är läst till slut säger appen det: efter sista sidan kommer
+  bokens baksida, med vad den handlade om, hur många sidor och ord det blev, hur stor del
+  som lästes på egen hand och hur länge läsningen pågick. Där ger du boken ett omdöme —
+  stjärnor och en rad — som följer med om du beställer en uppföljare, och därifrån går
+  det att dela att boken är läst, skriva en uppföljare, publicera en egen bok eller gå
+  vidare till nästa. Lästa böcker på startsidan har en länk tillbaka till baksidan.
 - **Ripasso** — det som skaver. En kort repetition som appen själv plockar ihop ur det du
   slagit upp och det som går trögt i gymmet.
 - **Palestra** — gymmet. 66 mazzi och drygt tusen frågor för den som vill nöta en enskild
@@ -107,6 +113,7 @@ samma commit inte körs två gånger.
 | Hem         | `/`                    | Nästa text, berättelsen, mazzot att satsa på, gymmet per pelare |
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet                |
 | Canzone     | `/canzone/:songId`     | Låten efter ett kapitel i följetongen: refrängen it/sv          |
+| Fine        | `/fine/:storyId`       | Bokens baksida: hur det gick, omdöme, dela, uppföljare          |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter         |
 | Fler texter | `/testi`               | Ny text, ny bok eller uppföljare, egen text, dina texter        |
 | Bibliotek   | `/bibliotek`           | Hämta, läs in med egen röst, rita omslag, publicera             |

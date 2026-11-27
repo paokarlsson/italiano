@@ -1,4 +1,11 @@
-import { Lettura, LexEntry, StoryData, StoryItem, StoryPage } from '../models/leggi.models';
+import {
+  Lettura,
+  LexEntry,
+  ReadState,
+  StoryData,
+  StoryItem,
+  StoryPage,
+} from '../models/leggi.models';
 
 /**
  * Följetongen som följer med appen — rena funktioner över dess data. Själva läsningen och
@@ -56,4 +63,46 @@ export function readingPath(texts: readonly Lettura[], stories: readonly StoryDa
 /** Kapitlets namn som det visas: «Prolog» eller «3 · Le prime parole». */
 export function chapterLabel(chapter: { n: number; title: string }): string {
   return chapter.n === 0 ? 'Prolog' : `${chapter.n} · ${chapter.title}`;
+}
+
+/** Hur det gick med en bok, räknat ur det som är läst. */
+export interface BookSummary {
+  /** Sidor och låtar i boken, och hur många av dem som är lästa och hörda. */
+  pages: number;
+  songs: number;
+  read: number;
+  total: number;
+  /** Sant när allt är läst. */
+  done: boolean;
+  /** Ord på de lästa sidorna, uppslag, och hur stor del som lästes på egen hand. */
+  words: number;
+  looked: number;
+  own: number;
+  /** När den första och den sista sidan lästes — den senaste läsningen av varje. */
+  first: number | null;
+  last: number | null;
+}
+
+/** Hur det gick med en bok: sidor, ord, uppslag och när den lästes. */
+export function bookSummary(
+  items: readonly StoryItem[],
+  texts: Readonly<Record<string, ReadState>>,
+): BookSummary {
+  const read = items.filter((i) => texts[i.id]);
+  const pages = read.filter((i) => i.kind === 'page').map((i) => texts[i.id]);
+  const words = pages.reduce((n, r) => n + r.words, 0);
+  const looked = pages.reduce((n, r) => n + r.looked, 0);
+  const times = read.map((i) => texts[i.id].at);
+  return {
+    pages: items.filter((i) => i.kind === 'page').length,
+    songs: items.filter((i) => i.kind === 'song').length,
+    read: read.length,
+    total: items.length,
+    done: items.length > 0 && read.length === items.length,
+    words,
+    looked,
+    own: words ? Math.round((100 * (words - looked)) / words) : 100,
+    first: times.length ? Math.min(...times) : null,
+    last: times.length ? Math.max(...times) : null,
+  };
 }

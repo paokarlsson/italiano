@@ -194,6 +194,16 @@ export interface BookSequel {
   scenes: string[];
   /** Den sista sidan, på italienska — där uppföljaren tar vid. */
   ending: string[];
+  /** Läsarens omdöme om den tidigare boken, om det finns ett. */
+  review?: string;
+}
+
+/** Läsarens omdöme om en bok, när den är läst: stjärnor och en rad, om man vill. */
+export interface BookReview {
+  /** 1–5. */
+  stars: number;
+  note: string;
+  at: number;
 }
 
 /** En plats i följetongen: en sida att läsa eller en låt att lyssna på. */

@@ -1,5 +1,12 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { StoryData, StoryItem, StoryPage, StorySong, UserText } from '../models/leggi.models';
+import {
+  BookReview,
+  StoryData,
+  StoryItem,
+  StoryPage,
+  StorySong,
+  UserText,
+} from '../models/leggi.models';
 import { StorageService } from './storage.service';
 import { storyItems } from './story';
 
@@ -19,6 +26,8 @@ interface StoredStory {
   adapted?: Record<string, UserText>;
   /** Sidor där omskrivningen inte höll — de läses som de är. */
   failed?: string[];
+  /** Läsarens omdömen om böckerna, per bok-id. */
+  reviews?: Record<string, BookReview>;
 }
 
 /**
@@ -33,6 +42,9 @@ export class StoryStore {
   private readonly _books = signal<readonly StoryData[]>([]);
   private readonly _adapted = signal<Record<string, UserText>>({});
   private readonly _failed = signal<ReadonlySet<string>>(new Set());
+  private readonly _reviews = signal<Record<string, BookReview>>({});
+  /** Läsarens omdömen om böckerna, per bok-id. */
+  readonly reviews = this._reviews.asReadonly();
   private readonly canon = new Map<string, Promise<string>>();
 
   /** Följetongerna, i läsordning: de som följer med appen, sedan de egna böckerna. */
@@ -64,6 +76,7 @@ export class StoryStore {
       const stored = JSON.parse(raw ?? '{}') as StoredStory;
       this._adapted.set(stored.adapted ?? {});
       this._failed.set(new Set(stored.failed ?? []));
+      this._reviews.set(stored.reviews ?? {});
     } catch {
       /* trasig data ignoreras */
     }
@@ -72,6 +85,22 @@ export class StoryStore {
   /** Lägger in följetongerna. Anropas av load() — och direkt av tester. */
   hydrate(stories: readonly StoryData[]): void {
     this._stories.set(stories);
+  }
+
+  /** Omdömet om en bok, om läsaren har gett ett. */
+  review(id: string): BookReview | null {
+    return this._reviews()[id] ?? null;
+  }
+
+  /** Sparar läsarens omdöme: 1–5 stjärnor och en rad. */
+  setReview(id: string, stars: number, note: string): void {
+    const review: BookReview = {
+      stars: Math.min(5, Math.max(1, Math.round(stars))),
+      note: note.trim().slice(0, 280),
+      at: Date.now(),
+    };
+    this._reviews.update((all) => ({ ...all, [id]: review }));
+    this.save();
   }
 
   /** En egen bok, efter id. */
@@ -169,7 +198,11 @@ export class StoryStore {
   }
 
   private save(): void {
-    const stored: StoredStory = { adapted: this._adapted(), failed: [...this._failed()] };
+    const stored: StoredStory = {
+      adapted: this._adapted(),
+      failed: [...this._failed()],
+      reviews: this._reviews(),
+    };
     void this.storage.set(STORY_KEY, JSON.stringify(stored));
   }
 }

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BOOK_TOPIC_MAX, pagesLeft, plannedCount, sequelOf } from '../../core/ai-book';
 import { AiResult, AiService, BookResult } from '../../core/ai.service';
@@ -73,6 +82,8 @@ export class Testi {
   protected readonly bookPages = signal<number>(6);
   /** Boken den nya ska vara en uppföljare till — tom för en fristående bok. */
   protected readonly after = signal('');
+  /** Från länken «Skriv en uppföljare» på en boks baksida: ?uppfoljare=<bok-id>. */
+  readonly uppfoljare = input<string>();
   /** Böckerna det går att skriva en uppföljare till: alla med minst en skriven sida. */
   protected readonly sequelOptions = computed(() =>
     this.saga
@@ -107,14 +118,22 @@ export class Testi {
         published: this.library.isPublished(book.id),
         publishable: this.library.pendingBooks().includes(book),
         sequelTo: book.own?.sequel?.title ?? null,
+        stars: this.saga.review(book.id)?.stars ?? 0,
       };
     }),
   );
 
+  constructor() {
+    effect(() => {
+      const id = this.uppfoljare();
+      if (id) untracked(() => this.after.set(id));
+    });
+  }
+
   /** Den tidigare boken i korthet, när en uppföljare beställs. */
   private sequelSource() {
     const story = this.saga.stories().find((s) => s.id === this.after());
-    return story ? sequelOf(story) : null;
+    return story ? sequelOf(story, this.saga.review(story.id)) : null;
   }
 
   /** Väljer en bok att skriva en uppföljare till, och visar beställningen. */

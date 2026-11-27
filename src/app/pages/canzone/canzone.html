@@ -23,7 +23,12 @@
     <div class="result-btns">
       @let page = afterPage();
       @let song = afterSong();
-      @if (song) {
+      @let done = bookDone();
+      @if (done && !song && !page) {
+        <button class="cta gold" type="button" [routerLink]="['/fine', done.id]">
+          Fine — boken är slut →
+        </button>
+      } @else if (song) {
         <button class="cta gold" type="button" [routerLink]="['/canzone', song.id]">
           Låten: {{ song.title }} →
         </button>

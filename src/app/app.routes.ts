@@ -30,6 +30,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/canzone/canzone').then((m) => m.Canzone),
   },
   {
+    path: 'fine/:storyId',
+    title: 'Fine · Italiano',
+    loadComponent: () => import('./pages/fine/fine').then((m) => m.Fine),
+  },
+  {
     path: 'ripasso',
     title: 'Ripasso · Italiano',
     loadComponent: () => import('./pages/ripasso/ripasso').then((m) => m.Ripasso),

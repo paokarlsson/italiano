@@ -183,6 +183,7 @@
       @if (d.cover) {
         <img class="saga-cover" [src]="d.cover" [alt]="'Omslaget till ' + d.title" />
       }
+      <a class="fine-link" [routerLink]="['/fine', d.id]">Baksidan och ditt omdöme →</a>
       @for (c of d.chapters; track c.n) {
         <div class="saga-ch done">
           <span class="saga-title" lang="it">{{ c.label }}</span>
