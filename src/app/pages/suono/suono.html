@@ -46,62 +46,31 @@
     <div class="eyebrow">Egen röst</div>
     @if (!voice.hasKey()) {
       <p>
-        Med en egen API-nyckel från ElevenLabs läser appen in det som saknar ljud — en mening eller
-        ett ord i taget, och aldrig samma två gånger.
+        Med en egen API-nyckel från ElevenLabs läser appen in det som saknar ljud: berättaren och
+        replikerna med en kvinnlig och en manlig röst, efter vem som talar.
       </p>
-      <input
-        type="password"
-        autocomplete="off"
-        placeholder="sk_…"
-        aria-label="ElevenLabs API-nyckel"
-        [value]="key()"
-        [disabled]="busy()"
-        (input)="key.set(valueOf($event))"
-      />
-      <button class="cta" type="button" [disabled]="busy()" (click)="saveKey()">
-        Spara nyckeln
+      <button class="cta" type="button" routerLink="/installningar">
+        Lägg in nyckeln under Inställningar →
       </button>
-      <p class="ai-fine">
-        Nyckeln sparas bara i den här webbläsaren och skickas bara till ElevenLabs. Varje inläsning
-        dras från ditt ElevenLabs-konto.
-      </p>
     } @else {
-      <label class="su-field">
-        Röst
-        <select [disabled]="!!audio.progress()" (change)="voice.setVoice(valueOf($event))">
-          @for (v of voice.voices(); track v.id) {
-            <option [value]="v.id" [selected]="v.id === voice.voiceId()">{{ v.name }}</option>
-          } @empty {
-            <option [value]="voice.voiceId()" selected>{{ voice.voiceId() || '—' }}</option>
-          }
-        </select>
-      </label>
-      <label class="su-field">
-        Modell
-        <select [disabled]="!!audio.progress()" (change)="voice.setModel(valueOf($event))">
-          @for (m of voice.models(); track m.id) {
-            <option [value]="m.id" [selected]="m.id === voice.modelId()">{{ m.name }}</option>
-          } @empty {
-            <option [value]="voice.modelId()" selected>{{ voice.modelId() || '—' }}</option>
-          }
-        </select>
-      </label>
-      <p class="ai-fine">
-        Välj en gång och håll fast vid det. Ljud med en annan röst eller modell är en annan
-        inläsning, och det som redan finns återanvänds då inte.
-      </p>
-
       @let p = audio.progress();
       @if (p) {
         <p role="status">Läser in… {{ p.done }} av {{ p.total }}</p>
         <button class="cta ghost" type="button" (click)="audio.cancel()">Avbryt</button>
       } @else if (audio.missing().length) {
         <p>
-          {{ audio.missing().length }} meningar och ord saknar ljud — {{ missingChars() }} tecken.
+          {{ audio.missing().length }} klipp saknar ljud — {{ audio.missingChars() }} tecken,
+          {{ voice.rate() === null ? 'ca ' : '' }}{{ estimate() }} krediter hos ElevenLabs.
         </p>
         <button class="cta" type="button" [disabled]="!voice.ready()" (click)="audio.fill()">
           Läs in allt som saknas →
         </button>
+        @if (!voice.ready()) {
+          <p class="ai-fine">
+            Välj en kvinnlig och en manlig röst under
+            <a routerLink="/installningar">Inställningar</a> först.
+          </p>
+        }
       } @else {
         <p>Allt i texterna och ordlistan har ljud.</p>
       }
@@ -109,8 +78,8 @@
         <p class="ai-error" role="alert">{{ audio.error() }}</p>
       }
       <p class="ai-fine">
-        Inläst härifrån: {{ voice.characters() }} tecken
-        <button class="ai-link" type="button" (click)="removeKey()">Ta bort nyckeln</button>
+        Röster och vad inläsningen har kostat finns under
+        <a routerLink="/installningar">Inställningar</a>.
       </p>
     }
   </div>

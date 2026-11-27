@@ -7,6 +7,7 @@ import {
   packName,
   packNumber,
   splitPacks,
+  voiceOf,
   voiceTag,
 } from './audio-pack';
 
@@ -27,7 +28,7 @@ const text = (id: string): UserText => ({
 describe('paketformatet', () => {
   it('packar klipp och texter i en fil och läser tillbaka dem oförändrade', () => {
     const pack = {
-      voice: voiceTag('v1', 'm1'),
+      voice: voiceTag('f', 'v1', 'm1'),
       clips: [
         { text: 'È già qui.', bytes: bytes(1, 2, 3) },
         { text: 'parlano', bytes: bytes() },
@@ -77,6 +78,13 @@ describe('paketformatet', () => {
     expect(splitPacks('v', [clip('a')], [], 1000).length).toBe(1);
     expect(splitPacks('v', [], [text('ai-1')])).toMatchObject([{ clips: [], texts: [{}] }]);
     expect(splitPacks('v', [], [])).toEqual([]);
+  });
+
+  it('märker röstens etikett med vilken sorts röst det är', () => {
+    expect(voiceTag('m', 'daniele', 'flash')).toBe('m:daniele/flash');
+    expect(voiceOf('m:daniele/flash')).toBe('m');
+    expect(voiceOf('f:samanta/flash')).toBe('f');
+    expect(voiceOf('daniele/flash')).toBeNull();
   });
 
   it('numrerar paketen så att de sorteras i den ordning de publicerades', () => {

@@ -7,7 +7,7 @@ import { DriveError, DriveService } from '../../core/drive.service';
 import { LibraryService } from '../../core/library.service';
 import { ToastService } from '../../core/toast.service';
 import { megabytes } from '../../core/utils';
-import { VoiceError, VoiceService } from '../../core/voice.service';
+import { VoiceService } from '../../core/voice.service';
 import { Topbar } from '../../shared/topbar';
 
 /** Ljud och bibliotek: hämta det som delas ut, läs in med egen röst, publicera. */
@@ -28,13 +28,12 @@ export class Suono {
   protected readonly megabytes = megabytes;
   protected readonly hasApiKey = !!CLOUD.apiKey;
 
-  protected readonly key = signal('');
   protected readonly busy = signal(false);
   protected readonly error = signal('');
 
-  /** Antal tecken i det som saknar ljud — det ElevenLabs räknar förbrukning i. */
-  protected readonly missingChars = computed(() =>
-    this.audio.missing().reduce((n, t) => n + t.length, 0),
+  /** Ungefär vad det kostar att läsa in allt som saknas, i krediter. */
+  protected readonly estimate = computed(() =>
+    Math.round(this.audio.missingChars() * (this.voice.rate() ?? 1)).toLocaleString('sv-SE'),
   );
   /** Sant när det finns något att publicera. */
   protected readonly hasPending = computed(
@@ -44,26 +43,13 @@ export class Suono {
   constructor() {
     // Förbered inloggningen och listorna, så att tryckningarna inte behöver vänta på dem.
     if (this.drive.canConnect) void this.drive.prepare().catch(() => undefined);
+    // Priset per tecken kommer med listan över modeller.
     if (this.voice.hasKey()) void this.voice.refresh().catch(() => undefined);
     void this.library.check();
   }
 
   protected valueOf(event: Event): string {
     return (event.target as HTMLInputElement | HTMLSelectElement).value;
-  }
-
-  protected saveKey(): Promise<void> {
-    return this.run(async () => {
-      await this.voice.saveKey(this.key());
-      this.key.set('');
-      this.toast.show('Nyckeln är sparad');
-    });
-  }
-
-  protected removeKey(): void {
-    if (confirm('Ta bort ElevenLabs-nyckeln från den här webbläsaren? Ljudet ligger kvar.')) {
-      this.voice.clearKey();
-    }
   }
 
   protected connect(): Promise<void> {
@@ -110,11 +96,7 @@ export class Suono {
     try {
       await task();
     } catch (e) {
-      this.error.set(
-        e instanceof VoiceError || e instanceof DriveError
-          ? e.message
-          : 'Något gick fel. Försök igen.',
-      );
+      this.error.set(e instanceof DriveError ? e.message : 'Något gick fel. Försök igen.');
     } finally {
       this.busy.set(false);
     }

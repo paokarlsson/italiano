@@ -18,8 +18,9 @@ delar som bygger på samma fyra pelare:
   texter på din nivå, som delar i en berättelse och täta på det du slår upp mest, och gör
   vilken italiensk text som helst läsbar. Varje sådan text kommer med egna frågor till
   repetitionen. Utan nyckel fungerar allt annat som vanligt.
-- **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp.
-  Den som har en egen ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
+- **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp,
+  med en kvinnlig och en manlig röst efter vem som talar. Den som har en egen
+  ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
   klippen och sina lästa texter i en publik mapp på Google Drive, och en besökare hämtar
   alltihop med ett tryck, utan att logga in någonstans.
 - **Påfyllning** — med nyckeln inlagd ligger det alltid två olästa texter färdiga, och ett
@@ -66,8 +67,9 @@ samma commit inte körs två gånger.
 | Hem         | `/`                    | Nästa text, lagret, mazzot att satsa på, gymmet per pelare     |
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter        |
-| Fler texter | `/testi`               | Nyckeln, ny text eller nästa del, egen text, påfyllningen      |
+| Fler texter | `/testi`               | Ny text eller nästa del, egen text, dina texter                |
 | Ljud        | `/suono`               | Hämta biblioteket, läs in med egen röst, publicera             |
+| Inställn.   | `/installningar`       | Nycklar, modell, röster, påfyllning och vad allt har kostat    |
 | Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
 | Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
 | Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
@@ -82,11 +84,12 @@ tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsG
 src/app/
   core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, levels,
                  profile, recommend, ripasso, ai + ai-text + ai-explain + ai-deck, supply,
-                 audio + audio-store + audio-pack, voice, drive, library, cloud.config,
+                 audio + audio-store + audio-pack, speech, voice, drive, library,
+                 cloud.config,
                  hint, toast, ai-report, tag-labels, guards
   models/        typerna bakom app-data.json och letture.json
-  pages/         home, leggi, ripasso, testi, suono, intro, quiz (+ mc/tf/match), result,
-                 stats
+  pages/         home, leggi, ripasso, testi, suono, settings, intro, quiz (+ mc/tf/match),
+                 result, stats
   shared/        topbar, perche
 public/data/     app-data.json — gymmets frågor · letture.json — texterna och ordlistan
 ```
@@ -167,7 +170,7 @@ aldrig används eller om `deck` pekar på ett mazzo som inte finns. Egennamn st�
 
 ### Fler texter
 
-Appen har ingen server. Nyckeln läggs in på `/testi`, sparas i webbläsarens lagring och
+Appen har ingen server. Nyckeln läggs in under Inställningar, sparas i webbläsarens lagring och
 används bara i anrop direkt till Anthropic (`@anthropic-ai/sdk`, som laddas först när det
 behövs). Lägg inte in en nyckel på en dator du delar med andra.
 
@@ -217,19 +220,27 @@ Med en nyckel inlagd och rutan «Fyll på av sig själv» ikryssad (förvalt) g�
   Claude får mazzots frågor och läsarens träffsäkerhet per tagg och skriver åtta nya på
   samma punkt (`ai-deck.ts`). Nästa påbyggnad räknas från den förra — tolv försök till —
   och ett mazzo får högst 40 tillskrivna frågor. De märks «ny · Claude» i rundan, sparas
-  lokalt och går att ta bort på `/testi`.
+  lokalt och går att ta bort under Inställningar.
 
 Det här drar pengar från kontot utan att någon trycker på något, så det finns spärrar: ett
 fel stoppar påfyllningen tills en text till har lästs eller läsaren ber den försöka igen,
-ett besök får högst tolv beställningar i bakgrunden, och `/testi` visar vad som förbrukats
+ett besök får högst tolv beställningar i bakgrunden, och Inställningar visar vad som förbrukats
 härifrån. Frågorna som skrivs till är inte granskade av någon människa.
 
 ### Ljud och bibliotek
 
-Ett klipp slås upp på rösten och på den exakta italienskan det läser upp — inte på texten
-det kom ifrån. Samma mening eller ord ger därför alltid samma klipp, och inget läses in två
-gånger. Det som läses in är varje mening i varje text och varje form i ordlistorna
-(`AudioService.wanted`); en form som slutar på apostrof, som «l'», hoppas över.
+Ett klipp slås upp på sorts röst och på den exakta italienskan det läser upp — inte på
+texten det kom ifrån. Samma replik eller ord ger därför alltid samma klipp, och inget läses
+in två gånger. Det som läses in är varje del av varje mening i varje text och varje form i
+ordlistorna (`AudioService.wanted`); en form som slutar på apostrof, som «l'», hoppas över.
+
+- **Vem som talar.** En kvinnlig («f») och en manlig («m») röst. `parts()` i `speech.ts`
+  delar en mening i det berättaren läser och replikerna inom «…». Texten säger vem som
+  berättar (`narrator` — i jag-form den som berättar, «sono andata» är en kvinna), och varje
+  mening vem som säger varje replik (`speakers`, en röst per replik i ordning). De inbyggda
+  texterna är märkta för hand, och `speech.spec.ts` fäller bygget om en replik saknar röst.
+  Claude märker texterna den skriver eller glosar på samma sätt; går rösterna inte jämnt
+  upp med replikerna läser berättaren. Orden i uppslaget läses av den kvinnliga rösten.
 
 - **Uppslaget går billigast först.** `AudioService.clip()` tar klippet ur webbläsaren
   (`AudioStore`, IndexedDB) om det finns där — hämtat ur biblioteket eller inläst tidigare.
@@ -238,16 +249,22 @@ gånger. Det som läses in är varje mening i varje text och varje form i ordlis
 - **Läsvyn.** «Lyssna» spelar texten mening för mening med riktigt ljud om hela texten har
   det, annars med webbläsarens egen italienska röst som förut. Uppslaget har knappar för
   att höra ordet och meningen.
-- **Rösten** väljs en gång på `/suono`. Listorna över röster och modeller hämtas från
-  kontot, och bara modeller som kan italienska visas. Språket låses till italienska i
-  anropet där modellen tar emot det, så att ett ensamt «come» inte läses på engelska.
+- **Rösterna** väljs en gång under Inställningar. Listorna över röster och modeller hämtas
+  från kontot, och bara modeller som kan italienska visas. Samanta och Daniele väljs av sig
+  själva om de finns bland kontots röster. Språket låses till italienska i anropet där
+  modellen tar emot det, så att ett ensamt «come» inte läses på engelska.
+- **Krediter.** Inställningar visar vad som lästs in härifrån, räknat på modellens pris per
+  tecken (`model_rates` från ElevenLabs), kontots förbrukning den här perioden
+  (`/v1/user/subscription`, om nyckeln får läsa den) och ungefär vad det som saknas skulle
+  kosta. Claude-sidan visar på samma ställe vad texterna har kostat i dollar.
 - **Paket.** Det som delas ut ligger i paket (`audio-pack.ts`): en fil med klipp och texter
   som beskriver sig själv. Paket läggs till och skrivs aldrig om, så den som redan hämtat
   får bara det nya. Ett paket är högst 4 MB, eftersom Drive tar 5 MB i en enkel uppladdning.
 - **Hämta.** `LibraryService` läser av den publika mappen med en API-nyckel vid uppstart.
   Finns det något nytt visar startsidan ett kort med storleken och en knapp. Klippen
   hamnar i ljudlagret, texterna bland de egna som «ur biblioteket», och de räknas in i
-  lagret av olästa texter.
+  lagret av olästa texter. Ett paket har en röst, så en publicering ger minst ett paket per
+  röst.
 - **Publicera.** Efter inloggning med Google laddas ett nytt paket upp med klippen som
   lästs in sedan sist och texterna från Claude som har lästs. En text som tagits bort, eller
   inte lästs, följer inte med. Bara den som skapade mappen kan skriva i den.
@@ -301,8 +318,8 @@ inloggningen behöver bara fungera för den som publicerar.
 9. Klistra in id:t som `folderId` i `cloud.config.ts` och pusha igen. Först nu hittar andra
    besökare biblioteket.
 
-Därefter: lägg in ElevenLabs-nyckeln på samma sida, välj röst och modell, tryck **Läs in
-allt som saknas** och sedan **Publicera**. Inloggningen gäller i ungefär en timme; efter det
+Därefter: lägg in ElevenLabs-nyckeln under Inställningar och välj röster och modell. Tryck
+sedan **Läs in allt som saknas** och **Publicera** under Ljud. Inloggningen gäller i ungefär en timme; efter det
 loggar du in igen när du ska publicera.
 
 Lägg inget annat i mappen än det appen lägger dit, och inget du inte vill dela — allt i den

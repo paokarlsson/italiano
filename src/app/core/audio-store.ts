@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { Clip, clipText } from './audio-pack';
+import { Voice } from '../models/leggi.models';
+import { Clip, clipText, voiceOf } from './audio-pack';
 
 const DB_NAME = 'it_companion_audio';
 const CLIPS = 'clips';
@@ -7,6 +8,7 @@ const META = 'meta';
 
 /** Det som är känt om ett klipp utan att ljudet behöver läsas in. */
 interface ClipMeta {
+  /** Röstens etikett — se voiceTag(). */
   voice: string;
   text: string;
   bytes: number;
@@ -31,8 +33,8 @@ function finished(tx: IDBTransaction): Promise<void> {
 }
 
 /**
- * Ljudklippen i webbläsaren. Ett klipp slås upp på rösten och texten det läser upp, så samma
- * mening eller ord ger alltid samma klipp, var det än står.
+ * Ljudklippen i webbläsaren. Ett klipp slås upp på sorts röst — kvinnlig eller manlig — och
+ * texten det läser upp, så samma mening eller replik ger alltid samma klipp, var den än står.
  *
  * Ljudet ligger i IndexedDB — localStorage är för litet. Vad som finns hålls också i minnet,
  * så att sidan kan fråga `has()` utan att vänta. Saknas IndexedDB ligger allt i minnet.
@@ -42,7 +44,7 @@ export class AudioStore {
   private db: IDBDatabase | null = null;
   private readonly memory = new Map<string, Uint8Array>();
   private readonly meta = new Map<string, ClipMeta>();
-  /** Rösterna som har ett klipp för en text. */
+  /** Röstetiketterna som har ett klipp för en text. */
   private readonly voices = new Map<string, Set<string>>();
 
   /** Räknas upp när innehållet ändras, så att det som läser `has()` ritas om. */
@@ -73,20 +75,24 @@ export class AudioStore {
     }
   }
 
-  /** Sant om det finns ett klipp för texten — med just den rösten, eller med vilken som helst. */
-  has(text: string, voice?: string): boolean {
+  /** Sant om det finns ett klipp för texten med en röst av den sorten. */
+  has(text: string, voice: Voice): boolean {
     this.revision();
-    const voices = this.voices.get(clipText(text));
-    return !!voices && (voice === undefined ? voices.size > 0 : voices.has(voice));
+    return !!this.tagFor(clipText(text), voice);
   }
 
-  /** Klippet för texten: med den föredragna rösten om det finns, annars med någon annan. */
-  async get(text: string, prefer?: string): Promise<Uint8Array | null> {
+  /**
+   * Klippet för texten med en röst av den sorten. Finns flera tas `prefer` — den egna
+   * rösten — om den är en av dem.
+   */
+  async get(text: string, voice: Voice, prefer?: string): Promise<Uint8Array | null> {
     const normal = clipText(text);
-    const voices = this.voices.get(normal);
-    if (!voices?.size) return null;
-    const voice = prefer !== undefined && voices.has(prefer) ? prefer : [...voices][0];
-    const key = keyOf(voice, normal);
+    const tag = this.tagFor(normal, voice, prefer);
+    if (!tag) return null;
+    return this.read(keyOf(tag, normal));
+  }
+
+  private async read(key: string): Promise<Uint8Array | null> {
     if (!this.db) return this.memory.get(key) ?? null;
     const stored = await done(
       this.db.transaction(CLIPS, 'readonly').objectStore(CLIPS).get(key) as IDBRequest<
@@ -119,22 +125,22 @@ export class AudioStore {
     this.touch();
   }
 
-  /** Klippen med en viss röst som ännu inte ligger i något publicerat paket. */
-  async unpublished(voice: string): Promise<Clip[]> {
+  /** Klippen med en viss röstetikett som ännu inte ligger i något publicerat paket. */
+  async unpublished(tag: string): Promise<Clip[]> {
     const out: Clip[] = [];
-    for (const meta of this.meta.values()) {
-      if (meta.voice !== voice || meta.pub) continue;
-      const bytes = await this.get(meta.text, voice);
+    for (const [key, meta] of this.meta) {
+      if (meta.voice !== tag || meta.pub) continue;
+      const bytes = await this.read(key);
       if (bytes) out.push({ text: meta.text, bytes });
     }
     return out;
   }
 
-  /** Antal klipp med en viss röst som väntar på att publiceras. */
-  pending(voice: string): number {
+  /** Antal klipp med en viss röstetikett som väntar på att publiceras. */
+  pending(tag: string): number {
     this.revision();
     let n = 0;
-    for (const meta of this.meta.values()) if (meta.voice === voice && !meta.pub) n++;
+    for (const meta of this.meta.values()) if (meta.voice === tag && !meta.pub) n++;
     return n;
   }
 
@@ -162,6 +168,12 @@ export class AudioStore {
     this.meta.clear();
     this.voices.clear();
     this.touch();
+  }
+
+  private tagFor(text: string, voice: Voice, prefer?: string): string | null {
+    const tags = [...(this.voices.get(text) ?? [])].filter((t) => voiceOf(t) === voice);
+    if (!tags.length) return null;
+    return prefer !== undefined && tags.includes(prefer) ? prefer : tags[0];
   }
 
   private index(key: string, meta: ClipMeta): void {

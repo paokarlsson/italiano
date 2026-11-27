@@ -11,5 +11,5 @@ export const CLOUD = {
   /** API-nyckel för att läsa den publika mappen utan inloggning. */
   apiKey: 'AIzaSyAqtjaam_uqnq91UixDd0vBqUVSXl0DI8o',
   /** Id för den publika mappen. Appen skapar mappen och visar id:t första gången. */
-  folderId: '',
+  folderId: '1vnteDM0QTJ0RIi5PGeF2Zrxr27vqUanR',
 };

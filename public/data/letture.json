@@ -1379,6 +1379,7 @@
       "sv": "Maria",
       "nota": "Två små verb bär nästan allt: è (är) och ha (har).",
       "level": 1,
+      "narrator": "f",
       "sentences": [
         {
           "it": "Maria è italiana.",
@@ -1413,6 +1414,7 @@
       "sv": "På kaféet",
       "nota": "Ändelsen visar vem: prende = han tar, parlano = de pratar.",
       "level": 1,
+      "narrator": "f",
       "sentences": [
         {
           "it": "Marco è al bar con un amico.",
@@ -1424,7 +1426,8 @@
         },
         {
           "it": "«Il caffè è buono?» «Sì, molto buono!»",
-          "sv": "”Är kaffet gott?” ”Ja, mycket gott!”"
+          "sv": "”Är kaffet gott?” ”Ja, mycket gott!”",
+          "speakers": ["m", "m"]
         },
         {
           "it": "Il bar è piccolo, ma c'è sempre molta gente.",
@@ -1447,6 +1450,7 @@
       "sv": "På stationen",
       "nota": "Ord på -zione kan du redan: station → stazione.",
       "level": 2,
+      "narrator": "m",
       "sentences": [
         {
           "it": "La stazione centrale di Milano è molto grande.",
@@ -1458,19 +1462,23 @@
         },
         {
           "it": "Una donna cerca informazioni: «Dov'è il treno per Roma?»",
-          "sv": "En kvinna söker information: ”Var är tåget till Rom?”"
+          "sv": "En kvinna söker information: ”Var är tåget till Rom?”",
+          "speakers": ["f"]
         },
         {
           "it": "Un uomo risponde: «È qui, ma oggi è in ritardo.»",
-          "sv": "En man svarar: ”Det är här, men i dag är det försenat.”"
+          "sv": "En man svarar: ”Det är här, men i dag är det försenat.”",
+          "speakers": ["m"]
         },
         {
           "it": "«Che situazione!» dice la donna.",
-          "sv": "”Vilken situation!” säger kvinnan."
+          "sv": "”Vilken situation!” säger kvinnan.",
+          "speakers": ["f"]
         },
         {
           "it": "«È normale», dice l'uomo.",
-          "sv": "”Det är normalt”, säger mannen."
+          "sv": "”Det är normalt”, säger mannen.",
+          "speakers": ["m"]
         }
       ],
       "question": {
@@ -1485,6 +1493,7 @@
       "sv": "Florens",
       "nota": "Fler gratisord: city → città, famous → famoso, incredible → incredibile.",
       "level": 2,
+      "narrator": "m",
       "sentences": [
         {
           "it": "Firenze è una città famosa.",
@@ -1523,6 +1532,7 @@
       "sv": "Min familj",
       "nota": "-iamo betyder alltid vi: mangiamo = vi äter.",
       "level": 2,
+      "narrator": "f",
       "sentences": [
         {
           "it": "Questa è la mia famiglia.",
@@ -1561,6 +1571,7 @@
       "sv": "Morgonen",
       "nota": "Mi framför verbet = jag gör det med mig själv: mi alzo, jag stiger upp.",
       "level": 3,
+      "narrator": "m",
       "sentences": [
         {
           "it": "Mi sveglio alle sette.",
@@ -1595,6 +1606,7 @@
       "sv": "Jag gillar",
       "nota": "Piacere går baklänges: mi piace = det behagar mig.",
       "level": 3,
+      "narrator": "f",
       "sentences": [
         {
           "it": "Mi piace la musica italiana.",
@@ -1633,6 +1645,7 @@
       "sv": "I går",
       "nota": "Dåtid i två delar: ho mangiato = jag åt. Rörelse tar essere: sono andata.",
       "level": 4,
+      "narrator": "f",
       "sentences": [
         {
           "it": "Ieri sono andata al mare con Anna.",
@@ -1667,6 +1680,7 @@
       "sv": "Som barn",
       "nota": "Imperfetto (-avo, -ava, -avamo) berättar hur det brukade vara.",
       "level": 5,
+      "narrator": "m",
       "sentences": [
         {
           "it": "Da bambino abitavo in un piccolo paese.",
@@ -1701,6 +1715,7 @@
       "sv": "Medan jag läste",
       "nota": "Imperfetto är bakgrunden, passato prossimo är det som händer.",
       "level": 5,
+      "narrator": "f",
       "sentences": [
         {
           "it": "Ieri sera pioveva e faceva freddo.",
@@ -1712,15 +1727,18 @@
         },
         {
           "it": "Era Luca: «Che cosa stai facendo?»",
-          "sv": "Det var Luca: ”Vad gör du?”"
+          "sv": "Det var Luca: ”Vad gör du?”",
+          "speakers": ["m"]
         },
         {
           "it": "«Sto leggendo», ho risposto.",
-          "sv": "”Jag läser”, svarade jag."
+          "sv": "”Jag läser”, svarade jag.",
+          "speakers": ["f"]
         },
         {
           "it": "«Io sto arrivando con una pizza!»",
-          "sv": "”Jag är på väg med en pizza!”"
+          "sv": "”Jag är på väg med en pizza!”",
+          "speakers": ["m"]
         },
         {
           "it": "Ho chiuso il libro subito.",
@@ -1739,6 +1757,7 @@
       "sv": "I morgon",
       "nota": "Futurum sitter i slutet av ordet: partirò, sarà, prenderemo.",
       "level": 6,
+      "narrator": "m",
       "sentences": [
         {
           "it": "Domani partirò per Venezia.",
@@ -1777,30 +1796,37 @@
       "sv": "På restaurangen",
       "nota": "Samtalets småord: vorrei, ecco, allora — och ne, «av det».",
       "level": 6,
+      "narrator": "m",
       "sentences": [
         {
           "it": "«Buonasera! Vorrei un tavolo per due.»",
-          "sv": "”God kväll! Jag skulle vilja ha ett bord för två.”"
+          "sv": "”God kväll! Jag skulle vilja ha ett bord för två.”",
+          "speakers": ["f"]
         },
         {
           "it": "«Certo. Ecco il menù.»",
-          "sv": "”Självklart. Här är menyn.”"
+          "sv": "”Självklart. Här är menyn.”",
+          "speakers": ["m"]
         },
         {
           "it": "«Avete il pesce oggi?» «Sì, ne abbiamo molto.»",
-          "sv": "”Har ni fisk i dag?” ”Ja, det har vi mycket av.”"
+          "sv": "”Har ni fisk i dag?” ”Ja, det har vi mycket av.”",
+          "speakers": ["f", "m"]
         },
         {
           "it": "«Allora prendo il pesce. E il vino?»",
-          "sv": "”Då tar jag fisken. Och vinet?”"
+          "sv": "”Då tar jag fisken. Och vinet?”",
+          "speakers": ["f"]
         },
         {
           "it": "«Ce n'è uno speciale, della regione.»",
-          "sv": "”Det finns ett särskilt, från regionen.”"
+          "sv": "”Det finns ett särskilt, från regionen.”",
+          "speakers": ["m"]
         },
         {
           "it": "«Perfetto, grazie mille!»",
-          "sv": "”Perfekt, tack så mycket!”"
+          "sv": "”Perfekt, tack så mycket!”",
+          "speakers": ["f"]
         }
       ],
       "question": {
@@ -1815,6 +1841,7 @@
       "sv": "En nyhet",
       "nota": "En tidningsnotis. Se hur mycket som redan är limmet, reglerna och motorn.",
       "level": 6,
+      "narrator": "m",
       "sentences": [
         {
           "it": "Il governo ha presentato una nuova proposta.",
@@ -1830,7 +1857,8 @@
         },
         {
           "it": "L'opposizione critica la decisione: «È una soluzione parziale.»",
-          "sv": "Oppositionen kritiserar beslutet: ”Det är en ofullständig lösning.”"
+          "sv": "Oppositionen kritiserar beslutet: ”Det är en ofullständig lösning.”",
+          "speakers": ["f"]
         },
         {
           "it": "La discussione continuerà domani in parlamento.",

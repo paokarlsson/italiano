@@ -14,9 +14,14 @@ export interface LexEntry {
   deck?: string;
 }
 
+/** Rösten som läser: «f» kvinnlig, «m» manlig. */
+export type Voice = 'f' | 'm';
+
 export interface Sentence {
   it: string;
   sv: string;
+  /** Vem som säger varje replik inom «…» i meningen, i ordning. Saknas en läser berättaren. */
+  speakers?: Voice[];
 }
 
 /** En repetitionsfråga som följer med en text, knuten till en form i den. */
@@ -40,6 +45,8 @@ export interface Lettura {
   nota: string;
   /** Svårighetsnivå, 1–7 — se core/levels.ts. Saknas på inklistrade texter. */
   level?: number | null;
+  /** Rösten som läser det som står utanför replikerna. I jag-form: den som berättar. */
+  narrator?: Voice;
   sentences: Sentence[];
   /** En fråga om innehållet. `answer` är index i `options`. */
   question: { sv: string; options: string[]; answer: number };

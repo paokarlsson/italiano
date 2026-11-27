@@ -1,4 +1,4 @@
-import { UserText } from '../models/leggi.models';
+import { UserText, Voice } from '../models/leggi.models';
 
 /**
  * Paketformatet för det som delas ut: ljudklipp och texter i en enda fil, så att en besökare
@@ -35,9 +35,18 @@ export interface Pack {
   texts: UserText[];
 }
 
-/** Röst och modell som en enda etikett — klipp med olika etikett är olika inläsningar. */
-export function voiceTag(voiceId: string, modelId: string): string {
-  return `${voiceId}/${modelId}`;
+/**
+ * Röst och modell som en enda etikett, med vilken sorts röst det är först: «f:<röst>/<modell>».
+ * Klipp med olika etikett är olika inläsningar.
+ */
+export function voiceTag(voice: Voice, voiceId: string, modelId: string): string {
+  return `${voice}:${voiceId}/${modelId}`;
+}
+
+/** Vilken sorts röst en etikett är — null för en etikett som inte säger det. */
+export function voiceOf(tag: string): Voice | null {
+  const v = tag.split(':')[0];
+  return v === 'f' || v === 'm' ? v : null;
 }
 
 /**

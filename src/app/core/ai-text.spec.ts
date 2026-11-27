@@ -122,6 +122,24 @@ describe('assembleText', () => {
     expect(assembleText(raw(), opts).text.questions).toBeUndefined();
   });
 
+  it('tar med rösterna där de går jämnt upp med replikerna', () => {
+    const { text } = assembleText(
+      raw({
+        narrator: 'm',
+        sentences: [
+          { it: '«Ciao!» dice Giulia.', sv: 'x', speakers: ['f'] },
+          { it: '«A» e «B»', sv: 'x', speakers: ['f'] },
+          { it: 'Il gatto dorme.', sv: 'x', speakers: [] },
+        ],
+      }),
+      opts,
+    );
+    expect(text.narrator).toBe('m');
+    expect(text.sentences.map((s) => s.speakers)).toEqual([['f'], undefined, undefined]);
+    // Saknas berättaren blir den kvinnlig.
+    expect(assembleText(raw(), opts).text.narrator).toBe('f');
+  });
+
   it('märker en text från Claude med del och recap, men inte en inklistrad', () => {
     const ai = assembleText(raw({ recap: ' Giulia har en katt. ' }), { ...opts, part: 3 }).text;
     expect(ai).toMatchObject({ part: 3, recap: 'Giulia har en katt.' });
@@ -185,6 +203,9 @@ describe('prompterna', () => {
     expect(system.match(/^\d\. /gm)?.length).toBe(7);
     expect(system).toContain('# Repetitionsfrågor (ripasso)');
     expect(system).toContain('- recap:');
+    expect(system).toContain('- narrator och speakers:');
+    expect(example.narrator).toBe('f');
+    expect(example.sentences.every((s) => Array.isArray(s.speakers))).toBe(true);
   });
 
   it('börjar en berättelse, eller fortsätter den med det som hänt hittills', () => {

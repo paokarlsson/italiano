@@ -1714,7 +1714,9 @@ app-perche {
 
 /* --- Ljud: uppspelning i läsvyn --- */
 .lt-s.playing {
-  background: linear-gradient(transparent 62%, var(--gold-soft) 62%);
+  background: rgba(238, 211, 160, 0.55);
+  border-radius: 6px;
+  box-shadow: 0 0 0 5px rgba(238, 211, 160, 0.55);
 }
 .lt-g-sound {
   display: flex;
@@ -1808,4 +1810,53 @@ app-perche {
 .ai-card p.ai-error {
   margin: 12px 0 0;
   padding: 10px 12px;
+}
+
+/* --- Inställningar: kostnader --- */
+.set-cost {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1.5px solid var(--line);
+}
+.set-cost-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.set-cost-value {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: right;
+}
+.set-meter {
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 99px;
+  background: var(--paper-2);
+  overflow: hidden;
+}
+.set-meter span {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  background: var(--verde);
+}
+.ai-card .ai-fine a,
+.stage > .ai-fine a {
+  color: var(--verde);
+  font-weight: 700;
+}
+.stage > .ai-fine {
+  margin: 4px 2px 16px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
 }
