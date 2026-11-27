@@ -30,6 +30,16 @@ export class Testi {
   protected readonly error = signal('');
   /** Om nästa text ska fortsätta på den senaste — förvalt, så länge det finns en. */
   protected readonly follow = signal(true);
+  /** Hur många texter som skrivs på en gång. */
+  protected readonly counts = [1, 3, 5] as const;
+  protected readonly count = signal<number>(3);
+  /** Knappens text: en eller flera, ny berättelse eller nästa del. */
+  protected readonly writeLabel = computed(() => {
+    const n = this.count();
+    const next = !!this.ai.lastPart() && this.follow();
+    if (n === 1) return next ? 'Skriv nästa del →' : 'Skriv en text åt mig →';
+    return next ? `Skriv nästa ${n} delar →` : `Skriv ${n} texter åt mig →`;
+  });
 
   protected readonly level = computed(() => level(this.leggi.level()));
   protected readonly openCount = computed(() => this.leggi.openWords().length);
@@ -45,7 +55,27 @@ export class Testi {
   }
 
   protected write(): Promise<void> {
-    return this.run(async () => this.open(await this.ai.write(this.topic(), this.follow())));
+    return this.run(async () => {
+      const { results, error } = await this.ai.writeSeries(
+        this.topic(),
+        this.follow(),
+        this.count(),
+      );
+      if (results.length === 1 && !error) return this.open(results[0]);
+      // Flera texter: öppna den första, och säg vad hela serien kostade.
+      const cost = results.reduce((n, r) => n + r.cost, 0);
+      const missing = results.reduce((n, r) => n + r.missing.length, 0);
+      const notes = [`ca $${cost.toFixed(2)}`];
+      if (missing) notes.push(`${missing} ord utan uppslag`);
+      this.toast.show(`${results.length} texter klara · ${notes.join(' · ')}`);
+      if (error) {
+        this.error.set(
+          `${results.length} av ${this.count()} texter skrevs. Nästa gick inte: ${error.message}`,
+        );
+        return;
+      }
+      void this.router.navigate(['/leggi', results[0].text.id]);
+    });
   }
 
   protected gloss(): Promise<void> {
