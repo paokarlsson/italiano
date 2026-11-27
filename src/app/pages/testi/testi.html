@@ -62,6 +62,70 @@
     </div>
 
     <div class="ai-card">
+      <div class="eyebrow">Ny bok</div>
+      <p>
+        Beskriv boken du vill läsa — handling, personer, miljö, ton. Claude gör en plan med kapitel
+        och skriver sedan sida för sida på den nivå du väljer.
+      </p>
+      <textarea
+        rows="4"
+        placeholder="T.ex. hur man flörtar på en bar i Neapel — dialog, charm, humor och alla klichéer"
+        aria-label="Vad boken ska handla om"
+        [attr.maxlength]="bookTopicMax"
+        [value]="bookTopic()"
+        [disabled]="ai.busy()"
+        (input)="bookTopic.set(valueOf($event))"
+      ></textarea>
+      <div class="ai-count">{{ bookTopic().length }} / {{ bookTopicMax }} tecken</div>
+      <div class="ai-count-label">Nivå</div>
+      <div class="seg ai-seg" role="group" aria-label="Bokens nivå">
+        @for (l of levels; track l.n) {
+          <button
+            type="button"
+            [class.on]="bookLevel().n === l.n"
+            [attr.aria-pressed]="bookLevel().n === l.n"
+            [title]="l.label"
+            [disabled]="ai.busy()"
+            (click)="setLevel(l.n)"
+          >
+            {{ l.n }}
+          </button>
+        }
+      </div>
+      <p class="ai-fine">
+        Nivå {{ bookLevel().n }} · {{ bookLevel().label }} — {{ bookLevel().scope }} Högst
+        {{ bookLevel().maxWords }} ord per mening.
+        @if (bookLevel().n === level().n) {
+          Det är din nivå just nu.
+        }
+      </p>
+      <div class="ai-count-label">Hur många sidor?</div>
+      <div class="seg ai-seg" role="group" aria-label="Hur många sidor">
+        @for (n of bookSizes; track n) {
+          <button
+            type="button"
+            [class.on]="bookPages() === n"
+            [attr.aria-pressed]="bookPages() === n"
+            [disabled]="ai.busy()"
+            (click)="bookPages.set(n)"
+          >
+            {{ n }}<span class="u">sidor</span>
+          </button>
+        }
+      </div>
+      <button class="cta gold" type="button" [disabled]="ai.busy()" (click)="writeBook()">
+        Skriv boken åt mig →
+      </button>
+      <p class="ai-fine">
+        Ett anrop för planen och ett per sida — ungefär en halv minut per sida. Boken sparas sida
+        för sida och syns på startsidan bland följetongerna.
+        @if (drawsCover()) {
+          Gemini ritar omslaget när boken är klar.
+        }
+      </p>
+    </div>
+
+    <div class="ai-card">
       <div class="eyebrow">Egen text</div>
       <p>Klistra in italienska — en artikel, en meny, en låttext — så blir den läsbar här.</p>
       <textarea
@@ -92,6 +156,48 @@
   }
   @if (error()) {
     <div class="ai-error" role="alert">{{ error() }}</div>
+  }
+
+  @if (books().length) {
+    <div class="stat-section-title" id="dina-bocker">Dina böcker ({{ books().length }})</div>
+    @for (b of books(); track b.book.id) {
+      <div class="ai-row">
+        @if (b.first) {
+          <a [routerLink]="['/leggi', b.first]">
+            <span class="ai-row-title" lang="it">{{ b.book.title }}</span>
+            <span class="ai-row-meta">
+              nivå {{ b.level }} · {{ b.read }} av {{ b.written }} lästa
+              @if (b.left) {
+                · {{ b.written }} av {{ b.planned }} sidor skrivna
+              }
+            </span>
+          </a>
+        } @else {
+          <span class="ai-row-empty">
+            <span class="ai-row-title" lang="it">{{ b.book.title }}</span>
+            <span class="ai-row-meta">nivå {{ b.level }} · inga sidor skrivna än</span>
+          </span>
+        }
+        @if (b.left && ai.hasKey()) {
+          <button
+            type="button"
+            class="ai-row-more"
+            [disabled]="ai.busy()"
+            (click)="continueBook(b.book)"
+          >
+            Skriv klart
+          </button>
+        }
+        <button
+          type="button"
+          [attr.aria-label]="'Ta bort ' + b.book.title"
+          [disabled]="ai.busy()"
+          (click)="deleteBook(b.book)"
+        >
+          ✕
+        </button>
+      </div>
+    }
   }
 
   @if (leggi.userTexts().length) {

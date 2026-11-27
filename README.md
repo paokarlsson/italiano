@@ -34,6 +34,14 @@ delar som bygger på samma fyra pelare:
   texter på din nivå, som delar i en berättelse och täta på det du slår upp mest, och gör
   vilken italiensk text som helst läsbar. Varje sådan text kommer med egna frågor till
   repetitionen. Utan nyckel fungerar allt annat som vanligt.
+- **Egna böcker** — samma nyckel. Under _Fler texter_ beskriver du boken du vill läsa,
+  med egna ord, och väljer nivå (1–7) och antal sidor. Claude planerar först boken —
+  titel, personer, kapitel och en scen per sida — och skriver sedan sidorna en i taget på
+  den nivån, med samma kontroll som de inbyggda böckerna: meningslängd, tempus och ett
+  uppslag för varje ord. En sida som inte håller skrivs en gång till. Boken sparas sida
+  för sida och läses som de andra följetongerna; en påbörjad egen bok visas på
+  startsidan bredvid den du står i. Stannar den på vägen skrivs resten med _Skriv klart_.
+  Finns en Gemini-nyckel ritas omslaget när boken är klar.
 - **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp,
   med en kvinnlig och en manlig röst efter vem som talar. Den som har en egen
   ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
@@ -157,7 +165,9 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
 - **`SupplyService`** är påfyllningen — se _Påfyllning_ nedan.
 - **`AiService`** är kopplingen till Claude; `ai-text.ts` är allt runt en text — prompten,
   svarsformatet och kontrollen av det som kommer tillbaka — och `ai-explain.ts` det som
-  sägs när läsaren frågar varför. Se _Fler texter_ och _Perché?_ nedan.
+  sägs när läsaren frågar varför, och `ai-book.ts` planen och sidorna i en egen bok. Se
+  _Fler texter_ och _Perché?_ nedan. De egna böckerna sparas av `StoryStore` och läggs
+  efter böckerna som följer med appen.
 - **`QuizService`** är övningsmotorn: bygger rundans kö ur mazzots pool, räknar poäng
   och skjuter in högst två repetitioner per tagg och runda. En repetition är alltid en
   _ny_ fråga på samma punkt — aldrig samma fråga igen.

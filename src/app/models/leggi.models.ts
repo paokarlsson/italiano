@@ -143,6 +143,37 @@ export interface StoryData {
   /** Berättelsens ordlista — läggs över appens. */
   lexicon: Record<string, LexEntry>;
   chapters: StoryChapter[];
+  /** En bok som läsaren själv har beställt av Claude — saknas på böckerna som följer med appen. */
+  own?: OwnBook;
+}
+
+/** En planerad sida i en egen bok: det som bestämdes innan sidan skrevs. */
+export interface BookPagePlan {
+  title: string;
+  sv: string;
+  scene: string;
+  narrator: Voice;
+}
+
+export interface BookChapterPlan {
+  n: number;
+  title: string;
+  sv: string;
+  pages: BookPagePlan[];
+}
+
+/**
+ * Det som hör till en egen bok: beställningen och planen. Boken skrivs sida för sida efter
+ * planen; sidorna som är skrivna står i kapitlen, och de som återstår kan skrivas senare.
+ */
+export interface OwnBook {
+  /** Läsarens beställning, med egna ord. */
+  topic: string;
+  level: number;
+  createdAt: number;
+  /** Personerna, på svenska — så att varje sida håller dem lika. */
+  cast: string;
+  plan: BookChapterPlan[];
 }
 
 /** En plats i följetongen: en sida att läsa eller en låt att lyssna på. */

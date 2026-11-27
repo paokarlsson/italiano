@@ -52,8 +52,7 @@
     </div>
   }
 
-  @let a = sagaView();
-  @if (a) {
+  @for (a of sagaViews(); track a.id) {
     <div class="story saga">
       @if (a.cover) {
         <img class="saga-cover" [src]="a.cover" [alt]="'Omslaget till ' + a.title" />
