@@ -2,6 +2,7 @@
   "id": "alba-luca",
   "title": "Alba & Luca",
   "sv": "En översättare och en kock på den liguriska kusten, från september till mars — en följetong i fjorton låtar.",
+  "canon": ["data/storie/alba-luca/varld.md", "data/storie/alba-luca/handling.md"],
   "names": [
     "alba",
     "boccadasse",

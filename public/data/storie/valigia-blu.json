@@ -1,0 +1,770 @@
+{
+  "id": "valigia-blu",
+  "title": "La valigia blu",
+  "sv": "Två likadana blå resväskor på stationen i Bologna — en kort berättelse på de två första nivåerna.",
+  "course": true,
+  "names": ["bologna", "matteo", "rossi", "sofia", "torino"],
+  "lexicon": {
+    "adesso": {
+      "p": "D1",
+      "sv": "nu",
+      "deck": "D1.9"
+    },
+    "ah": {
+      "p": "D1",
+      "sv": "åh, aha",
+      "deck": "D1.14"
+    },
+    "alla": {
+      "p": "D1",
+      "sv": "på, till",
+      "note": "a + la · alla stazione = på stationen",
+      "deck": "D1.6"
+    },
+    "alto": {
+      "p": "D3",
+      "sv": "lång",
+      "note": "alt·o — maskulin · alta om en kvinna",
+      "deck": "D3.3"
+    },
+    "anni": {
+      "p": "D3",
+      "sv": "år",
+      "note": "ann·i — plural av anno · avere … anni = vara … år",
+      "deck": "D3.2"
+    },
+    "arriva": {
+      "p": "D3",
+      "sv": "kommer",
+      "note": "arriv·a — -a = han/hon (arrivare)",
+      "deck": "D3.7"
+    },
+    "aspetta": {
+      "p": "D3",
+      "sv": "väntar",
+      "note": "aspett·a — -a = han/hon (aspettare)",
+      "deck": "D3.7"
+    },
+    "barba": {
+      "p": "D4",
+      "sv": "skägg",
+      "note": "avere la barba = ha skägg",
+      "deck": "D4.4"
+    },
+    "bellissima": {
+      "p": "D3",
+      "sv": "jättevacker",
+      "note": "bell·issima — -issimo/-issima = mycket",
+      "deck": "D3.3"
+    },
+    "blu": {
+      "p": "D4",
+      "sv": "blå",
+      "note": "böjs inte: una valigia blu, due valigie blu",
+      "deck": "D4.11"
+    },
+    "camicia": {
+      "p": "D4",
+      "sv": "skjorta",
+      "deck": "D4.7"
+    },
+    "come": {
+      "p": "D1",
+      "sv": "som, precis som",
+      "note": "come la valigia di Sofia = som Sofias resväska",
+      "deck": "D1.8"
+    },
+    "comincia": {
+      "p": "D3",
+      "sv": "börjar",
+      "note": "cominci·a — -a = han/hon/den (cominciare)",
+      "deck": "D3.7"
+    },
+    "concerto": {
+      "p": "D2",
+      "sv": "konsert",
+      "note": "concert → concerto"
+    },
+    "contenta": {
+      "p": "D3",
+      "sv": "glad, nöjd",
+      "note": "content·a — feminin av contento",
+      "deck": "D3.3"
+    },
+    "da oggi": {
+      "p": "D1",
+      "sv": "från och med i dag",
+      "note": "da + tid = sedan, från",
+      "deck": "D1.5"
+    },
+    "da uomo": {
+      "p": "D1",
+      "sv": "herr-, för män",
+      "note": "una camicia da uomo = en herrskjorta",
+      "deck": "D1.5"
+    },
+    "direttore": {
+      "p": "D2",
+      "sv": "rektor, chef",
+      "note": "director → direttore",
+      "deck": "D2.13"
+    },
+    "dopo": {
+      "p": "D1",
+      "sv": "efter",
+      "note": "dopo il concerto = efter konserten",
+      "deck": "D1.5"
+    },
+    "ed": {
+      "p": "D1",
+      "sv": "och",
+      "note": "e blir ed före vokal: ed è",
+      "deck": "D1.1"
+    },
+    "grazie": {
+      "p": "D1",
+      "sv": "tack",
+      "deck": "D1.14"
+    },
+    "guarda": {
+      "p": "D3",
+      "sv": "tittar",
+      "note": "guard·a — -a = han/hon (guardare)",
+      "deck": "D3.7"
+    },
+    "hai": {
+      "p": "D1",
+      "sv": "har du",
+      "note": "avere · tu hai — h:et hörs inte",
+      "deck": "D1.2"
+    },
+    "lavori": {
+      "p": "D3",
+      "sv": "du jobbar",
+      "note": "lavor·i — -i = du (lavorare)",
+      "deck": "D3.5"
+    },
+    "le": {
+      "p": "D1",
+      "sv": "bestämd artikel, feminin plural",
+      "note": "le valigie = resväskorna",
+      "deck": "D1.4"
+    },
+    "mattina": {
+      "p": "D4",
+      "sv": "morgon",
+      "deck": "D4.5"
+    },
+    "musicista": {
+      "p": "D2",
+      "sv": "musiker",
+      "note": "musician → musicista · -ista som pianista",
+      "deck": "D2.9"
+    },
+    "nome": {
+      "p": "D4",
+      "sv": "namn"
+    },
+    "nove": {
+      "p": "D4",
+      "sv": "nio",
+      "note": "alle nove = klockan nio"
+    },
+    "numero di telefono": {
+      "p": "D2",
+      "sv": "telefonnummer",
+      "note": "number → numero, telephone → telefono"
+    },
+    "nuovo": {
+      "p": "D3",
+      "sv": "ny",
+      "note": "nuov·o — maskulin · nuova om något feminint",
+      "deck": "D3.3"
+    },
+    "ordina": {
+      "p": "D3",
+      "sv": "beställer",
+      "note": "ordin·a — -a = han/hon (ordinare)",
+      "deck": "D3.7"
+    },
+    "orologio": {
+      "p": "D4",
+      "sv": "klocka",
+      "deck": "D4.7"
+    },
+    "palco": {
+      "p": "D4",
+      "sv": "scen"
+    },
+    "parla": {
+      "p": "D3",
+      "sv": "pratar",
+      "note": "parl·a — -a = han/hon (parlare)",
+      "deck": "D3.7"
+    },
+    "per fortuna": {
+      "p": "D1",
+      "sv": "som tur är",
+      "note": "fortuna = tur, lycka",
+      "deck": "D1.9"
+    },
+    "pianista": {
+      "p": "D2",
+      "sv": "pianist",
+      "note": "pianist → pianista",
+      "deck": "D2.9"
+    },
+    "piena": {
+      "p": "D3",
+      "sv": "full",
+      "note": "pien·a — feminin av pieno",
+      "deck": "D3.3"
+    },
+    "porto": {
+      "p": "D3",
+      "sv": "jag tar med",
+      "note": "port·o — -o = jag (portare) · porto io = jag tar med",
+      "deck": "D3.7"
+    },
+    "primo": {
+      "p": "D4",
+      "sv": "första",
+      "note": "il primo giorno = den första dagen"
+    },
+    "pronto": {
+      "p": "D1",
+      "sv": "hallå (i telefon)",
+      "note": "pronto = redo — i telefon: hallå?",
+      "deck": "D1.14"
+    },
+    "qual è": {
+      "p": "D1",
+      "sv": "vilken är",
+      "note": "quale blir qual före è",
+      "deck": "D1.8"
+    },
+    "ragazzo": {
+      "p": "D4",
+      "sv": "kille, ung man",
+      "deck": "D4.3"
+    },
+    "ride": {
+      "p": "D3",
+      "sv": "skrattar",
+      "note": "rid·e — -e = han/hon (ridere)",
+      "deck": "D3.8"
+    },
+    "rosso": {
+      "p": "D4",
+      "sv": "röd",
+      "note": "ross·o — maskulin, som il vestito",
+      "deck": "D4.11"
+    },
+    "sala": {
+      "p": "D4",
+      "sv": "sal"
+    },
+    "salame": {
+      "p": "D4",
+      "sv": "salami",
+      "deck": "D4.8"
+    },
+    "scuola": {
+      "p": "D4",
+      "sv": "skola"
+    },
+    "segretaria": {
+      "p": "D2",
+      "sv": "sekreterare",
+      "note": "secretary → segretaria",
+      "deck": "D2.10"
+    },
+    "simpatico": {
+      "p": "D2",
+      "sv": "trevlig",
+      "note": "inte sympatisk i svensk mening — trevlig, rolig att vara med",
+      "deck": "D2.11"
+    },
+    "stanca": {
+      "p": "D3",
+      "sv": "trött",
+      "note": "stanc·a — feminin av stanco",
+      "deck": "D3.3"
+    },
+    "strana": {
+      "p": "D3",
+      "sv": "konstig",
+      "note": "stran·a — feminin av strano",
+      "deck": "D3.3"
+    },
+    "suona": {
+      "p": "D3",
+      "sv": "spelar",
+      "note": "suon·a — -a = han/hon (suonare) · suonare = spela ett instrument",
+      "deck": "D3.7"
+    },
+    "tardi": {
+      "p": "D4",
+      "sv": "sent",
+      "note": "è tardi = det är sent",
+      "deck": "D4.5"
+    },
+    "tu": {
+      "p": "D1",
+      "sv": "du",
+      "deck": "D1.3"
+    },
+    "tua": {
+      "p": "D1",
+      "sv": "din",
+      "note": "tua med feminint: la tua valigia",
+      "deck": "D1.3"
+    },
+    "tuo": {
+      "p": "D1",
+      "sv": "din",
+      "note": "tuo med maskulint: il tuo salame",
+      "deck": "D1.3"
+    },
+    "valigia": {
+      "p": "D4",
+      "sv": "resväska",
+      "deck": "D4.7"
+    },
+    "valigie": {
+      "p": "D3",
+      "sv": "resväskor",
+      "note": "valigi·e — plural av valigia: -a blir -e",
+      "deck": "D3.2"
+    },
+    "vecchia": {
+      "p": "D4",
+      "sv": "gammal",
+      "note": "vecchi·a — feminin av vecchio",
+      "deck": "D4.10"
+    },
+    "vede": {
+      "p": "D3",
+      "sv": "ser",
+      "note": "ved·e — -e = han/hon (vedere)",
+      "deck": "D3.8"
+    },
+    "ventisei": {
+      "p": "D4",
+      "sv": "tjugosex",
+      "note": "venti + sei"
+    },
+    "ventotto": {
+      "p": "D4",
+      "sv": "tjugoåtta",
+      "note": "venti + otto — venti tappar i före otto"
+    },
+    "vestito": {
+      "p": "D4",
+      "sv": "klänning",
+      "note": "vestito = klädesplagg, oftast klänning eller kostym",
+      "deck": "D4.7"
+    },
+    "vicine": {
+      "p": "D3",
+      "sv": "nära, bredvid varandra",
+      "note": "vicin·e — feminin plural av vicino",
+      "deck": "D3.2"
+    }
+  },
+  "chapters": [
+    {
+      "n": 1,
+      "title": "Due valigie",
+      "sv": "Två resväskor",
+      "pages": [
+        {
+          "id": "valigia-blu-01-1",
+          "chapter": 1,
+          "part": 1,
+          "title": "Sofia",
+          "sv": "Sofia",
+          "nota": "Bara è och ha. Adjektivet står efter ordet och böjs efter det: una valigia vecchia, Sofia è stanca.",
+          "level": 1,
+          "narrator": "f",
+          "scene": "Sofia, 26 år, från Turin, på stationen i Bologna med en gammal blå resväska. I morgon börjar hon ett nytt jobb. En kille har också en blå resväska.",
+          "sentences": [
+            {
+              "it": "Questa è Sofia.",
+              "sv": "Det här är Sofia."
+            },
+            {
+              "it": "Sofia ha ventisei anni.",
+              "sv": "Sofia är tjugosex år."
+            },
+            {
+              "it": "È di Torino, ma oggi è a Bologna.",
+              "sv": "Hon är från Turin, men i dag är hon i Bologna."
+            },
+            {
+              "it": "È alla stazione con una valigia blu.",
+              "sv": "Hon är på stationen med en blå resväska."
+            },
+            {
+              "it": "La valigia è vecchia, ma è bella.",
+              "sv": "Resväskan är gammal, men den är fin."
+            },
+            {
+              "it": "Sofia è stanca ma contenta.",
+              "sv": "Sofia är trött men glad."
+            },
+            {
+              "it": "Domani è il primo giorno di lavoro.",
+              "sv": "I morgon är hennes första dag på jobbet."
+            },
+            {
+              "it": "Anche un ragazzo ha una valigia blu.",
+              "sv": "En kille har också en blå resväska."
+            }
+          ],
+          "question": {
+            "sv": "Vilken färg har Sofias resväska?",
+            "options": ["Röd", "Blå", "Grön"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "valigia-blu-01-2",
+          "chapter": 1,
+          "part": 2,
+          "title": "Matteo",
+          "sv": "Matteo",
+          "nota": "Plural av ord på -a: valigia → valigie, vicina → vicine. -a blir -e.",
+          "level": 1,
+          "narrator": "m",
+          "scene": "Killen är Matteo, 28 år, från Bologna, musiker. Hans resväska är lika blå och gammal som Sofias, och nu står de bredvid varandra.",
+          "sentences": [
+            {
+              "it": "Il ragazzo è Matteo.",
+              "sv": "Killen heter Matteo."
+            },
+            {
+              "it": "Matteo ha ventotto anni ed è di Bologna.",
+              "sv": "Matteo är tjugoåtta år och kommer från Bologna."
+            },
+            {
+              "it": "È alto e ha la barba.",
+              "sv": "Han är lång och har skägg."
+            },
+            {
+              "it": "Matteo è musicista.",
+              "sv": "Matteo är musiker."
+            },
+            {
+              "it": "Anche la sua valigia è blu e vecchia.",
+              "sv": "Hans resväska är också blå och gammal."
+            },
+            {
+              "it": "È come la valigia di Sofia!",
+              "sv": "Den är precis som Sofias resväska!"
+            },
+            {
+              "it": "Adesso le due valigie sono vicine.",
+              "sv": "Nu står de två resväskorna bredvid varandra."
+            },
+            {
+              "it": "Ma qual è la valigia di Sofia?",
+              "sv": "Men vilken är Sofias resväska?"
+            }
+          ],
+          "question": {
+            "sv": "Vad är Matteo?",
+            "options": ["Musiker", "Kock", "Konduktör"],
+            "answer": 0
+          }
+        },
+        {
+          "id": "valigia-blu-01-3",
+          "chapter": 1,
+          "part": 3,
+          "title": "Non è mia!",
+          "sv": "Den är inte min!",
+          "nota": "Mia och mio = min. Ändelsen följer saken, inte ägaren: la valigia è mia, il libro è mio.",
+          "level": 1,
+          "narrator": "f",
+          "scene": "På kvällen i den nya lägenheten: resväskan är fel. I den ligger en herrskjorta, en bok om musik och en salami. Klänningen till i morgon är borta.",
+          "sentences": [
+            {
+              "it": "È sera e Sofia è a casa.",
+              "sv": "Det är kväll och Sofia är hemma."
+            },
+            {
+              "it": "La casa è nuova, piccola e tranquilla.",
+              "sv": "Lägenheten är ny, liten och lugn."
+            },
+            {
+              "it": "Ma la valigia è strana.",
+              "sv": "Men resväskan är konstig."
+            },
+            {
+              "it": "Ha una camicia da uomo.",
+              "sv": "I den ligger en herrskjorta."
+            },
+            {
+              "it": "Ha un libro di musica.",
+              "sv": "Där ligger en bok om musik."
+            },
+            {
+              "it": "E ha anche un salame!",
+              "sv": "Och där ligger till och med en salami!"
+            },
+            {
+              "it": "«Questa valigia non è mia!»",
+              "sv": "”Den här resväskan är inte min!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "E il vestito per domani?",
+              "sv": "Och klänningen till i morgon?"
+            }
+          ],
+          "question": {
+            "sv": "Vad ligger i resväskan?",
+            "options": [
+              "Klänningar och skor",
+              "Böcker om Bologna",
+              "En herrskjorta, en bok och en salami"
+            ],
+            "answer": 2
+          },
+          "lexicon": {
+            "ha": {
+              "p": "D1",
+              "sv": "har — här: i den ligger",
+              "note": "avere · la valigia ha… = resväskan har…, det ligger … i den",
+              "deck": "D1.2"
+            }
+          }
+        },
+        {
+          "id": "valigia-blu-01-4",
+          "chapter": 1,
+          "part": 4,
+          "title": "Pronto?",
+          "sv": "Hallå?",
+          "nota": "Pronto? = hallå? i telefon. «Sono Sofia» = det är Sofia — på italienska säger man «jag är Sofia».",
+          "level": 1,
+          "narrator": "f",
+          "scene": "Resväskan har en adresslapp med Matteos namn och telefonnummer. Sofia ringer. Matteo har hennes väska och klänningen, och de ska ses på Bar Centrale klockan åtta i morgon.",
+          "sentences": [
+            {
+              "it": "La valigia ha un nome: Matteo Rossi.",
+              "sv": "På resväskan står ett namn: Matteo Rossi."
+            },
+            {
+              "it": "E ha un numero di telefono.",
+              "sv": "Och ett telefonnummer."
+            },
+            {
+              "it": "«Pronto?»",
+              "sv": "”Hallå?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Buonasera, sono Sofia. Ho la tua valigia!»",
+              "sv": "”God kväll, det är Sofia. Jag har din resväska!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Ah! E io ho la tua!»",
+              "sv": "”Åh! Och jag har din!”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Hai il mio vestito per domani?»",
+              "sv": "”Har du min klänning till i morgon?”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Sì, è qui, ed è molto bello.»",
+              "sv": "”Ja, den är här, och den är jättefin.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Domani sono al Bar Centrale alle otto.»",
+              "sv": "”I morgon är jag på Bar Centrale klockan åtta.”",
+              "speakers": ["m"]
+            }
+          ],
+          "question": {
+            "sv": "Var är Matteo i morgon klockan åtta?",
+            "options": ["På stationen", "På Bar Centrale", "Hemma hos Sofia"],
+            "answer": 1
+          }
+        }
+      ],
+      "songs": []
+    },
+    {
+      "n": 2,
+      "title": "Il primo giorno",
+      "sv": "Första dagen",
+      "pages": [
+        {
+          "id": "valigia-blu-02-1",
+          "chapter": 2,
+          "part": 1,
+          "title": "Al bar",
+          "sv": "På kaféet",
+          "nota": "Verb på -are i presens: arriva, ordina, aspetta, guarda. Ändelsen -a = han eller hon gör.",
+          "level": 2,
+          "narrator": "m",
+          "scene": "Morgonen efter på Bar Centrale. Matteo väntar, Sofia kommer med hans resväska och salamin, som är hans farmors. Hon ser på klockan: jobbet börjar nio.",
+          "sentences": [
+            {
+              "it": "È mattina e Matteo arriva al bar alle otto.",
+              "sv": "Det är morgon och Matteo kommer till baren klockan åtta."
+            },
+            {
+              "it": "Il bar è piccolo e c'è molta gente.",
+              "sv": "Baren är liten och det är mycket folk där."
+            },
+            {
+              "it": "Matteo ordina un caffè e aspetta.",
+              "sv": "Matteo beställer en kaffe och väntar."
+            },
+            {
+              "it": "Poi arriva Sofia, con la valigia blu.",
+              "sv": "Sedan kommer Sofia, med den blå resväskan."
+            },
+            {
+              "it": "«Ecco la tua valigia, e il tuo salame!»",
+              "sv": "”Här är din resväska, och din salami!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Matteo ride: «Grazie! Il salame è della nonna.»",
+              "sv": "Matteo skrattar: ”Tack! Salamin är från farmor.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Sofia guarda l'orologio: è tardi!",
+              "sv": "Sofia tittar på klockan: det är sent!"
+            },
+            {
+              "it": "«Il lavoro comincia alle nove!»",
+              "sv": "”Jobbet börjar klockan nio!”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vems är salamin?",
+            "options": ["Sofias", "Farmors", "Barens"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "valigia-blu-02-2",
+          "chapter": 2,
+          "part": 2,
+          "title": "Il primo giorno",
+          "sv": "Första dagen",
+          "nota": "Ord som liknar engelskan: musica, segretaria, direttore, concerto, pianista, perfetto. Gissa först, slå upp sedan.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Sofias nya jobb är som sekreterare på en musikskola. Den pratsamma rektorn berättar om kvällens konsert och pianisten, en kille från Bologna. Den röda klänningen passar perfekt.",
+          "sentences": [
+            {
+              "it": "Sofia arriva al lavoro alle nove.",
+              "sv": "Sofia kommer till jobbet klockan nio."
+            },
+            {
+              "it": "Il nuovo lavoro è in una scuola di musica.",
+              "sv": "Det nya jobbet är på en musikskola."
+            },
+            {
+              "it": "Sofia è la nuova segretaria.",
+              "sv": "Sofia är den nya sekreteraren."
+            },
+            {
+              "it": "Il direttore è simpatico e parla molto.",
+              "sv": "Rektorn är trevlig och pratar mycket."
+            },
+            {
+              "it": "«Stasera c'è un concerto qui, alle sette.»",
+              "sv": "”I kväll är det konsert här, klockan sju.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Il pianista è un ragazzo di Bologna.»",
+              "sv": "”Pianisten är en kille från Bologna.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Sofia lavora tutto il giorno.",
+              "sv": "Sofia jobbar hela dagen."
+            },
+            {
+              "it": "Per fortuna il vestito rosso è perfetto per stasera.",
+              "sv": "Som tur är passar den röda klänningen perfekt i kväll."
+            }
+          ],
+          "question": {
+            "sv": "Vad har Sofia för nytt jobb?",
+            "options": ["Sekreterare på en musikskola", "Pianist på en bar", "Lärare i Turin"],
+            "answer": 0
+          }
+        },
+        {
+          "id": "valigia-blu-02-3",
+          "chapter": 2,
+          "part": 3,
+          "title": "Il concerto",
+          "sv": "Konserten",
+          "nota": "Tu och lui/lei: lavori = du jobbar, lavora = han eller hon jobbar. -i betyder du.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Konserten på kvällen. Pianisten är Matteo. Efteråt känner de igen varandra, och han bjuder henne på kaffe i morgon klockan åtta. Hon tar med salamin.",
+          "sentences": [
+            {
+              "it": "Alle sette la sala è piena.",
+              "sv": "Klockan sju är salen full."
+            },
+            {
+              "it": "Sofia cerca un posto e guarda il palco.",
+              "sv": "Sofia letar efter en plats och tittar mot scenen."
+            },
+            {
+              "it": "Il pianista arriva: è Matteo!",
+              "sv": "Pianisten kommer in: det är Matteo!"
+            },
+            {
+              "it": "Matteo suona e la musica è bellissima.",
+              "sv": "Matteo spelar och musiken är jättevacker."
+            },
+            {
+              "it": "Dopo il concerto, Matteo vede Sofia.",
+              "sv": "Efter konserten ser Matteo Sofia."
+            },
+            {
+              "it": "«Tu! Lavori qui?» «Sì, da oggi!»",
+              "sv": "”Du! Jobbar du här?” ”Ja, från och med i dag!”",
+              "speakers": ["m", "f"]
+            },
+            {
+              "it": "«Allora un caffè insieme, domani alle otto?»",
+              "sv": "”En kaffe tillsammans då, i morgon klockan åtta?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Sofia ride: «Sì, ma porto io il salame!»",
+              "sv": "Sofia skrattar: ”Ja, men jag tar med salamin!”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vem spelar piano på konserten?",
+            "options": ["Rektorn", "Sofia", "Matteo"],
+            "answer": 2
+          }
+        }
+      ],
+      "songs": []
+    }
+  ]
+}

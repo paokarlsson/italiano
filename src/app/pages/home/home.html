@@ -173,6 +173,30 @@
     </div>
   }
 
+  @for (d of sagasDone(); track d.id) {
+    <details class="basics">
+      <summary>
+        <span class="stock-label">{{ d.title }} · {{ d.read }} av {{ d.total }} lästa</span>
+      </summary>
+      @for (c of d.chapters; track c.n) {
+        <div class="saga-ch done">
+          <span class="saga-title" lang="it">{{ c.label }}</span>
+          <div class="read-row">
+            @for (p of c.items; track p.id) {
+              <a
+                class="read-dot done"
+                [routerLink]="p.link"
+                [attr.aria-label]="p.title"
+                [title]="p.title"
+                >{{ p.label }}</a
+              >
+            }
+          </div>
+        </div>
+      }
+    </details>
+  }
+
   @let own = leggi.own();
   @if (own !== null) {
     <div class="read-meta">

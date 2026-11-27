@@ -15,7 +15,7 @@ import {
 } from '../models/leggi.models';
 import { levelShift, MAX_LEVEL, MIN_LEVEL } from './levels';
 import { StorageService } from './storage.service';
-import { storyLexicon } from './story';
+import { readingPath, storyLexicon } from './story';
 import { StoryStore } from './story-store';
 import { tokenize } from './tokenize';
 
@@ -98,7 +98,7 @@ export class LeggiService {
   readonly profile = computed<ReadingProfile>(() => {
     this._texts();
     const own = this._userTexts();
-    const story = this.storyStore.data();
+    const stories = this.storyStore.stories();
     const adapted = Object.values(this.storyStore.adapted());
     const load: Record<PillarId, { seen: number; looked: number }> = {
       D1: { seen: 0, looked: 0 },
@@ -111,9 +111,7 @@ export class LeggiService {
       // Den inbyggda ordlistan först; annars den egna text där formen står.
       const entry = Object.hasOwn(this._lexicon, key)
         ? this._lexicon[key]
-        : story && Object.hasOwn(story.lexicon, key)
-          ? story.lexicon[key]
-          : [...own, ...adapted].find((t) => Object.hasOwn(t.lexicon, key))?.lexicon[key];
+        : [...stories, ...own, ...adapted].find((t) => Object.hasOwn(t.lexicon, key))?.lexicon[key];
       if (!entry || !load[entry.p]) continue;
       load[entry.p].seen += word.seen;
       load[entry.p].looked += word.looked;
@@ -162,29 +160,38 @@ export class LeggiService {
     Object.values(this._progress().texts).reduce((n, r) => n + r.times, 0),
   );
 
-  /** Det första i följetongen som inte är läst — en sida eller en låt. Null när allt är det. */
+  /**
+   * Läsordningen: grundkursen med följetongen som läses varvat med den, sedan de andra
+   * följetongerna — se readingPath().
+   */
+  readonly path = computed(() => readingPath(this._texts(), this.storyStore.stories()));
+
+  /**
+   * Det första i följetongerna som inte är läst, i läsordning — en sida eller en låt. Null
+   * när allt är det.
+   */
   readonly storyNext = computed<StoryItem | null>(() => {
     const read = this._progress().texts;
-    return this.storyStore.items().find((item) => !read[item.id]) ?? null;
+    const item = this.path().find((i) => i.kind !== 'text' && !read[i.id]);
+    return item && item.kind !== 'text' ? item : null;
   });
 
-  /** Antal lästa sidor och hörda låtar i följetongen. */
+  /** Antal lästa sidor och hörda låtar i följetongerna. */
   readonly storyRead = computed(() => {
     const read = this._progress().texts;
     return this.storyStore.items().filter((item) => read[item.id]).length;
   });
 
   /**
-   * Nästa text: den första olästa inbyggda, sedan följetongen, sedan den äldsta olästa i
-   * lagret. När allt är läst — den inbyggda med flest öppna ord, och vid lika den som
-   * lästes för längst sedan.
+   * Nästa text: den första olästa i läsordningen — grundkursen och följetongerna — sedan den
+   * äldsta olästa i lagret. När allt är läst — den inbyggda med flest öppna ord, och vid
+   * lika den som lästes för längst sedan.
    */
   readonly next = computed<Lettura | null>(() => {
     const texts = this._texts();
     const read = this._progress().texts;
-    const page = this.storyStore.items().find((item) => item.kind === 'page' && !read[item.id]);
-    const unread =
-      texts.find((t) => !read[t.id]) ?? (page && this.text(page.id)) ?? this.stock()[0];
+    const first = this.path().find((i) => i.kind !== 'song' && !read[i.id]);
+    const unread = (first && this.text(first.id)) ?? this.stock()[0];
     if (unread) return unread;
     const open = new Set(this.openWords());
     let best: Lettura | null = null;
@@ -199,13 +206,11 @@ export class LeggiService {
     return best;
   });
 
-  /** Det som står på tur — som `next`, men med följetongens låtar på sina platser. */
+  /** Det som står på tur — som `next`, men med följetongernas låtar på sina platser. */
   readonly step = computed<Step | null>(() => {
     const read = this._progress().texts;
-    const story = this.storyNext();
-    if (story?.kind === 'song' && this._texts().every((t) => read[t.id])) {
-      return { kind: 'song', song: story.song };
-    }
+    const first = this.path().find((i) => !read[i.id]);
+    if (first?.kind === 'song') return { kind: 'song', song: first.song };
     const text = this.next();
     return text ? { kind: 'text', text } : null;
   });
@@ -409,9 +414,10 @@ export class LeggiService {
   private lexiconFor(id: string): Record<string, LexEntry> {
     const own = this._userTexts().find((t) => t.id === id) ?? this.storyStore.adaptation(id);
     if (own) return own.lexicon;
-    const page = this.storyStore.page(id);
-    const story = this.storyStore.data();
-    return page && story ? storyLexicon(this._lexicon, story, page) : this._lexicon;
+    const item = this.storyStore.item(id);
+    return item?.kind === 'page'
+      ? storyLexicon(this._lexicon, item.story, item.page)
+      : this._lexicon;
   }
 
   /** Alla uppslagbara bitar i texten, i ordning och med upprepningar. */

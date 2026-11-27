@@ -208,13 +208,14 @@ export class AiService {
   async adapt(pageId: string, label = ''): Promise<{ text: UserText | null; cost: number }> {
     const item = this.story.item(pageId);
     if (item?.kind !== 'page') throw new AiError('bad-shape', 'Sidan finns inte i berättelsen.');
-    const { page, chapter } = item;
-    const canon = await this.story.loadCanon().catch(() => {
+    const { page, chapter, story } = item;
+    if (!story.canon?.length) throw new AiError('bad-shape', 'Berättelsen skrivs inte om.');
+    const canon = await this.story.loadCanon(story).catch(() => {
       throw new AiError('network', 'Berättelsens kanon gick inte att hämta.');
     });
     const reader = this.leggi.level();
     const weave = this.weave();
-    const items = this.story.items();
+    const items = this.story.itemsOf(story);
     const before = items
       .slice(
         0,

@@ -32,6 +32,7 @@ const story: StoryData = {
   id: 'alba-luca',
   title: 'Alba & Luca',
   sv: 'En kärlekshistoria.',
+  canon: ['data/storie/alba-luca/varld.md'],
   names: ['alba'],
   lexicon: { qui: { p: 'D1', sv: 'här' } },
   chapters: [
@@ -92,7 +93,7 @@ describe('följetongen i läsningen', () => {
     leggi = TestBed.inject(LeggiService);
     store = TestBed.inject(StoryStore);
     leggi.hydrate(base);
-    store.hydrate(story);
+    store.hydrate([story]);
   });
 
   it('kommer efter grundkursen, med låten på sin plats', () => {
@@ -109,6 +110,52 @@ describe('följetongen i läsningen', () => {
     leggi.markHeard('alba-luca-01-canzone');
     expect(leggi.storyRead()).toBe(4);
     expect(leggi.step()).toMatchObject({ kind: 'text', text: { id: 'alba-luca-02-1' } });
+  });
+
+  it('varvar en kort följetong med grundkursen, efter texterna på samma nivå', () => {
+    const short = (id: string, level: number): StoryPage => ({
+      ...page(1, 1, { level }),
+      id,
+    });
+    const course: StoryData = {
+      ...story,
+      id: 'kort',
+      title: 'Kort',
+      course: true,
+      chapters: [
+        {
+          n: 1,
+          title: 'Uno',
+          sv: '',
+          pages: [short('kort-1', 1), short('kort-2', 2)],
+          songs: [],
+        },
+      ],
+    };
+    const text = (id: string, level: number) => ({ ...base.texts[0], id, title: id, level });
+    leggi.hydrate({
+      ...base,
+      texts: [text('uno', 1), text('due', 2), text('tre', 3)],
+    });
+    store.hydrate([course, story]);
+    expect(leggi.path().map((i) => i.id)).toEqual([
+      'uno',
+      'kort-1',
+      'due',
+      'kort-2',
+      'tre',
+      ...store.itemsOf(story).map((i) => i.id),
+    ]);
+
+    expect(leggi.next()?.id).toBe('uno');
+    leggi.complete('uno', new Set());
+    expect(leggi.next()?.id).toBe('kort-1');
+    expect(leggi.storyNext()?.id).toBe('kort-1');
+    // Nästa sida i följetongen hör till samma följetong — inte till läsordningen.
+    expect(store.after('kort-1')?.id).toBe('kort-2');
+    expect(store.after('kort-2')).toBeNull();
+    leggi.complete('kort-1', new Set());
+    expect(leggi.next()?.id).toBe('due');
   });
 
   it('läser en sida med appens ordlista och berättelsens ovanpå', () => {
@@ -231,7 +278,7 @@ describe('påfyllningen och följetongen', () => {
     leggi = TestBed.inject(LeggiService);
     store = TestBed.inject(StoryStore);
     leggi.hydrate(base);
-    store.hydrate(story);
+    store.hydrate([story]);
     TestBed.inject(DataService).hydrate([]);
     ai = TestBed.inject(AiService) as unknown as FakeAi;
     supply = TestBed.inject(SupplyService);
@@ -268,6 +315,15 @@ describe('påfyllningen och följetongen', () => {
     supply.start();
     await settle();
     expect(ai.adapted).toEqual(['alba-luca-02-1']);
+  });
+
+  it('skriver aldrig om en följetong som läses varvat med grundkursen', async () => {
+    store.hydrate([{ ...story, course: true }]);
+    leggi.complete('uno', new Set());
+    leggi.complete('alba-luca-00-1', new Set());
+    supply.start();
+    await settle();
+    expect(ai.adapted).toEqual([]);
   });
 
   it('fyller på med fria texter först när följetongen är läst', async () => {
