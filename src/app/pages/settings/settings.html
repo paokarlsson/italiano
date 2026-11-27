@@ -221,6 +221,67 @@
     }
   </div>
 
+  <div class="stat-section-title">Gemini · omslag</div>
+  <div class="ai-card">
+    @if (!gemini.hasKey()) {
+      <p>
+        Med en egen API-nyckel från Google AI Studio ritar Gemini («Nano Banana») en framsida till
+        varje bok. Omslagen skapas under Ljud och följer med när biblioteket publiceras.
+      </p>
+      <input
+        type="password"
+        autocomplete="off"
+        placeholder="AIza…"
+        aria-label="Gemini API-nyckel"
+        [value]="geminiKey()"
+        [disabled]="busy()"
+        (input)="geminiKey.set(valueOf($event))"
+      />
+      <button class="cta" type="button" [disabled]="busy()" (click)="saveGeminiKey()">
+        Spara nyckeln
+      </button>
+      <p class="ai-fine">
+        Nyckeln sparas bara i den här webbläsaren och skickas bara till Google. Varje omslag dras
+        från ditt Google-konto.
+      </p>
+    } @else {
+      <label class="su-field">
+        Modell
+        <select (change)="gemini.setModel(valueOf($event))">
+          @for (m of gemini.models; track m.id) {
+            <option [value]="m.id" [selected]="m.id === gemini.model()">
+              {{ m.name }} — {{ m.note }}
+            </option>
+          }
+        </select>
+      </label>
+      <label class="su-field">
+        Mall för alla omslag
+        <textarea rows="12" [value]="gemini.template()" (change)="saveTemplate($event)"></textarea>
+      </label>
+      <p class="ai-fine">
+        Mallen står först i varje prompt och ger böckerna samma stil. Efter den kommer bokens titel
+        och bokens egen bildprompt, som du ändrar under <a routerLink="/suono">Ljud</a>.
+        @if (gemini.customTemplate()) {
+          Det här är din egen mall.
+          <button class="ai-link" type="button" (click)="resetTemplate()">
+            Återställ standardmallen
+          </button>
+        }
+      </p>
+      <div class="set-cost">
+        <span class="set-cost-label">Omslag ritade härifrån</span>
+        <span class="set-cost-value">{{ gemini.images() }}</span>
+      </div>
+      <p class="ai-fine">
+        <button class="ai-link" type="button" (click)="removeGeminiKey()">Ta bort nyckeln</button>
+      </p>
+    }
+    @if (geminiError()) {
+      <p class="ai-error" role="alert">{{ geminiError() }}</p>
+    }
+  </div>
+
   @if (showGoogle()) {
     <div class="stat-section-title">Google · publicera</div>
     <div class="ai-card">
@@ -228,7 +289,7 @@
         <p>Inloggad. Publicera det du har läst in under <a routerLink="/suono">Ljud</a>.</p>
       } @else {
         <p>
-          Logga in med Google för att lägga det du har läst in, och texterna du har läst, i
+          Logga in med Google för att lägga det du har läst in, omslagen och texterna du har läst i
           biblioteket. Inloggningen gäller i ungefär en timme.
         </p>
         <button class="cta" type="button" [disabled]="busy()" (click)="connectGoogle()">

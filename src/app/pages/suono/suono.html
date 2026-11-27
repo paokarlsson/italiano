@@ -1,4 +1,4 @@
-<app-topbar step="Suono" title="Ljud och bibliotek" />
+<app-topbar step="Suono" title="Ljud, omslag och bibliotek" />
 
 <div class="stage">
   <div class="ai-card">
@@ -18,7 +18,7 @@
         <p role="status">Hämtar… {{ megabytes(p?.done ?? 0) }} av {{ megabytes(p?.total ?? 0) }}</p>
       } @else if (library.fresh().length) {
         <p>
-          Det finns ljud och texter att hämta: {{ library.fresh().length }} paket,
+          Det finns ljud, omslag och texter att hämta: {{ library.fresh().length }} paket,
           {{ megabytes(library.freshBytes()) }}. De hämtas av sig själva när appen öppnas, utom när
           webbläsaren ber om att spara data.
         </p>
@@ -82,6 +82,72 @@
     </div>
   }
 
+  @if (gemini.hasKey()) {
+    <div class="ai-card">
+      <div class="eyebrow">Omslag</div>
+      <p class="cover-intro">
+        Gemini ritar en framsida till varje bok. Prompten är mallen — samma för alla böcker, under
+        <a routerLink="/installningar">Inställningar</a> — följd av bokens titel och bildprompten
+        här.
+      </p>
+      @for (story of stories(); track story.id) {
+        @let c = covers.covers()[story.id];
+        <div class="cover-row">
+          @if (c) {
+            <img class="cover-img" [src]="c.url" [alt]="'Omslaget till ' + story.title" />
+          } @else {
+            <div class="cover-img cover-none" aria-hidden="true">?</div>
+          }
+          <div class="cover-body">
+            <b lang="it">{{ story.title }}</b>
+            @if (c) {
+              <span class="ai-fine">
+                {{ megabytes(c.bytes) }} · {{ c.pub ? 'publicerat' : 'inte publicerat' }}
+              </span>
+            }
+            <label class="su-field">
+              Bildprompt
+              <textarea
+                rows="5"
+                [value]="promptOf(story)"
+                [disabled]="!!drawing()"
+                (change)="savePrompt(story, $event)"
+              ></textarea>
+            </label>
+            @if (gemini.prompt(story.id)) {
+              <p class="ai-fine">
+                Din egen prompt.
+                <button class="ai-link" type="button" (click)="resetPrompt(story)">
+                  Återställ bokens
+                </button>
+              </p>
+            }
+            <details class="cover-full">
+              <summary class="ai-fine">Hela prompten som skickas</summary>
+              <pre>{{ fullPrompt(story) }}</pre>
+            </details>
+            <button class="cta" type="button" [disabled]="!!drawing()" (click)="draw(story)">
+              @if (drawing() === story.id) {
+                Ritar…
+              } @else {
+                {{ c ? 'Rita ett nytt omslag' : 'Rita omslaget' }} →
+              }
+            </button>
+          </div>
+        </div>
+      }
+      @if (coverError()) {
+        <p class="ai-error" role="alert">{{ coverError() }}</p>
+      }
+      @if (library.pendingCovers() && !drive.connected() && drive.canConnect) {
+        <p class="ai-fine">
+          {{ library.pendingCovers() }} omslag väntar på att publiceras. Logga in med Google under
+          <a routerLink="/installningar">Inställningar</a>, så kan du publicera dem här.
+        </p>
+      }
+    </div>
+  }
+
   @if (drive.connected()) {
     <div class="ai-card">
       <div class="eyebrow">Publicera</div>
@@ -113,10 +179,11 @@
           <p role="status">Publicerar… paket {{ (p?.done ?? 0) + 1 }} av {{ p?.total ?? 1 }}</p>
         } @else if (hasPending()) {
           <p>
-            Nytt sedan sist: {{ library.pendingClips() }} klipp och
+            Nytt sedan sist: {{ library.pendingClips() }} klipp,
             {{ library.pendingTexts().length }}
-            {{ library.pendingTexts().length === 1 ? 'text' : 'texter' }}. Texter följer med när du
-            har läst dem; en text du har tagit bort följer inte med.
+            {{ library.pendingTexts().length === 1 ? 'text' : 'texter' }} och
+            {{ library.pendingCovers() }} omslag. Texter följer med när du har läst dem; en text du
+            har tagit bort följer inte med.
           </p>
           <button class="cta gold" type="button" (click)="publish()">Publicera →</button>
         } @else {

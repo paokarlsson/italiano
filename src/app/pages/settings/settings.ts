@@ -6,6 +6,7 @@ import { AudioService } from '../../core/audio.service';
 import { AudioStore } from '../../core/audio-store';
 import { DataService } from '../../core/data.service';
 import { DriveError, DriveService } from '../../core/drive.service';
+import { GeminiError, GeminiService } from '../../core/gemini.service';
 import { LibraryService } from '../../core/library.service';
 import { STOCK_TARGET, SupplyService } from '../../core/supply.service';
 import { ToastService } from '../../core/toast.service';
@@ -41,6 +42,7 @@ export class Settings {
   protected readonly store = inject(AudioStore);
   protected readonly drive = inject(DriveService);
   protected readonly library = inject(LibraryService);
+  protected readonly gemini = inject(GeminiService);
   protected readonly megabytes = megabytes;
 
   protected readonly models = AI_MODELS;
@@ -55,6 +57,8 @@ export class Settings {
 
   protected readonly claudeKey = signal('');
   protected readonly voiceKey = signal('');
+  protected readonly geminiKey = signal('');
+  protected readonly geminiError = signal('');
   protected readonly busy = signal(false);
   protected readonly claudeError = signal('');
   protected readonly voiceError = signal('');
@@ -71,7 +75,8 @@ export class Settings {
       (this.drive.connected() ||
         !this.drive.folderId() ||
         this.library.pendingClips() > 0 ||
-        this.library.pendingTexts().length > 0),
+        this.library.pendingTexts().length > 0 ||
+        this.library.pendingCovers() > 0),
   );
 
   /** Ungefär vad det kostar att läsa in allt som saknas, i krediter. */
@@ -104,7 +109,7 @@ export class Settings {
   }
 
   protected valueOf(event: Event): string {
-    return (event.target as HTMLInputElement | HTMLSelectElement).value;
+    return (event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).value;
   }
 
   protected saveClaudeKey(): Promise<void> {
@@ -168,6 +173,31 @@ export class Settings {
     }
   }
 
+  protected saveGeminiKey(): Promise<void> {
+    return this.run(this.geminiError, async () => {
+      await this.gemini.saveKey(this.geminiKey());
+      this.geminiKey.set('');
+      this.toast.show('Nyckeln är sparad');
+    });
+  }
+
+  protected removeGeminiKey(): void {
+    if (confirm('Ta bort Gemini-nyckeln från den här webbläsaren? Omslagen ligger kvar.')) {
+      this.gemini.clearKey();
+    }
+  }
+
+  protected saveTemplate(event: Event): void {
+    this.gemini.setTemplate(this.valueOf(event));
+    this.toast.show('Mallen är sparad');
+  }
+
+  protected resetTemplate(): void {
+    if (confirm('Gå tillbaka till standardmallen? Din egen mall försvinner.')) {
+      this.gemini.resetTemplate();
+    }
+  }
+
   protected connectGoogle(): Promise<void> {
     return this.run(this.googleError, async () => {
       await this.drive.connect();
@@ -197,7 +227,7 @@ export class Settings {
 }
 
 function message(e: unknown): string {
-  return e instanceof AiError || e instanceof VoiceError
+  return e instanceof AiError || e instanceof VoiceError || e instanceof GeminiError
     ? e.message
     : 'Något gick fel. Försök igen.';
 }

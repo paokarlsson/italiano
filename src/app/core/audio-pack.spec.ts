@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { UserText } from '../models/leggi.models';
 import {
   clipText,
+  coverPacks,
   decodePack,
   encodePack,
   packName,
@@ -92,5 +93,44 @@ describe('paketformatet', () => {
     expect(packNumber('pack-0007.itpk')).toBe(7);
     expect(packNumber('pack-12345.itpk')).toBe(12345);
     expect(packNumber('anteckningar.txt')).toBeNull();
+  });
+
+  it('packar omslag efter klippen och läser tillbaka dem', () => {
+    const pack = {
+      voice: 'f:x/m',
+      clips: [{ text: 'ciao', bytes: new Uint8Array([1, 2]) }],
+      texts: [],
+      covers: [{ book: 'valigia-blu', mime: 'image/png', bytes: new Uint8Array([7, 8, 9]) }],
+    };
+    const back = decodePack(encodePack(pack));
+    expect(back.clips).toEqual(pack.clips);
+    expect(back.covers).toEqual(pack.covers);
+  });
+
+  it('läser ett paket utan omslag som förut', () => {
+    const back = decodePack(encodePack({ voice: 'f:x/m', clips: [], texts: [] }));
+    expect(back.covers).toBeUndefined();
+  });
+
+  it('säger ifrån när ett omslag är avklippt', () => {
+    const file = encodePack({
+      voice: '',
+      clips: [],
+      texts: [],
+      covers: [{ book: 'b', mime: 'image/png', bytes: new Uint8Array(10) }],
+    });
+    expect(() => decodePack(file.subarray(0, file.byteLength - 1))).toThrow(/avklippt/);
+  });
+
+  it('delar omslagen i paket som ryms i en uppladdning', () => {
+    const cover = (book: string, n: number) => ({
+      book,
+      mime: 'image/png',
+      bytes: new Uint8Array(n),
+    });
+    const packs = coverPacks([cover('a', 600), cover('b', 600), cover('c', 100)], 1000);
+    expect(packs.map((p) => p.covers?.map((c) => c.book))).toEqual([['a'], ['b', 'c']]);
+    expect(packs.every((p) => p.voice === '' && !p.clips.length)).toBe(true);
+    expect(coverPacks([])).toEqual([]);
   });
 });

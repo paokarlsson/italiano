@@ -134,6 +134,11 @@ export interface StoryData {
    * Utan kanon skrivs sidorna inte om.
    */
   canon?: string[];
+  /**
+   * Bildprompten till bokens framsida: vad omslaget ska visa. Läggs efter mallen när Gemini
+   * ritar omslaget — se core/cover.ts.
+   */
+  cover?: string;
   names: string[];
   /** Berättelsens ordlista — läggs över appens. */
   lexicon: Record<string, LexEntry>;

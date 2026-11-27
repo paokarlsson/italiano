@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { AiService } from '../../core/ai.service';
 import { DataService } from '../../core/data.service';
+import { CoverStore } from '../../core/cover-store';
 import { DriveService } from '../../core/drive.service';
+import { GeminiService } from '../../core/gemini.service';
 import { HintService } from '../../core/hint.service';
 import { AudioStore } from '../../core/audio-store';
 import { LeggiService } from '../../core/leggi.service';
@@ -40,6 +42,8 @@ export class Home {
   protected readonly voice = inject(VoiceService);
   protected readonly drive = inject(DriveService);
   protected readonly saga = inject(StoryStore);
+  protected readonly gemini = inject(GeminiService);
+  private readonly covers = inject(CoverStore);
 
   protected readonly megabytes = megabytes;
 
@@ -191,6 +195,7 @@ export class Home {
     const current = next ? next.chapter.n : (chapters.at(-1)?.n ?? 0);
     return {
       id: data.id,
+      cover: this.covers.url(data.id),
       title: data.title,
       sv: data.sv,
       chapters,
@@ -200,6 +205,19 @@ export class Home {
       total: all.length,
     };
   }
+
+  /** Länken till Ljud: vad som går att göra där, med de nycklar och den inloggning som finns. */
+  protected readonly suono = computed(() => {
+    const sound = this.voice.hasKey() || this.drive.connected();
+    const can = [
+      this.voice.hasKey() && 'läs in',
+      this.gemini.hasKey() && 'rita omslag',
+      this.drive.connected() && 'publicera',
+    ].filter((x): x is string => !!x);
+    if (!can.length) return null;
+    const text = can.length > 1 ? `${can.slice(0, -1).join(', ')} och ${can.at(-1)}` : can[0];
+    return { title: sound ? 'Ljud' : 'Omslag', text };
+  });
 
   /** Grundkursen fälls ihop när den är läst och en berättelse har tagit över. */
   protected readonly basicsDone = computed(

@@ -38,6 +38,10 @@ delar som bygger på samma fyra pelare:
   klippen och sina lästa texter i en publik mapp på Google Drive, och en besökares app
   hämtar alltihop av sig själv, utan att någon loggar in.
 
+- **Omslag** — valfritt. Med en egen nyckel till Googles Gemini API ritar «Nano Banana» en
+  framsida till varje bok. Prompten är en mall som är densamma för alla böcker, följd av
+  bokens titel och bokens egen bildprompt. Omslagen publiceras i biblioteket som ljudet.
+
 Det som kräver en nyckel eller en inloggning syns bara när den finns. Utan Claude-nyckel
 finns ingen länk till Fler texter, utan ElevenLabs-nyckel eller Google-inloggning ingen
 länk till Ljud. Inställningar syns alltid — det är där nycklarna läggs in.
@@ -104,6 +108,7 @@ tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsG
 src/app/
   core/          storage, data, stats, quiz (gymmets motor), leggi, tokenize, levels,
                  profile, recommend, ripasso, ai + ai-text + ai-explain + ai-deck, supply,
+                 cover + gemini + cover-store,
                  audio + audio-store + audio-pack, speech, voice, drive, library,
                  cloud.config,
                  hint, toast, ai-report, tag-labels, guards
@@ -315,6 +320,33 @@ Inget av det här är provat mot de riktiga tjänsterna — bara mot låtsasvers
 webbläsare. Två saker avgör om det fungerar på riktigt och är värda att pröva först: att
 ElevenLabs API går att anropa direkt från en webbsida, och att en publik mapp går att läsa
 med bara en API-nyckel.
+
+### Omslag
+
+Varje följetong har en bildprompt i sin JSON (`cover`) som säger vad framsidan ska visa.
+Gemini får tre delar i följd (`coverPrompt()` i `core/cover.ts`):
+
+1. **Mallen** — stilen, densamma för alla böcker så att de ser ut att höra ihop.
+   Standardmallen står i `DEFAULT_TEMPLATE` och går att skriva om under Inställningar; en
+   egen mall sparas i webbläsaren och kan återställas.
+2. **Titeln**, som mallen ber om att få tryckt på omslaget.
+3. **Bokens bildprompt** — den ur JSON-filen, eller en egen som skrivs under Ljud.
+
+- **Nyckeln** kommer från Google AI Studio och läggs in under Inställningar, där också
+  modellen väljs: Nano Banana 2.1 är förvald, Nano Banana 2 Lite är billigast och Nano
+  Banana Pro dyrast. `GeminiService` anropar `generateContent` direkt från webbläsaren,
+  med bilden i formatet 3:4.
+- **Rita** gör man under Ljud, en bok i taget. Ett nytt omslag ersätter det gamla. Hela
+  prompten som skickas går att fälla ut under varje bok.
+- **Lagras** gör omslagen i webbläsaren (`CoverStore`, IndexedDB) och visas på startsidan
+  bredvid följetongen man står i.
+- **Publiceras** gör de i samma paket som ljudet och texterna: huvudet räknar upp
+  omslagen (`covers`) och bilderna ligger efter klippen, så att en äldre app läser paketet
+  som förut. En besökare hämtar dem av sig själv. Ett senare omslag till samma bok ersätter
+  ett tidigare, men ett eget omslag som inte är publicerat än skrivs aldrig över.
+
+Inget av det här är provat mot Googles riktiga API — bara mot en låtsasversion i
+webbläsaren. Det första att pröva är att anropet går igenom direkt från en webbsida.
 
 ### Google
 

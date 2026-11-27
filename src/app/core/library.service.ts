@@ -1,7 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { UserText } from '../models/leggi.models';
-import { decodePack, encodePack, packName, packNumber, splitPacks } from './audio-pack';
+import { coverPacks, decodePack, encodePack, packName, packNumber, splitPacks } from './audio-pack';
 import { AudioStore } from './audio-store';
+import { CoverStore } from './cover-store';
 import { DriveError, DriveFile, DriveService } from './drive.service';
 import { LeggiService } from './leggi.service';
 import { StorageService } from './storage.service';
@@ -35,8 +36,9 @@ function readable(text: UserText): boolean {
 
 /**
  * Biblioteket: det som delas ut genom den publika mappen. En besökare hämtar paketen med
- * ett tryck, utan inloggning, och får ljud och fler texter. Den som publicerar lägger nya
- * paket i mappen — klippen som lästs in sedan sist, och texterna som har lästs.
+ * ett tryck, utan inloggning, och får ljud, bokomslag och fler texter. Den som publicerar
+ * lägger nya paket i mappen — klippen som lästs in sedan sist, texterna som har lästs och
+ * omslagen som skapats.
  *
  * Paket läggs till och skrivs aldrig om, så den som redan hämtat får bara det nya.
  */
@@ -45,6 +47,7 @@ export class LibraryService {
   private readonly storage = inject(StorageService);
   private readonly drive = inject(DriveService);
   private readonly store = inject(AudioStore);
+  private readonly covers = inject(CoverStore);
   private readonly leggi = inject(LeggiService);
   private readonly voice = inject(VoiceService);
 
@@ -74,6 +77,8 @@ export class LibraryService {
       .filter((t) => t.source === 'ai' && this.leggi.isRead(t.id) && !published.has(t.id))
       .sort((a, b) => a.createdAt - b.createdAt);
   });
+  /** Egna omslag som inte ligger i något paket än. */
+  readonly pendingCovers = computed(() => this.covers.pending());
   /** Egna klipp som inte ligger i något paket än, med båda rösterna. */
   readonly pendingClips = computed(
     () => this.store.pending(this.voice.tag('f')) + this.store.pending(this.voice.tag('m')),
@@ -130,7 +135,11 @@ export class LibraryService {
 
   private lastSync = 0;
 
-  /** Hämtar paketen som saknas och läser in dem: klippen i ljudlagret, texterna bland de egna. */
+  /**
+   * Hämtar paketen som saknas och läser in dem: klippen i ljudlagret, omslagen bland
+   * omslagen och texterna bland de egna. Ett senare omslag till samma bok ersätter ett
+   * tidigare, eftersom paketen läses i den ordning de publicerades.
+   */
   async download(): Promise<void> {
     if (this.working()) return;
     this.working.set('download');
@@ -143,6 +152,7 @@ export class LibraryService {
       for (const file of packs) {
         const pack = decodePack(await this.drive.download(file.id));
         await this.store.put(pack.voice, pack.clips, true);
+        for (const cover of pack.covers ?? []) await this.covers.put(cover, true);
         this.addTexts(pack.texts);
         this.remember({ loaded: [file.id] });
         done += file.size;
@@ -157,7 +167,8 @@ export class LibraryService {
   }
 
   /**
-   * Publicerar det som är nytt: klippen som lästs in sedan sist, och texterna som har lästs.
+   * Publicerar det som är nytt: klippen som lästs in sedan sist, texterna som har lästs och
+   * omslagen som skapats.
    * Kräver inloggning och en mapp. Returnerar antalet paket som laddades upp.
    */
   async publish(): Promise<number> {
@@ -182,6 +193,7 @@ export class LibraryService {
         texts = [];
       }
       if (texts.length) packs.push(...splitPacks(this.voice.tag('f'), [], texts));
+      packs.push(...coverPacks(this.covers.unpublished()));
       this.progress.set({ done: 0, total: packs.length });
       let done = 0;
       for (const pack of packs) {
@@ -191,6 +203,7 @@ export class LibraryService {
           pack.voice,
           pack.clips.map((c) => c.text),
         );
+        await this.covers.markPublished((pack.covers ?? []).map((c) => c.book));
         this.remember({ loaded: [file.id], published: pack.texts.map((t) => t.id) });
         this.packs.update((list) => [...list, file]);
         this.progress.set({ done: ++done, total: packs.length });
