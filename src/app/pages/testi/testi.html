@@ -107,7 +107,9 @@
   }
 
   @if (leggi.userTexts().length) {
-    <div class="stat-section-title">Dina texter ({{ leggi.userTexts().length }})</div>
+    <div class="stat-section-title" id="dina-texter">
+      Dina texter ({{ leggi.userTexts().length }})
+    </div>
     @for (text of leggi.userTexts(); track text.id) {
       <div class="ai-row">
         <a [routerLink]="['/leggi', text.id]">

@@ -1904,3 +1904,90 @@ app-perche {
 .ai-card .seg.ai-seg button {
   padding: 9px 6px;
 }
+
+/* --- Startsidan: berättelsen och grundkursen --- */
+.story {
+  margin-top: 14px;
+}
+.story-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+.story-head a {
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--verde);
+}
+.story .read-row {
+  margin-top: 8px;
+  align-items: center;
+}
+.read-dot.waiting {
+  border-style: dashed;
+  border-color: var(--verde);
+  color: var(--verde);
+}
+.read-dot.coming {
+  border-style: dashed;
+  color: var(--ink-soft);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.story-gap {
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  padding: 0 2px;
+}
+.basics {
+  margin-top: 12px;
+}
+.basics summary {
+  cursor: pointer;
+  list-style: none;
+}
+.basics summary::-webkit-details-marker {
+  display: none;
+}
+.basics summary::after {
+  content: ' +';
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+.basics[open] summary::after {
+  content: ' −';
+}
+.basics summary:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.recap {
+  margin-top: 12px;
+}
+.recap summary {
+  display: inline-block;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--gold-soft);
+  list-style: none;
+}
+.recap summary::-webkit-details-marker {
+  display: none;
+}
+.recap summary::before {
+  content: '▸ ';
+}
+.recap[open] summary::before {
+  content: '▾ ';
+}
+.read-card .recap p {
+  margin-top: 6px;
+  font-size: 13.5px;
+  opacity: 0.8;
+}

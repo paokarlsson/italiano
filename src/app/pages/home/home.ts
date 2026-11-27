@@ -5,6 +5,7 @@ import { DataService } from '../../core/data.service';
 import { HintService } from '../../core/hint.service';
 import { AudioStore } from '../../core/audio-store';
 import { LeggiService } from '../../core/leggi.service';
+import { level, LEVELS } from '../../core/levels';
 import { LibraryService } from '../../core/library.service';
 import { recommend } from '../../core/recommend';
 import { RIPASSO_MAX } from '../../core/ripasso';
@@ -12,6 +13,10 @@ import { StatsService } from '../../core/stats.service';
 import { SupplyService } from '../../core/supply.service';
 import { megabytes } from '../../core/utils';
 import { Lettura, UserText } from '../../models/leggi.models';
+
+/** Så många lästa delar som syns före den du står på, och hur många delar fönstret rymmer. */
+const STORY_BEHIND = 2;
+const STORY_WINDOW = 7;
 
 @Component({
   selector: 'app-home',
@@ -54,12 +59,54 @@ export class Home {
     return text(true);
   });
 
-  /** Resten av lagret — det som ligger färdigt utöver texten på kortet. */
-  protected readonly stock = computed(() => {
-    const r = this.reading();
-    const shown = r?.kind === 'text' ? r.text.id : null;
-    return this.leggi.stock().filter((t) => t.id !== shown);
+  /**
+   * Berättelsen som ett fönster, inte en hel rad: de två senast lästa delarna, den du står
+   * på, och det som ligger färdigt efter den. Null innan någon del finns.
+   */
+  protected readonly story = computed(() => {
+    const parts = this.leggi.story();
+    if (!parts.length) return null;
+    const read = (t: UserText) => this.leggi.isRead(t.id);
+    const first = parts.findIndex((t) => !read(t));
+    // Är allt läst står du efter den sista.
+    const at = first < 0 ? parts.length : first;
+    const from = Math.max(0, at - STORY_BEHIND);
+    const items = parts.slice(from, from + STORY_WINDOW).map((t, k) => ({
+      id: t.id,
+      n: t.part ?? from + k + 1,
+      title: t.title,
+      state: read(t) ? 'read' : from + k === at ? 'current' : 'stock',
+    }));
+    const last = parts[parts.length - 1];
+    return {
+      items,
+      /** Delarna utanför fönstret. */
+      before: from,
+      after: parts.length - from - items.length,
+      /** Numret nästa del får, när den skrivs. */
+      next: (last.part ?? parts.length) + 1,
+      read: parts.filter(read).length,
+      total: parts.length,
+    };
   });
+
+  /**
+   * Sammanfattningen av förra delen, när kortet visar en del i berättelsen. Claude skrev
+   * den för att kunna fortsätta — här påminner den om var man var.
+   */
+  protected readonly recap = computed(() => {
+    const r = this.reading();
+    if (r?.kind !== 'text') return null;
+    const parts = this.leggi.story();
+    const i = parts.findIndex((t) => t.id === r.text.id);
+    return i > 0 ? (parts[i - 1].recap ?? null) : null;
+  });
+
+  /** Grundkursen fälls ihop när den är läst och berättelsen har tagit över. */
+  protected readonly basicsDone = computed(() => this.leggi.allRead() && !!this.story());
+
+  protected readonly level = computed(() => level(this.leggi.level()));
+  protected readonly levelCount = LEVELS.length;
 
   /** Mazzin värda att satsa på, viktigast först. */
   protected readonly advice = computed(() =>

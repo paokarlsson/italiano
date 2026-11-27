@@ -62,18 +62,18 @@ samma commit inte körs två gånger.
 
 ## Så hänger det ihop
 
-| Vy          | Route                  | Vad som händer                                                 |
-| ----------- | ---------------------- | -------------------------------------------------------------- |
-| Hem         | `/`                    | Nästa text, lagret, mazzot att satsa på, gymmet per pelare     |
-| Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet               |
-| Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter        |
-| Fler texter | `/testi`               | Ny text eller nästa del, egen text, dina texter                |
-| Ljud        | `/suono`               | Hämta biblioteket, läs in med egen röst, publicera             |
-| Inställn.   | `/installningar`       | Nycklar, modell, röster, påfyllning och vad allt har kostat    |
-| Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)       |
-| Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit           |
-| Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                               |
-| Statistik   | `/stats`               | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export |
+| Vy          | Route                  | Vad som händer                                                  |
+| ----------- | ---------------------- | --------------------------------------------------------------- |
+| Hem         | `/`                    | Nästa text, berättelsen, mazzot att satsa på, gymmet per pelare |
+| Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet                |
+| Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter         |
+| Fler texter | `/testi`               | Ny text eller nästa del, egen text, dina texter                 |
+| Ljud        | `/suono`               | Hämta biblioteket, läs in med egen röst, publicera              |
+| Inställn.   | `/installningar`       | Nycklar, modell, röster, påfyllning och vad allt har kostat     |
+| Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)        |
+| Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit            |
+| Resultat    | `/deck/:deckId/result` | Poäng, stjärnor och vägen vidare                                |
+| Statistik   | `/stats`               | Träffsäkerhet per tagg, sorterad svagast först, plus AI-export  |
 
 Runda och resultat kräver en påbörjad runda — annars leder `activeRoundGuard`
 tillbaka till introt. Okända id:n fångas av `deckExistsGuard` och `textExistsGuard`.
@@ -98,6 +98,12 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
   uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp,
   eller sitter i en repetition. Nästa text är den första olästa inbyggda, sedan den äldsta
   olästa i lagret; när allt är läst den inbyggda med flest öppna ord.
+- **Startsidan** har två skeden. Först grundkursen: de 13 inbyggda texterna som en rad,
+  med en knapp per text. När den är läst och en berättelse finns fälls den ihop till en
+  rad, och berättelsen (`LeggiService.story`, delarna från den senaste del 1) tar platsen
+  som ett fönster: de två senast lästa delarna, den du står på och det som ligger på lager.
+  Läskortet har «Förra gången» — sammanfattningen Claude skrev av förra delen, bakom ett
+  tryck — och raden under visar nivån och andelen på egen hand.
 - **`tokenize()`** delar en mening i uppslagbara bitar. Längsta träffen i ordlistan
   vinner, så «ho mangiato» och «c'è» förklaras som en enhet.
 - **`buildRipasso()`** väljer repetitionens frågor. Ord repeteras som ord, regler på nya
