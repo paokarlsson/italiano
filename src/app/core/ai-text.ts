@@ -1,7 +1,17 @@
-import { Lettura, LexEntry, PillarId, TextQuestion, Token, UserText } from '../models/leggi.models';
+import {
+  Lettura,
+  LexEntry,
+  PillarId,
+  Sentence,
+  TextQuestion,
+  Token,
+  UserText,
+  Voice,
+} from '../models/leggi.models';
 import { Pillar } from '../models/quiz.models';
 import { LEVELS, level as levelOf } from './levels';
 import { PILLAR_NAMES } from './profile';
+import { speakersFit } from './speech';
 import { tokenize } from './tokenize';
 
 /**
@@ -53,6 +63,7 @@ export const TEXT_SCHEMA = {
     'question',
     'ripasso',
     'recap',
+    'narrator',
   ],
   properties: {
     italian: { type: 'boolean' },
@@ -64,8 +75,12 @@ export const TEXT_SCHEMA = {
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['it', 'sv'],
-        properties: { it: { type: 'string' }, sv: { type: 'string' } },
+        required: ['it', 'sv', 'speakers'],
+        properties: {
+          it: { type: 'string' },
+          sv: { type: 'string' },
+          speakers: { type: 'array', items: { type: 'string', enum: ['f', 'm'] } },
+        },
       },
     },
     lexicon: { type: 'array', items: LEXICON_ITEM },
@@ -82,6 +97,7 @@ export const TEXT_SCHEMA = {
     },
     ripasso: { type: 'array', items: RIPASSO_ITEM },
     recap: { type: 'string' },
+    narrator: { type: 'string', enum: ['f', 'm'] },
   },
 } as const;
 
@@ -117,13 +133,14 @@ export interface RawText {
   title: string;
   sv: string;
   nota: string;
-  sentences: { it: string; sv: string }[];
+  sentences: { it: string; sv: string; speakers?: string[] }[];
   lexicon: RawEntry[];
   names: string[];
   question: { sv: string; options: string[]; answer: number };
   /** Repetitionsfrågor — saknas i mallen, som bara visar resten. */
   ripasso?: RawQuestion[];
   recap?: string;
+  narrator?: string;
 }
 
 export type AiProblem =
@@ -192,6 +209,7 @@ En post per form som står i texten, exakt som den står men i gemener. Varje or
 - nota: en enda mening på svenska om det som är värt att lägga märke till i texten, gärna med ett exempel ur den.
 - question: en fråga på svenska om innehållet, som bara går att besvara om man har förstått texten. Exakt tre korta svarsalternativ på svenska; answer är index (0–2) för det rätta.
 - italian: true. Bara om du ombeds glosa en text som inte är italienska sätter du false och lämnar resten tomt.
+- narrator och speakers: texten läses upp med en kvinnlig («f») och en manlig («m») röst, efter vem som talar. narrator är rösten för allt utanför replikerna — i jag-form den som berättar (en text med «sono andata» har en kvinna som berättare), annars valfritt. speakers är en lista per mening med en röst för varje replik inom «» i meningen, i ordning; en mening utan repliker har en tom lista. Ge personerna i en dialog olika kön när det går, så att rösterna skiljer dem åt.
 - recap: när du skriver en text — två eller tre meningar på svenska om vilka personerna är och vad som har hänt hittills, den här texten inräknad, så att nästa del kan ta vid. När du glosar en inklistrad text: tom sträng.
 
 # Repetitionsfrågor (ripasso)
@@ -344,7 +362,8 @@ export function exampleFrom(
     title: text.title,
     sv: text.sv,
     nota: text.nota,
-    sentences: text.sentences,
+    narrator: text.narrator ?? 'f',
+    sentences: text.sentences.map((s) => ({ it: s.it, sv: s.sv, speakers: s.speakers ?? [] })),
     lexicon: [...lexicon.values()],
     names: [...used],
     question: text.question,
@@ -425,7 +444,13 @@ export function assembleText(raw: RawText, opts: AssembleOptions): Assembled {
     throw new AiError('not-italian', 'Texten verkar inte vara italienska.');
   }
   const sentences = (raw.sentences ?? [])
-    .map((s) => ({ it: (s.it ?? '').trim(), sv: (s.sv ?? '').trim() }))
+    .map((s) => {
+      const sentence: Sentence = { it: (s.it ?? '').trim(), sv: (s.sv ?? '').trim() };
+      // Rösterna tas bara med om de går jämnt upp med replikerna — annars läser berättaren.
+      const speakers = (s.speakers ?? []) as Voice[];
+      if (speakers.length && speakersFit({ ...sentence, speakers })) sentence.speakers = speakers;
+      return sentence;
+    })
     .filter((s) => s.it);
   const options = (raw.question?.options ?? []).map((o) => o.trim()).filter(Boolean);
   const answer = raw.question?.answer;
@@ -447,6 +472,7 @@ export function assembleText(raw: RawText, opts: AssembleOptions): Assembled {
     sv: raw.sv?.trim() ?? '',
     nota: raw.nota?.trim() ?? '',
     level: opts.level,
+    narrator: raw.narrator === 'm' ? 'm' : 'f',
     sentences,
     question: { sv: raw.question.sv.trim(), options, answer },
     source: opts.source,

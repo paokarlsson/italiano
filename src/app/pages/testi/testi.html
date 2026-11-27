@@ -9,22 +9,9 @@
         italiensk text som helst läsbar och förklarar ett ord eller ett svar när du frågar varför.
         Utan nyckel fungerar allt annat som vanligt.
       </p>
-      <input
-        type="password"
-        autocomplete="off"
-        placeholder="sk-ant-…"
-        aria-label="API-nyckel"
-        [value]="key()"
-        [disabled]="ai.busy()"
-        (input)="key.set(valueOf($event))"
-      />
-      <button class="cta gold" type="button" [disabled]="ai.busy()" (click)="saveKey()">
-        Spara nyckeln
+      <button class="cta gold" type="button" routerLink="/installningar">
+        Lägg in nyckeln under Inställningar →
       </button>
-      <p class="ai-fine">
-        Nyckeln sparas bara i den här webbläsaren och skickas bara till Anthropic. Lägg inte in den
-        på en dator du delar med andra. Varje text och förklaring dras från ditt Anthropic-konto.
-      </p>
     </div>
   } @else {
     <div class="ai-card">
@@ -117,45 +104,10 @@
   }
 
   @if (ai.hasKey()) {
-    <div class="ai-card ai-auto">
-      <div class="eyebrow">Påfyllning</div>
-      <label class="ai-check">
-        <input type="checkbox" [checked]="ai.auto()" (change)="toggleAuto()" />
-        <span>Fyll på av sig själv</span>
-      </label>
-      <p class="ai-fine">
-        Påslagen håller appen {{ stockTarget }} olästa texter på lager och skriver nya frågor till
-        ett mazzo du har gått igenom utan att det sitter. Det sker medan appen är öppen och dras
-        från ditt Anthropic-konto utan att du trycker på något.
-      </p>
-      @if (supply.active() && supply.error()) {
-        <p class="ai-fine">
-          Står still: {{ supply.error() }}
-          <button class="ai-link" type="button" (click)="supply.retry()">Försök igen</button>
-        </p>
-      }
-      <p class="ai-fine">
-        Förbrukat härifrån: ca ${{ ai.spent().toFixed(2) }}
-        @if (data.extraCount()) {
-          · {{ data.extraCount() }} frågor tillskrivna i gymmet
-          <button class="ai-link" type="button" (click)="removeExtras()">Ta bort dem</button>
-        }
-      </p>
-    </div>
-
-    <div class="ai-settings">
-      <label>
-        Modell
-        <select [disabled]="ai.busy()" (change)="setModel($event)">
-          @for (m of models; track m.id) {
-            <option [value]="m.id" [selected]="m.id === ai.model()">
-              {{ m.label }} — {{ m.note }}
-            </option>
-          }
-        </select>
-      </label>
-      <button type="button" [disabled]="ai.busy()" (click)="removeKey()">Ta bort nyckeln</button>
-    </div>
+    <p class="ai-fine">
+      Modell, påfyllning och vad det har kostat finns under
+      <a routerLink="/installningar">Inställningar</a>.
+    </p>
   }
 
   <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka</button>

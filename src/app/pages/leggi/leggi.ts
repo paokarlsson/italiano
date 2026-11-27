@@ -12,7 +12,8 @@ import {
 import { RouterLink } from '@angular/router';
 import { AiService } from '../../core/ai.service';
 import { wordPrompt } from '../../core/ai-explain';
-import { AudioService } from '../../core/audio.service';
+import { AudioService, Cue } from '../../core/audio.service';
+import { textParts, WORD_VOICE } from '../../core/speech';
 import { DataService } from '../../core/data.service';
 import { LeggiService } from '../../core/leggi.service';
 import { PILLAR_NAMES } from '../../core/profile';
@@ -118,33 +119,42 @@ export class Leggi {
   protected readonly voice = signal<SpeechSynthesisVoice | null>(null);
   private readonly synthSpeaking = signal(false);
 
+  /**
+   * Texten som delar att spela, mening för mening: det berättaren läser och replikerna,
+   * var och en med sin röst. Varje del är märkt med meningen den står i.
+   */
+  private readonly cues = computed<Cue[][]>(() => {
+    const text = this.text();
+    if (!text) return [];
+    return textParts(text).map((parts, i) => parts.map((p) => ({ ...p, mark: `s${i}` })));
+  });
+
   /** Sant om hela texten går att spela med riktigt ljud. */
   private readonly hasAudio = computed(() => {
-    const text = this.text();
-    return !!text && text.sentences.every((s) => this.audio.can(s.it));
+    const cues = this.cues();
+    return cues.length > 0 && cues.flat().every((c) => this.audio.can(c));
   });
   /** Sant om texten går att lyssna på, på det ena eller andra sättet. */
   protected readonly canListen = computed(() => this.hasAudio() || !!this.voice());
-  protected readonly speaking = computed(() => {
-    const text = this.text();
-    const playing = this.audio.playing();
-    return (
-      this.synthSpeaking() ||
-      this.audio.loading() ||
-      (!!playing && !!text?.sentences.some((s) => s.it === playing))
-    );
+  /** Meningen som spelas just nu — null när ingen gör det. */
+  protected readonly playingSentence = computed(() => {
+    const mark = this.audio.playing()?.mark;
+    return mark?.startsWith('s') ? Number(mark.slice(1)) : null;
   });
+  protected readonly speaking = computed(
+    () => this.synthSpeaking() || this.audio.loading() || this.playingSentence() !== null,
+  );
 
   /** Det valda ordet och meningen det står i, om de går att spela. */
   protected readonly sound = computed(() => {
     const token = this.selected();
-    const text = this.text();
-    if (!token?.key || !text) return null;
+    if (!token?.key) return null;
     const i = this.tokens().findIndex((sentence) => sentence.includes(token));
-    const sentence = i < 0 ? null : text.sentences[i].it;
+    const word: Cue = { text: token.key, voice: WORD_VOICE, mark: 'word' };
+    const sentence = (this.cues()[i] ?? []).map((c) => ({ ...c, mark: 'sentence' }));
     return {
-      word: this.audio.can(token.key) ? token.key : null,
-      sentence: sentence && this.audio.can(sentence) ? sentence : null,
+      word: this.audio.can(word) ? word : null,
+      sentence: sentence.length && sentence.every((c) => this.audio.can(c)) ? sentence : null,
     };
   });
 
@@ -214,7 +224,7 @@ export class Leggi {
       return;
     }
     // Riktigt ljud om hela texten har det; annars webbläsarens röst.
-    if (this.hasAudio() && (await this.audio.play(text.sentences.map((s) => s.it)))) return;
+    if (this.hasAudio() && (await this.audio.play(this.cues().flat()))) return;
     const voice = this.voice();
     if (!this.synth || !voice) return;
     const utterance = new SpeechSynthesisUtterance(text.sentences.map((s) => s.it).join(' '));
@@ -228,9 +238,9 @@ export class Leggi {
   }
 
   /** Spelar ett ord eller en mening ur uppslaget. */
-  protected say(text: string): void {
+  protected say(cues: Cue[]): void {
     this.stopSpeaking();
-    void this.audio.play([text]);
+    void this.audio.play(cues);
   }
 
   private stopSpeaking(): void {

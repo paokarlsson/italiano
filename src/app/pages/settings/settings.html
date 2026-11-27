@@ -1,0 +1,199 @@
+<app-topbar step="Impostazioni" title="Inställningar" />
+
+<div class="stage">
+  <div class="stat-section-title">Claude · texter och frågor</div>
+  <div class="ai-card">
+    @if (!ai.hasKey()) {
+      <p>
+        Med en egen API-nyckel från Anthropic skriver appen nya texter på din nivå, gör vilken
+        italiensk text som helst läsbar och förklarar ett ord eller ett svar när du frågar varför.
+      </p>
+      <input
+        type="password"
+        autocomplete="off"
+        placeholder="sk-ant-…"
+        aria-label="Claude API-nyckel"
+        [value]="claudeKey()"
+        [disabled]="busy()"
+        (input)="claudeKey.set(valueOf($event))"
+      />
+      <button class="cta gold" type="button" [disabled]="busy()" (click)="saveClaudeKey()">
+        Spara nyckeln
+      </button>
+      <p class="ai-fine">
+        Nyckeln sparas bara i den här webbläsaren och skickas bara till Anthropic. Lägg inte in den
+        på en dator du delar med andra.
+      </p>
+    } @else {
+      <label class="su-field">
+        Modell
+        <select [disabled]="ai.busy()" (change)="setModel($event)">
+          @for (m of models; track m.id) {
+            <option [value]="m.id" [selected]="m.id === ai.model()">
+              {{ m.label }} — {{ m.note }}
+            </option>
+          }
+        </select>
+      </label>
+
+      <label class="ai-check">
+        <input type="checkbox" [checked]="ai.auto()" (change)="toggleAuto()" />
+        <span>Fyll på av sig själv</span>
+      </label>
+      <p class="ai-fine">
+        Påslagen håller appen {{ stockTarget }} olästa texter på lager och skriver nya frågor till
+        ett mazzo du har gått igenom utan att det sitter. Det sker medan appen är öppen och dras
+        från ditt Anthropic-konto utan att du trycker på något.
+      </p>
+      @if (supply.active() && supply.error()) {
+        <p class="ai-fine">
+          Står still: {{ supply.error() }}
+          <button class="ai-link" type="button" (click)="supply.retry()">Försök igen</button>
+        </p>
+      }
+
+      <div class="set-cost">
+        <span class="set-cost-label">Förbrukat härifrån</span>
+        <span class="set-cost-value">ca ${{ ai.spent().toFixed(2) }}</span>
+      </div>
+      <p class="ai-fine">
+        Räknat på listpriserna, för allt som beställts från den här webbläsaren.
+        @if (data.extraCount()) {
+          {{ data.extraCount() }} frågor är tillskrivna i gymmet.
+          <button class="ai-link" type="button" (click)="removeExtras()">Ta bort dem</button>
+        }
+      </p>
+      <p class="ai-fine">
+        <button class="ai-link" type="button" (click)="removeClaudeKey()">Ta bort nyckeln</button>
+      </p>
+    }
+    @if (claudeError()) {
+      <p class="ai-error" role="alert">{{ claudeError() }}</p>
+    }
+  </div>
+
+  <div class="stat-section-title">ElevenLabs · ljud</div>
+  <div class="ai-card">
+    @if (!voice.hasKey()) {
+      <p>
+        Med en egen API-nyckel från ElevenLabs läser appen in det som saknar ljud: berättaren och
+        replikerna med en kvinnlig och en manlig röst, efter vem som talar.
+      </p>
+      <input
+        type="password"
+        autocomplete="off"
+        placeholder="sk_…"
+        aria-label="ElevenLabs API-nyckel"
+        [value]="voiceKey()"
+        [disabled]="busy()"
+        (input)="voiceKey.set(valueOf($event))"
+      />
+      <button class="cta" type="button" [disabled]="busy()" (click)="saveVoiceKey()">
+        Spara nyckeln
+      </button>
+      <p class="ai-fine">
+        Nyckeln sparas bara i den här webbläsaren och skickas bara till ElevenLabs. Varje inläsning
+        dras från ditt ElevenLabs-konto.
+      </p>
+    } @else {
+      @for (role of roles; track role.id) {
+        <label class="su-field">
+          {{ role.label }}
+          <select
+            [disabled]="!!audio.progress()"
+            (change)="voice.setVoice(role.id, valueOf($event))"
+          >
+            @for (v of voice.voices(); track v.id) {
+              <option [value]="v.id" [selected]="v.id === voice.voiceId(role.id)">
+                {{ v.name }}
+              </option>
+            } @empty {
+              <option [value]="voice.voiceId(role.id)" selected>
+                {{ voice.voiceId(role.id) || '—' }}
+              </option>
+            }
+          </select>
+        </label>
+      }
+      <label class="su-field">
+        Modell
+        <select [disabled]="!!audio.progress()" (change)="voice.setModel(valueOf($event))">
+          @for (m of voice.models(); track m.id) {
+            <option [value]="m.id" [selected]="m.id === voice.modelId()">
+              {{ m.name }}{{ m.rate !== null ? ' (' + perChar(m.rate) + '/tecken)' : '' }}
+            </option>
+          } @empty {
+            <option [value]="voice.modelId()" selected>{{ voice.modelId() || '—' }}</option>
+          }
+        </select>
+      </label>
+      @if (missingVoice()) {
+        <p class="ai-fine">
+          En vald röst finns inte på kontot längre. Lägg till den i ElevenLabs, eller välj en annan.
+        </p>
+      }
+      <p class="ai-fine">
+        Samanta och Daniele väljs av sig själva om de finns bland rösterna på ditt konto — lägg till
+        dem från röstbiblioteket i ElevenLabs först och tryck sedan
+        <button class="ai-link" type="button" [disabled]="busy()" (click)="refreshVoices()">
+          Hämta rösterna igen</button
+        >. Välj en gång och håll fast vid det: ljud med en annan röst eller modell är en annan
+        inläsning, och det som redan finns återanvänds då inte.
+      </p>
+
+      <div class="set-cost">
+        <span class="set-cost-label">Inläst härifrån</span>
+        <span class="set-cost-value">
+          {{ voice.guessed() ? 'ca ' : '' }}{{ credits(voice.credits()) }} krediter
+        </span>
+      </div>
+      <p class="ai-fine">
+        {{ credits(voice.characters()) }} tecken, räknat på modellens pris per tecken.
+        @if (voice.guessed()) {
+          Priset var inte känt för allt, och räknades då som en kredit per tecken.
+        }
+        @if (voice.characters()) {
+          <button class="ai-link" type="button" (click)="resetCount()">Nollställ</button>
+        }
+      </p>
+
+      @let acc = voice.account();
+      @if (acc) {
+        <div class="set-cost">
+          <span class="set-cost-label">Kontot den här perioden</span>
+          <span class="set-cost-value">
+            {{ credits(acc.used) }} av {{ credits(acc.limit) }} krediter
+          </span>
+        </div>
+        <div class="set-meter" role="presentation">
+          <span [style.width.%]="acc.limit ? (100 * acc.used) / acc.limit : 0"></span>
+        </div>
+        @if (resets()) {
+          <p class="ai-fine">Räkningen börjar om den {{ resets() }}.</p>
+        }
+      }
+
+      @if (audio.missing().length) {
+        <div class="set-cost">
+          <span class="set-cost-label">Att läsa in det som saknas</span>
+          <span class="set-cost-value">
+            {{ voice.rate() === null ? 'ca ' : '' }}{{ credits(estimate()) }} krediter
+          </span>
+        </div>
+        <p class="ai-fine">
+          {{ audio.missing().length }} klipp, {{ credits(audio.missingChars()) }} tecken. Läses in
+          under <a routerLink="/suono">Ljud</a>.
+        </p>
+      }
+
+      <p class="ai-fine">
+        <button class="ai-link" type="button" (click)="removeVoiceKey()">Ta bort nyckeln</button>
+      </p>
+    }
+    @if (voiceError()) {
+      <p class="ai-error" role="alert">{{ voiceError() }}</p>
+    }
+  </div>
+
+  <button class="cta ghost push-bottom" type="button" routerLink="/">Tillbaka</button>
+</div>

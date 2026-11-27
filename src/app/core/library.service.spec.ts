@@ -68,7 +68,7 @@ describe('LibraryService', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: DriveService, useClass: FakeDrive },
-        { provide: VoiceService, useValue: { tag: signal('mia/m') } },
+        { provide: VoiceService, useValue: { tag: (v: string) => `${v}:mia/m` } },
       ],
     });
     leggi = TestBed.inject(LeggiService);
@@ -82,7 +82,7 @@ describe('LibraryService', () => {
     drive.files.set(`id-${name}`, {
       name,
       bytes: encodePack({
-        voice: 'utvecklaren/m',
+        voice: 'f:utvecklaren/m',
         clips: clips.map(([text, n]) => ({ text, bytes: new Uint8Array([n]) })),
         texts,
       }),
@@ -100,9 +100,9 @@ describe('LibraryService', () => {
     await library.download();
     expect(library.fresh()).toEqual([]);
     expect(store.count()).toBe(2);
-    expect(await store.get('ciao')).toEqual(new Uint8Array([1]));
+    expect(await store.get('ciao', 'f')).toEqual(new Uint8Array([1]));
     // Det hämtade räknas som publicerat — det ska inte laddas upp igen.
-    expect(store.pending('utvecklaren/m')).toBe(0);
+    expect(store.pending('f:utvecklaren/m')).toBe(0);
     // Texten ligger bland de egna som delad, och står i lagret för läsning.
     expect(leggi.text('ai-1')).toMatchObject({ source: 'shared' });
     expect(leggi.stock().map((t) => t.id)).toEqual(['ai-1']);
@@ -153,28 +153,34 @@ describe('LibraryService', () => {
 
   it('publicerar egna klipp och lästa texter som nästa paket i ordningen', async () => {
     shelve('pack-0003.itpk', [['ciao', 1]]);
-    await store.put('mia/m', [{ text: 'amico', bytes: new Uint8Array([5]) }], false);
-    await store.put('utvecklaren/m', [{ text: 'ciao', bytes: new Uint8Array([1]) }], true);
+    await store.put('f:mia/m', [{ text: 'amico', bytes: new Uint8Array([5]) }], false);
+    await store.put('m:mia/m', [{ text: 'Ciao!', bytes: new Uint8Array([6]) }], false);
+    await store.put('f:utvecklaren/m', [{ text: 'ciao', bytes: new Uint8Array([1]) }], true);
     leggi.addUserText(own('ai-1', 1));
     leggi.addUserText(own('ai-2', 2));
     leggi.addUserText({ ...own('paste-1', 3), source: 'paste' });
     leggi.complete('ai-1', new Set());
     leggi.complete('paste-1', new Set());
-    expect(library.pendingClips()).toBe(1);
+    expect(library.pendingClips()).toBe(2);
     // Bara den lästa texten från Claude — inte den olästa, inte den inklistrade.
     expect(library.pendingTexts().map((t) => t.id)).toEqual(['ai-1']);
 
-    expect(await library.publish()).toBe(1);
-    const pack = decodePack(drive.files.get('id-pack-0004.itpk')!.bytes);
-    expect(pack.voice).toBe('mia/m');
-    expect(pack.clips).toEqual([{ text: 'amico', bytes: new Uint8Array([5]) }]);
-    expect(pack.texts.map((t) => t.id)).toEqual(['ai-1']);
+    // Ett paket per röst; texterna följer med det första.
+    expect(await library.publish()).toBe(2);
+    const women = decodePack(drive.files.get('id-pack-0004.itpk')!.bytes);
+    expect(women.voice).toBe('f:mia/m');
+    expect(women.clips).toEqual([{ text: 'amico', bytes: new Uint8Array([5]) }]);
+    expect(women.texts.map((t) => t.id)).toEqual(['ai-1']);
+    const men = decodePack(drive.files.get('id-pack-0005.itpk')!.bytes);
+    expect(men.voice).toBe('m:mia/m');
+    expect(men.clips).toEqual([{ text: 'Ciao!', bytes: new Uint8Array([6]) }]);
+    expect(men.texts).toEqual([]);
 
     // Inget kvar att publicera, och det egna paketet räknas som redan hämtat.
     expect(library.pendingClips()).toBe(0);
     expect(library.pendingTexts()).toEqual([]);
     expect(library.fresh().map((p) => p.name)).toEqual(['pack-0003.itpk']);
     expect(await library.publish()).toBe(0);
-    expect(drive.files.size).toBe(2);
+    expect(drive.files.size).toBe(3);
   });
 });

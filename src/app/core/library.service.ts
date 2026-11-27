@@ -72,8 +72,10 @@ export class LibraryService {
       .filter((t) => t.source === 'ai' && this.leggi.isRead(t.id) && !published.has(t.id))
       .sort((a, b) => a.createdAt - b.createdAt);
   });
-  /** Egna klipp som inte ligger i något paket än. */
-  readonly pendingClips = computed(() => this.store.pending(this.voice.tag()));
+  /** Egna klipp som inte ligger i något paket än, med båda rösterna. */
+  readonly pendingClips = computed(
+    () => this.store.pending(this.voice.tag('f')) + this.store.pending(this.voice.tag('m')),
+  );
 
   async load(): Promise<void> {
     try {
@@ -139,16 +141,24 @@ export class LibraryService {
       this.checked.set(true);
       let number = Math.max(0, ...this.packs().map((p) => packNumber(p.name) ?? 0));
 
-      const tag = this.voice.tag();
-      const texts = this.pendingTexts();
-      const packs = splitPacks(tag, await this.store.unpublished(tag), texts);
+      // Ett paket har en röst. Texterna följer med det första paketet.
+      let texts = this.pendingTexts();
+      const packs = [];
+      for (const voice of ['f', 'm'] as const) {
+        const tag = this.voice.tag(voice);
+        const clips = await this.store.unpublished(tag);
+        if (!clips.length) continue;
+        packs.push(...splitPacks(tag, clips, texts));
+        texts = [];
+      }
+      if (texts.length) packs.push(...splitPacks(this.voice.tag('f'), [], texts));
       this.progress.set({ done: 0, total: packs.length });
       let done = 0;
       for (const pack of packs) {
         const file = await this.drive.upload(packName(++number), encodePack(pack));
         // Bokförs paket för paket: går nästa fel är det här ändå klart.
         await this.store.markPublished(
-          tag,
+          pack.voice,
           pack.clips.map((c) => c.text),
         );
         this.remember({ loaded: [file.id], published: pack.texts.map((t) => t.id) });
