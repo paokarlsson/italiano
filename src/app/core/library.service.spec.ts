@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LettureData, UserText } from '../models/leggi.models';
 import { decodePack, encodePack } from './audio-pack';
 import { AudioStore } from './audio-store';
+import { CoverStore } from './cover-store';
 import { DriveError, DriveFile, DriveService } from './drive.service';
 import { LeggiService } from './leggi.service';
 import { LibraryService } from './library.service';
@@ -206,5 +207,36 @@ describe('LibraryService', () => {
     expect(library.fresh().map((p) => p.name)).toEqual(['pack-0003.itpk']);
     expect(await library.publish()).toBe(0);
     expect(drive.files.size).toBe(3);
+  });
+
+  it('publicerar egna omslag och hämtar andras, utan att skriva över ett eget', async () => {
+    const covers = TestBed.inject(CoverStore);
+    const png = (n: number) => ({ mime: 'image/png', bytes: new Uint8Array([n]) });
+    await covers.put({ book: 'valigia-blu', ...png(1) }, false);
+    expect(library.pendingCovers()).toBe(1);
+
+    expect(await library.publish()).toBe(1);
+    expect(library.pendingCovers()).toBe(0);
+    const [file] = [...drive.files.values()];
+    expect(decodePack(file.bytes).covers?.map((c) => c.book)).toEqual(['valigia-blu']);
+
+    // Ett nyare omslag i mappen ersätter det publicerade — men inte ett eget som väntar.
+    await covers.put({ book: 'alba-luca', ...png(5) }, false);
+    drive.files.set('id-pack-0002.itpk', {
+      name: 'pack-0002.itpk',
+      bytes: encodePack({
+        voice: '',
+        clips: [],
+        texts: [],
+        covers: [
+          { book: 'valigia-blu', ...png(2) },
+          { book: 'alba-luca', ...png(3) },
+        ],
+      }),
+    });
+    await library.check();
+    await library.download();
+    expect(covers.unpublished().map((c) => [c.book, [...c.bytes]])).toEqual([['alba-luca', [5]]]);
+    expect(covers.covers()['valigia-blu']).toMatchObject({ pub: true, bytes: 1 });
   });
 });

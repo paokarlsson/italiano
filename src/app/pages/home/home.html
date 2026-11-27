@@ -55,6 +55,9 @@
   @let a = sagaView();
   @if (a) {
     <div class="story saga">
+      @if (a.cover) {
+        <img class="saga-cover" [src]="a.cover" [alt]="'Omslaget till ' + a.title" />
+      }
       <div class="story-head">
         <span class="stock-label">{{ a.title }} · {{ a.read }} av {{ a.total }}</span>
       </div>
@@ -178,6 +181,9 @@
       <summary>
         <span class="stock-label">{{ d.title }} · {{ d.read }} av {{ d.total }} lästa</span>
       </summary>
+      @if (d.cover) {
+        <img class="saga-cover" [src]="d.cover" [alt]="'Omslaget till ' + d.title" />
+      }
       @for (c of d.chapters; track c.n) {
         <div class="saga-ch done">
           <span class="saga-title" lang="it">{{ c.label }}</span>
@@ -250,10 +256,10 @@
       <span>skriv en ny eller klistra in en egen</span>
     </a>
   }
-  @if (voice.hasKey() || drive.connected()) {
+  @if (suono(); as l) {
     <a routerLink="/suono">
-      <b>Ljud</b>
-      <span>läs in och publicera</span>
+      <b>{{ l.title }}</b>
+      <span>{{ l.text }}</span>
     </a>
   }
 </div>

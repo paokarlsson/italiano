@@ -1,11 +1,15 @@
 import { UserText, Voice } from '../models/leggi.models';
 
 /**
- * Paketformatet för det som delas ut: ljudklipp och texter i en enda fil, så att en besökare
- * hämtar några få filer i stället för tusen. Ett paket beskriver sig självt och skrivs aldrig
- * om — nytt innehåll blir ett nytt paket.
+ * Paketformatet för det som delas ut: ljudklipp, texter och bokomslag i en enda fil, så att
+ * en besökare hämtar några få filer i stället för tusen. Ett paket beskriver sig självt och
+ * skrivs aldrig om — nytt innehåll blir ett nytt paket.
  *
- *   «ITPK» · huvudets längd (uint32, little endian) · huvudet som JSON · klippen i följd
+ *   «ITPK» · huvudets längd (uint32, little endian) · huvudet som JSON · klippen i följd ·
+ *   omslagen i följd
+ *
+ * Omslagen ligger sist, så att en äldre app som bara känner till klippen läser dem som förut
+ * och lämnar resten.
  */
 
 const MAGIC = [0x49, 0x54, 0x50, 0x4b]; // «ITPK»
@@ -22,6 +26,15 @@ export interface PackHeader {
   clips: [text: string, bytes: number][];
   /** Texter som följer med paketet. */
   texts: UserText[];
+  /** Omslagen i den ordning de ligger efter klippen: bokens id, bildtyp och längd i byte. */
+  covers?: [book: string, mime: string, bytes: number][];
+}
+
+/** Ett bokomslag: bilden till en följetong, med boken som nyckel. */
+export interface Cover {
+  book: string;
+  mime: string;
+  bytes: Uint8Array;
 }
 
 export interface Clip {
@@ -33,6 +46,7 @@ export interface Pack {
   voice: string;
   clips: Clip[];
   texts: UserText[];
+  covers?: Cover[];
 }
 
 /**
@@ -64,16 +78,19 @@ export function encodePack(pack: Pack): Uint8Array {
     clips: pack.clips.map((c) => [c.text, c.bytes.byteLength]),
     texts: pack.texts,
   };
+  const covers = pack.covers ?? [];
+  if (covers.length) header.covers = covers.map((c) => [c.book, c.mime, c.bytes.byteLength]);
   const head = new TextEncoder().encode(JSON.stringify(header));
-  const audio = pack.clips.reduce((n, c) => n + c.bytes.byteLength, 0);
-  const out = new Uint8Array(PREAMBLE + head.byteLength + audio);
+  const blobs = [...pack.clips, ...covers].map((x) => x.bytes);
+  const body = blobs.reduce((n, b) => n + b.byteLength, 0);
+  const out = new Uint8Array(PREAMBLE + head.byteLength + body);
   out.set(MAGIC, 0);
   new DataView(out.buffer).setUint32(MAGIC.length, head.byteLength, true);
   out.set(head, PREAMBLE);
   let at = PREAMBLE + head.byteLength;
-  for (const clip of pack.clips) {
-    out.set(clip.bytes, at);
-    at += clip.bytes.byteLength;
+  for (const bytes of blobs) {
+    out.set(bytes, at);
+    at += bytes.byteLength;
   }
   return out;
 }
@@ -108,7 +125,41 @@ export function decodePack(file: Uint8Array): Pack {
     clips.push({ text, bytes: file.slice(at, at + bytes) });
     at += bytes;
   }
-  return { voice: String(header.voice ?? ''), clips, texts: header.texts ?? [] };
+  const covers: Cover[] = [];
+  for (const entry of Array.isArray(header.covers) ? header.covers : []) {
+    const [book, mime, bytes] = entry;
+    if (typeof book !== 'string' || typeof mime !== 'string' || !Number.isInteger(bytes)) {
+      throw new Error('Paketets huvud går inte att läsa.');
+    }
+    if (bytes < 0 || at + bytes > file.byteLength) throw new Error('Paketet är avklippt.');
+    covers.push({ book, mime, bytes: file.slice(at, at + bytes) });
+    at += bytes;
+  }
+  const pack: Pack = { voice: String(header.voice ?? ''), clips, texts: header.texts ?? [] };
+  if (covers.length) pack.covers = covers;
+  return pack;
+}
+
+/**
+ * Delar upp omslagen i paket utan klipp, som vart och ett ryms i en uppladdning. Ett omslag
+ * som ensamt är större än gränsen får ett eget paket.
+ */
+export function coverPacks(covers: readonly Cover[], maxBytes = PACK_MAX_BYTES): Pack[] {
+  const packs: Pack[] = [];
+  let current: Cover[] = [];
+  let size = 0;
+  for (const cover of covers) {
+    const cost = cover.bytes.byteLength + cover.book.length + 64;
+    if (current.length && size + cost > maxBytes) {
+      packs.push({ voice: '', clips: [], texts: [], covers: current });
+      current = [];
+      size = 0;
+    }
+    current.push(cover);
+    size += cost;
+  }
+  if (current.length) packs.push({ voice: '', clips: [], texts: [], covers: current });
+  return packs;
 }
 
 /**

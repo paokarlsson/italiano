@@ -2,6 +2,7 @@
   "id": "alba-luca",
   "title": "Alba & Luca",
   "sv": "En översättare och en kock på den liguriska kusten, från september till mars — en följetong i fjorton låtar.",
+  "cover": "Boccadasse i Genua i skymningen: färgglada fiskarhus tätt mot en liten vik, båtar uppdragna på stenarna. På en smal balkong över havet står två koppar på räcket, en med kaffe och en med te, och en nyckelknippa bredvid. Långt borta vid horisonten lyser fyren Lanterna. Inga människor syns. Stilla, längtansfull och ömsint stämning.",
   "canon": ["data/storie/alba-luca/varld.md", "data/storie/alba-luca/handling.md"],
   "names": [
     "alba",

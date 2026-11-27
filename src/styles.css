@@ -1850,6 +1850,7 @@ app-perche {
   background: var(--verde);
 }
 .ai-card .ai-fine a,
+.ai-card .cover-intro a,
 .stage > .ai-fine a {
   color: var(--verde);
   font-weight: 700;
@@ -2042,4 +2043,78 @@ app-perche {
   color: var(--ink-soft);
   font-style: italic;
   margin: 6px 0 18px;
+}
+
+/* --- Omslagen: ritade av Gemini, visade på startsidan och under Ljud --- */
+.su-field textarea {
+  margin-top: 5px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.saga-cover {
+  float: right;
+  width: 76px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  margin: 0 0 8px 14px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+}
+.saga::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.cover-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.cover-row:first-of-type {
+  margin-top: 6px;
+}
+.cover-img {
+  flex: none;
+  width: 96px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+}
+.cover-none {
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1.5px dashed var(--line);
+  box-shadow: none;
+  color: var(--ink-soft);
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+}
+.cover-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cover-body b {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+}
+.cover-full pre {
+  white-space: pre-wrap;
+  font-size: 12px;
+  line-height: 1.4;
+  max-height: 260px;
+  overflow: auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
 }
