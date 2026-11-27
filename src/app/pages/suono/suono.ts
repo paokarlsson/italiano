@@ -51,6 +51,7 @@ export class Suono {
     () =>
       this.library.pendingClips() > 0 ||
       this.library.pendingTexts().length > 0 ||
+      this.library.pendingBooks().length > 0 ||
       this.library.pendingCovers() > 0,
   );
 

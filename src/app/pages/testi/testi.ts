@@ -8,6 +8,7 @@ import { GeminiService } from '../../core/gemini.service';
 import { StoryStore } from '../../core/story-store';
 import { AiError, PASTE_MAX_CHARS } from '../../core/ai-text';
 import { LeggiService } from '../../core/leggi.service';
+import { LibraryService } from '../../core/library.service';
 import { level, LEVELS } from '../../core/levels';
 import { PILLAR_NAMES } from '../../core/profile';
 import { ToastService } from '../../core/toast.service';
@@ -29,6 +30,7 @@ export class Testi {
   protected readonly saga = inject(StoryStore);
   private readonly gemini = inject(GeminiService);
   private readonly covers = inject(CoverStore);
+  protected readonly library = inject(LibraryService);
 
   protected readonly levelCount = LEVELS.length;
   protected readonly pasteMax = PASTE_MAX_CHARS;
@@ -80,6 +82,8 @@ export class Testi {
         left: pagesLeft(book).length,
         read: items.filter((i) => this.leggi.isRead(i.id)).length,
         level: book.own?.level ?? 1,
+        shared: !!book.own?.shared,
+        published: this.library.isPublished(book.id),
       };
     }),
   );

@@ -1,13 +1,14 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { LettureData, UserText } from '../models/leggi.models';
+import { LettureData, StoryData, UserText } from '../models/leggi.models';
 import { decodePack, encodePack } from './audio-pack';
 import { AudioStore } from './audio-store';
 import { CoverStore } from './cover-store';
 import { DriveError, DriveFile, DriveService } from './drive.service';
 import { LeggiService } from './leggi.service';
 import { LibraryService } from './library.service';
+import { StoryStore } from './story-store';
 import { VoiceService } from './voice.service';
 
 const data: LettureData = {
@@ -238,5 +239,78 @@ describe('LibraryService', () => {
     await library.download();
     expect(covers.unpublished().map((c) => [c.book, [...c.bytes]])).toEqual([['alba-luca', [5]]]);
     expect(covers.covers()['valigia-blu']).toMatchObject({ pub: true, bytes: 1 });
+  });
+
+  /** En egen bok med en sida skriven av `planned` planerade. */
+  const book = (id: string, planned = 1, createdAt = 1): StoryData => {
+    const plan = Array.from({ length: planned }, (_, i) => ({
+      title: `p${i}`,
+      sv: '',
+      scene: 'Scen.',
+      narrator: 'f' as const,
+    }));
+    const page = {
+      ...data.texts[0],
+      id: `${id}-01-1`,
+      chapter: 1,
+      part: 1,
+      level: 1,
+      narrator: 'f' as const,
+      scene: 'Scen.',
+      lexicon: { ciao: { p: 'D4' as const, sv: 'hej' } },
+    };
+    return {
+      id,
+      title: id,
+      sv: '',
+      names: [],
+      lexicon: {},
+      chapters: [{ n: 1, title: 'Uno', sv: '', pages: [page], songs: [] }],
+      own: {
+        topic: '',
+        level: 1,
+        createdAt,
+        cast: '',
+        plan: [{ n: 1, title: 'Uno', sv: '', pages: plan }],
+      },
+    };
+  };
+
+  it('publicerar egna böcker när de är skrivna klart, och hämtar andras', async () => {
+    const stories = TestBed.inject(StoryStore);
+    stories.saveBook(book('bok-klar'));
+    stories.saveBook(book('bok-halv', 2));
+    // Bara den som är skriven klart.
+    expect(library.pendingBooks().map((b) => b.id)).toEqual(['bok-klar']);
+
+    expect(await library.publish()).toBe(1);
+    const [file] = [...drive.files.values()];
+    expect(decodePack(file.bytes).books?.map((b) => b.id)).toEqual(['bok-klar']);
+    expect(library.pendingBooks()).toEqual([]);
+    expect(library.isPublished('bok-klar')).toBe(true);
+
+    // Någon annans bok i mappen: den hämtas, märkt som hämtad — en som redan finns rörs inte,
+    // och inte heller en trasig eller en med samma id som en egen.
+    drive.files.set('id-pack-0002.itpk', {
+      name: 'pack-0002.itpk',
+      bytes: encodePack({
+        voice: '',
+        clips: [],
+        texts: [],
+        books: [
+          book('bok-annan', 1, 9),
+          { ...book('bok-klar'), title: 'Ersatt' },
+          { ...book('bok-trasig'), chapters: [] },
+        ],
+      }),
+    });
+    await library.check();
+    await library.download();
+    expect(stories.book('bok-annan')?.own?.shared).toBe(true);
+    expect(stories.book('bok-klar')?.title).toBe('bok-klar');
+    expect(stories.book('bok-trasig')).toBeUndefined();
+    expect(stories.items().some((i) => i.id === 'bok-annan-01-1')).toBe(true);
+    // En hämtad bok publiceras inte igen.
+    expect(library.pendingBooks()).toEqual([]);
   });
 });

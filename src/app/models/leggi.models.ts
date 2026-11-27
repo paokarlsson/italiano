@@ -174,6 +174,8 @@ export interface OwnBook {
   /** Personerna, på svenska — så att varje sida håller dem lika. */
   cast: string;
   plan: BookChapterPlan[];
+  /** Sant för en bok som hämtats ur biblioteket — någon annan beställde den. */
+  shared?: boolean;
 }
 
 /** En plats i följetongen: en sida att läsa eller en låt att lyssna på. */

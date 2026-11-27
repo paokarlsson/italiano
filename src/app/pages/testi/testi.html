@@ -170,6 +170,11 @@
               @if (b.left) {
                 · {{ b.written }} av {{ b.planned }} sidor skrivna
               }
+              @if (b.shared) {
+                · ur biblioteket
+              } @else if (b.published) {
+                · publicerad
+              }
             </span>
           </a>
         } @else {
@@ -178,7 +183,7 @@
             <span class="ai-row-meta">nivå {{ b.level }} · inga sidor skrivna än</span>
           </span>
         }
-        @if (b.left && ai.hasKey()) {
+        @if (b.left && !b.shared && ai.hasKey()) {
           <button
             type="button"
             class="ai-row-more"
@@ -198,6 +203,16 @@
         </button>
       </div>
     }
+  }
+
+  @if (library.pendingBooks().length; as n) {
+    <p class="ai-fine">
+      {{
+        n === 1 ? 'En bok är skriven klart och väntar' : n + ' böcker är skrivna klart och väntar'
+      }}
+      på att publiceras i biblioteket, med sina omslag —
+      <a routerLink="/suono">publicera under Ljud</a>.
+    </p>
   }
 
   @if (leggi.userTexts().length) {

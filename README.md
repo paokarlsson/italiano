@@ -41,11 +41,13 @@ delar som bygger på samma fyra pelare:
   uppslag för varje ord. En sida som inte håller skrivs en gång till. Boken sparas sida
   för sida och läses som de andra följetongerna; en påbörjad egen bok visas på
   startsidan bredvid den du står i. Stannar den på vägen skrivs resten med _Skriv klart_.
-  Finns en Gemini-nyckel ritas omslaget när boken är klar.
+  Finns en Gemini-nyckel ritas omslaget när boken är klar. En bok som är skriven klart
+  publiceras i biblioteket med nästa tryck på _Publicera_ under Ljud, och en besökare får
+  den bland sina böcker, märkt «ur biblioteket».
 - **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp,
   med en kvinnlig och en manlig röst efter vem som talar. Den som har en egen
   ElevenLabs-nyckel läser in det som saknas; den som publicerar lägger
-  klippen och sina lästa texter i en publik mapp på Google Drive, och en besökares app
+  klippen, sina lästa texter och sina egna böcker i en publik mapp på Google Drive, och en besökares app
   hämtar alltihop av sig själv, utan att någon loggar in.
 
 - **Omslag** — valfritt. Med en egen nyckel till Googles Gemini API ritar «Nano Banana» en

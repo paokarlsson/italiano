@@ -181,9 +181,11 @@
           <p>
             Nytt sedan sist: {{ library.pendingClips() }} klipp,
             {{ library.pendingTexts().length }}
-            {{ library.pendingTexts().length === 1 ? 'text' : 'texter' }} och
-            {{ library.pendingCovers() }} omslag. Texter följer med när du har läst dem; en text du
-            har tagit bort följer inte med.
+            {{ library.pendingTexts().length === 1 ? 'text' : 'texter' }},
+            {{ library.pendingBooks().length }}
+            {{ library.pendingBooks().length === 1 ? 'bok' : 'böcker' }} och
+            {{ library.pendingCovers() }} omslag. Texter följer med när du har läst dem, egna böcker
+            när de är skrivna klart; det du har tagit bort följer inte med.
           </p>
           <button class="cta gold" type="button" (click)="publish()">Publicera →</button>
         } @else {
