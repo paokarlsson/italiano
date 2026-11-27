@@ -1,0 +1,823 @@
+{
+  "id": "cane-di-nessuno",
+  "title": "Il cane di nessuno",
+  "sv": "En smutsig hund i ett bageri på Sicilien, som ingen vill kännas vid — en kort berättelse på de två första nivåerna.",
+  "course": true,
+  "names": ["biscotto", "bruno", "cefalù", "fiocco", "nina", "pina", "sicilia"],
+  "lexicon": {
+    "a domani": {
+      "p": "D1",
+      "sv": "vi ses i morgon",
+      "note": "a domani = till i morgon — så säger man hej då",
+      "deck": "D1.11"
+    },
+    "abbaia": {
+      "p": "D3",
+      "sv": "skäller",
+      "note": "abbai·a — -a = han/hon/den (abbaiare)",
+      "deck": "D3.7"
+    },
+    "abbraccia": {
+      "p": "D3",
+      "sv": "kramar",
+      "note": "abbracci·a — -a = han/hon (abbracciare)",
+      "deck": "D3.7"
+    },
+    "acqua": {
+      "p": "D4",
+      "sv": "vatten",
+      "deck": "D4.8"
+    },
+    "adesso": {
+      "p": "D1",
+      "sv": "nu",
+      "deck": "D1.9"
+    },
+    "alla": {
+      "p": "D1",
+      "sv": "till, på",
+      "note": "a + la · bussa alla porta = knackar på dörren",
+      "deck": "D1.6"
+    },
+    "ama": {
+      "p": "D3",
+      "sv": "älskar, tycker om",
+      "note": "am·a — -a = han/hon/den (amare)",
+      "deck": "D3.7"
+    },
+    "ancora": {
+      "p": "D1",
+      "sv": "igen, fortfarande",
+      "note": "guarda ancora = tittar igen",
+      "deck": "D1.9"
+    },
+    "apre": {
+      "p": "D3",
+      "sv": "öppnar",
+      "note": "apr·e — -e = han/hon (aprire)",
+      "deck": "D3.8"
+    },
+    "bagno": {
+      "p": "D4",
+      "sv": "bad",
+      "note": "il giorno del bagno = baddagen",
+      "deck": "D4.7"
+    },
+    "bianco": {
+      "p": "D4",
+      "sv": "vit",
+      "note": "bianc·o — maskulin, som il cane",
+      "deck": "D4.11"
+    },
+    "buongiorno": {
+      "p": "D1",
+      "sv": "god morgon, god dag",
+      "note": "buon + giorno — som buonasera",
+      "deck": "D1.14"
+    },
+    "bussa": {
+      "p": "D3",
+      "sv": "knackar",
+      "note": "buss·a — -a = han/hon (bussare)",
+      "deck": "D3.7"
+    },
+    "calda": {
+      "p": "D3",
+      "sv": "varm",
+      "note": "cald·a — feminin av caldo, som l'acqua",
+      "deck": "D3.3"
+    },
+    "camminano": {
+      "p": "D3",
+      "sv": "går, promenerar",
+      "note": "cammin·ano — -ano = de (camminare)",
+      "deck": "D3.7"
+    },
+    "chiude": {
+      "p": "D3",
+      "sv": "stänger",
+      "note": "chiud·e — -e = han/hon (chiudere)",
+      "deck": "D3.8"
+    },
+    "ciao": {
+      "p": "D1",
+      "sv": "hej, hej då",
+      "deck": "D1.14"
+    },
+    "cliente": {
+      "p": "D2",
+      "sv": "kund",
+      "note": "client → cliente"
+    },
+    "clienti": {
+      "p": "D3",
+      "sv": "kunder",
+      "note": "client·i — plural av cliente: -e blir -i",
+      "deck": "D3.2"
+    },
+    "conosco": {
+      "p": "D3",
+      "sv": "jag känner",
+      "note": "conosc·o — -o = jag (conoscere) · känna en person eller ett djur",
+      "deck": "D4.13"
+    },
+    "coperta": {
+      "p": "D4",
+      "sv": "filt",
+      "deck": "D4.7"
+    },
+    "da oggi": {
+      "p": "D1",
+      "sv": "från och med i dag",
+      "note": "da + tid = sedan, från",
+      "deck": "D1.5"
+    },
+    "davanti alla": {
+      "p": "D1",
+      "sv": "framför",
+      "note": "davanti a + la · davanti alla porta = framför dörren",
+      "deck": "D1.6"
+    },
+    "del": {
+      "p": "D1",
+      "sv": "av, …s",
+      "note": "di + il · il giorno del bagno = baddagen",
+      "deck": "D1.6"
+    },
+    "di chi": {
+      "p": "D1",
+      "sv": "vems",
+      "note": "di chi sei? = vems är du?",
+      "deck": "D1.8"
+    },
+    "di gioia": {
+      "p": "D1",
+      "sv": "av glädje",
+      "note": "gioia = glädje",
+      "deck": "D1.5"
+    },
+    "dieci": {
+      "p": "D4",
+      "sv": "tio",
+      "note": "alle dieci = klockan tio"
+    },
+    "dietro": {
+      "p": "D4",
+      "sv": "bakom",
+      "note": "dietro il cane = bakom hunden",
+      "deck": "D4.6"
+    },
+    "disastro": {
+      "p": "D2",
+      "sv": "katastrof",
+      "note": "disaster → disastro"
+    },
+    "diventa": {
+      "p": "D3",
+      "sv": "blir",
+      "note": "divent·a — -a = han/hon/den (diventare)",
+      "deck": "D3.7"
+    },
+    "dopo": {
+      "p": "D1",
+      "sv": "efter",
+      "note": "la mattina dopo = morgonen efter",
+      "deck": "D1.5"
+    },
+    "elegante": {
+      "p": "D2",
+      "sv": "elegant",
+      "note": "elegant → elegante"
+    },
+    "felice": {
+      "p": "D4",
+      "sv": "glad, lycklig",
+      "note": "felice — plural felici"
+    },
+    "gatto": {
+      "p": "D4",
+      "sv": "katt"
+    },
+    "gialla": {
+      "p": "D4",
+      "sv": "gul",
+      "note": "giall·a — feminin av giallo, som la casa",
+      "deck": "D4.11"
+    },
+    "gli occhi": {
+      "p": "D1",
+      "sv": "ögonen",
+      "note": "gli = bestämd artikel, maskulin plural · occhio → occhi",
+      "deck": "D1.4"
+    },
+    "grazie": {
+      "p": "D1",
+      "sv": "tack",
+      "deck": "D1.14"
+    },
+    "guarda": {
+      "p": "D3",
+      "sv": "tittar",
+      "note": "guard·a — -a = han/hon (guardare)",
+      "deck": "D3.7"
+    },
+    "ha fame": {
+      "p": "D4",
+      "sv": "är hungrig",
+      "note": "avere fame = vara hungrig — man har hunger",
+      "deck": "D4.8"
+    },
+    "lava": {
+      "p": "D3",
+      "sv": "tvättar",
+      "note": "lav·a — -a = han/hon (lavare)",
+      "deck": "D3.7"
+    },
+    "lei": {
+      "p": "D1",
+      "sv": "henne, hon",
+      "note": "con lei = med henne",
+      "deck": "D1.3"
+    },
+    "letto": {
+      "p": "D4",
+      "sv": "säng",
+      "deck": "D4.7"
+    },
+    "marrone": {
+      "p": "D4",
+      "sv": "brun",
+      "note": "un cane marrone, l'acqua diventa marrone",
+      "deck": "D4.11"
+    },
+    "mattina": {
+      "p": "D4",
+      "sv": "morgon",
+      "deck": "D4.5"
+    },
+    "nero": {
+      "p": "D4",
+      "sv": "svart",
+      "note": "ner·o — maskulin, som l'orecchio",
+      "deck": "D4.11"
+    },
+    "no": {
+      "p": "D1",
+      "sv": "nej",
+      "deck": "D1.1"
+    },
+    "nome": {
+      "p": "D4",
+      "sv": "namn"
+    },
+    "orecchio": {
+      "p": "D4",
+      "sv": "öra",
+      "deck": "D4.4"
+    },
+    "panetteria": {
+      "p": "D4",
+      "sv": "bageri",
+      "note": "pane = bröd → panetteria = bageri"
+    },
+    "pensa": {
+      "p": "D3",
+      "sv": "tänker",
+      "note": "pens·a — -a = han/hon (pensare) · pensa a = tänker på",
+      "deck": "D3.7"
+    },
+    "piatto": {
+      "p": "D4",
+      "sv": "tallrik",
+      "note": "un piatto di pasta = en tallrik pasta",
+      "deck": "D4.7"
+    },
+    "porta": {
+      "p": "D4",
+      "sv": "dörr",
+      "deck": "D4.6"
+    },
+    "postino": {
+      "p": "D4",
+      "sv": "brevbärare",
+      "note": "posta = post → postino",
+      "deck": "D4.3"
+    },
+    "primo": {
+      "p": "D4",
+      "sv": "första",
+      "note": "il primo cliente = den första kunden"
+    },
+    "pulito": {
+      "p": "D3",
+      "sv": "ren",
+      "note": "pulit·o — maskulin, som il cane",
+      "deck": "D3.3"
+    },
+    "questo": {
+      "p": "D1",
+      "sv": "den här, det här",
+      "note": "questo cane = den här hunden · questa med feminint"
+    },
+    "resta": {
+      "p": "D3",
+      "sv": "förblir, stannar",
+      "note": "rest·a — -a = han/hon/den (restare)",
+      "deck": "D3.7"
+    },
+    "ride": {
+      "p": "D3",
+      "sv": "skrattar",
+      "note": "rid·e — -e = han/hon (ridere)",
+      "deck": "D3.8"
+    },
+    "salta": {
+      "p": "D3",
+      "sv": "hoppar",
+      "note": "salt·a — -a = han/hon/den (saltare)",
+      "deck": "D3.7"
+    },
+    "scappa": {
+      "p": "D3",
+      "sv": "rymmer, smiter",
+      "note": "scapp·a — -a = han/hon/den (scappare)",
+      "deck": "D3.7"
+    },
+    "seconda": {
+      "p": "D4",
+      "sv": "andra",
+      "note": "second·a — feminin av secondo: la seconda cliente"
+    },
+    "sei": {
+      "p": "D1",
+      "sv": "är (du)",
+      "note": "essere · tu sei",
+      "deck": "D1.2"
+    },
+    "signora": {
+      "p": "D4",
+      "sv": "fru, dam",
+      "note": "signora = artigt tilltal till en kvinna",
+      "deck": "D4.3"
+    },
+    "soldi": {
+      "p": "D4",
+      "sv": "pengar"
+    },
+    "solo": {
+      "p": "D1",
+      "sv": "bara",
+      "deck": "D1.9"
+    },
+    "speciali": {
+      "p": "D3",
+      "sv": "speciella",
+      "note": "special·i — plural av speciale",
+      "deck": "D3.2"
+    },
+    "sporco": {
+      "p": "D3",
+      "sv": "smutsig",
+      "note": "sporc·o — maskulin, som il cane",
+      "deck": "D3.3"
+    },
+    "strano": {
+      "p": "D3",
+      "sv": "konstig",
+      "note": "stran·o — maskulin, som il cliente",
+      "deck": "D3.3"
+    },
+    "suo": {
+      "p": "D1",
+      "sv": "er (artigt), hans, hennes",
+      "note": "è suo, signora? = är den er?",
+      "deck": "D1.3"
+    },
+    "tornano": {
+      "p": "D3",
+      "sv": "går hem, återvänder",
+      "note": "torn·ano — -ano = de (tornare)",
+      "deck": "D3.7"
+    },
+    "tristi": {
+      "p": "D3",
+      "sv": "ledsna",
+      "note": "trist·i — plural av triste",
+      "deck": "D3.2"
+    },
+    "troppo": {
+      "p": "D1",
+      "sv": "alltför",
+      "note": "troppo tranquilla = alldeles för lugnt",
+      "deck": "D4.16"
+    },
+    "tuo": {
+      "p": "D1",
+      "sv": "din",
+      "note": "tuo med maskulint: il tuo pane",
+      "deck": "D1.3"
+    },
+    "vecchia": {
+      "p": "D4",
+      "sv": "gammal",
+      "note": "vecchi·a — feminin av vecchio",
+      "deck": "D4.10"
+    },
+    "vicino al": {
+      "p": "D1",
+      "sv": "nära",
+      "note": "vicino a + il · vicino al mare = nära havet",
+      "deck": "D1.6"
+    },
+    "vuota": {
+      "p": "D3",
+      "sv": "tom",
+      "note": "vuot·a — feminin av vuoto, som la coperta",
+      "deck": "D3.3"
+    }
+  },
+  "chapters": [
+    {
+      "n": 1,
+      "title": "Un cliente strano",
+      "sv": "En konstig kund",
+      "pages": [
+        {
+          "id": "cane-di-nessuno-01-1",
+          "chapter": 1,
+          "part": 1,
+          "title": "Un cliente strano",
+          "sv": "En konstig kund",
+          "nota": "«Ha fame» = är hungrig — på italienska har man hunger. Likadant: ha sete (är törstig), ha sonno (är sömnig).",
+          "level": 1,
+          "narrator": "f",
+          "scene": "Nina har ett litet bageri vid havet i Cefalù. I dag har hon en konstig kund: en liten, brun och smutsig hund med ett svart öra och ledsna ögon. Den har inga pengar, men den är hungrig.",
+          "sentences": [
+            {
+              "it": "Nina è di Cefalù, in Sicilia.",
+              "sv": "Nina är från Cefalù, på Sicilien."
+            },
+            {
+              "it": "Ha una piccola panetteria vicino al mare.",
+              "sv": "Hon har ett litet bageri nära havet."
+            },
+            {
+              "it": "Il pane di Nina è caldo e buono.",
+              "sv": "Ninas bröd är varmt och gott."
+            },
+            {
+              "it": "Oggi la panetteria ha un cliente strano.",
+              "sv": "I dag har bageriet en konstig kund."
+            },
+            {
+              "it": "È un cane piccolo, marrone e sporco.",
+              "sv": "Det är en liten hund, brun och smutsig."
+            },
+            {
+              "it": "Ha un orecchio nero e gli occhi tristi.",
+              "sv": "Den har ett svart öra och ledsna ögon."
+            },
+            {
+              "it": "Il cane non ha soldi, ma ha fame.",
+              "sv": "Hunden har inga pengar, men den är hungrig."
+            },
+            {
+              "it": "«Ciao, piccolo! Di chi sei?»",
+              "sv": "”Hej, lilleman! Vems är du?”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vad har hunden inte?",
+            "options": ["Hunger", "Pengar", "Ett svart öra"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "cane-di-nessuno-01-2",
+          "chapter": 1,
+          "part": 2,
+          "title": "Non è mio",
+          "sv": "Den är inte min",
+          "nota": "Mio, tuo, suo = min, din, hans eller hennes. Suo är också artigt: «è suo, signora?» = är den er?",
+          "level": 1,
+          "narrator": "m",
+          "scene": "Brevbäraren Bruno har en katt, inte en hund. Gamla, eleganta signora Pina säger nej: hennes hund är vit och ren, den här är brun och smutsig.",
+          "sentences": [
+            {
+              "it": "Il primo cliente è Bruno, il postino.",
+              "sv": "Den första kunden är Bruno, brevbäraren."
+            },
+            {
+              "it": "«Buongiorno, Bruno! Questo cane è tuo?»",
+              "sv": "”God morgon, Bruno! Är den här hunden din?”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«No, non è mio. Io ho un gatto.»",
+              "sv": "”Nej, den är inte min. Jag har en katt.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "La seconda cliente è la signora Pina.",
+              "sv": "Den andra kunden är signora Pina."
+            },
+            {
+              "it": "Pina è vecchia e molto elegante.",
+              "sv": "Pina är gammal och mycket elegant."
+            },
+            {
+              "it": "«Signora, è suo questo cane?»",
+              "sv": "”Signora, är den här hunden er?”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«No! Il mio cane è bianco e pulito.»",
+              "sv": "”Nej! Min hund är vit och ren.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Questo cane è marrone e molto sporco!»",
+              "sv": "”Den här hunden är brun och jättesmutsig!”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vilken färg har Pinas hund?",
+            "options": ["Brun", "Svart", "Vit"],
+            "answer": 2
+          }
+        },
+        {
+          "id": "cane-di-nessuno-01-3",
+          "chapter": 1,
+          "part": 3,
+          "title": "Biscotto",
+          "sv": "Biscotto",
+          "nota": "Sei = du är. Sono, sei, è — jag är, du är, han eller hon är.",
+          "level": 1,
+          "narrator": "f",
+          "scene": "Hunden följer med Nina hem och får namnet Biscotto, en tallrik pasta och en filt vid sängen. Den är glad men smutsig, och i morgon är det baddag.",
+          "sentences": [
+            {
+              "it": "È sera, e Nina è a casa.",
+              "sv": "Det är kväll, och Nina är hemma."
+            },
+            {
+              "it": "Anche il cane è a casa con lei.",
+              "sv": "Hunden är också hemma hos henne."
+            },
+            {
+              "it": "Adesso il cane ha un nome: Biscotto.",
+              "sv": "Nu har hunden ett namn: Biscotto."
+            },
+            {
+              "it": "Biscotto ha un piatto di pasta.",
+              "sv": "Biscotto får en tallrik pasta."
+            },
+            {
+              "it": "Ha anche una coperta vicino al letto.",
+              "sv": "Han får också en filt bredvid sängen."
+            },
+            {
+              "it": "Biscotto è felice, ma è molto sporco.",
+              "sv": "Biscotto är glad, men han är jättesmutsig."
+            },
+            {
+              "it": "«Biscotto, sei un disastro!»",
+              "sv": "”Biscotto, du är en katastrof!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Domani è il giorno del bagno!»",
+              "sv": "”I morgon är det baddag!”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vad händer i morgon?",
+            "options": ["Biscotto ska badas", "Nina ska hälsa på Pina", "Bageriet är stängt"],
+            "answer": 0
+          }
+        }
+      ],
+      "songs": []
+    },
+    {
+      "n": 2,
+      "title": "Fiocco",
+      "sv": "Fiocco",
+      "pages": [
+        {
+          "id": "cane-di-nessuno-02-1",
+          "chapter": 2,
+          "part": 1,
+          "title": "Il bagno",
+          "sv": "Badet",
+          "nota": "Diventa = blir: l'acqua diventa marrone, il cane diventa bianco.",
+          "level": 2,
+          "narrator": "m",
+          "scene": "Nina badar hunden i varmt vatten. Vattnet blir brunt och hunden blir vit — bara ett öra är kvar svart. Nina tittar länge: hon känner igen hunden.",
+          "sentences": [
+            {
+              "it": "La mattina Nina lava Biscotto con acqua calda.",
+              "sv": "På morgonen tvättar Nina Biscotto med varmt vatten."
+            },
+            {
+              "it": "Il cane non ama il bagno e salta.",
+              "sv": "Hunden gillar inte bad och hoppar."
+            },
+            {
+              "it": "Nina ride, e l'acqua diventa marrone.",
+              "sv": "Nina skrattar, och vattnet blir brunt."
+            },
+            {
+              "it": "Ma il cane diventa bianco, molto bianco!",
+              "sv": "Men hunden blir vit, alldeles vit!"
+            },
+            {
+              "it": "Solo un orecchio resta nero.",
+              "sv": "Bara ett öra förblir svart."
+            },
+            {
+              "it": "Nina guarda il cane e pensa.",
+              "sv": "Nina tittar på hunden och tänker."
+            },
+            {
+              "it": "Un cane bianco, con un orecchio nero…",
+              "sv": "En vit hund, med ett svart öra …"
+            },
+            {
+              "it": "«Ma io conosco questo cane!»",
+              "sv": "”Men jag känner ju den här hunden!”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Hur ser hunden ut efter badet?",
+            "options": ["Brun och smutsig", "Vit, med ett svart öra", "Helt svart"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "cane-di-nessuno-02-2",
+          "chapter": 2,
+          "part": 2,
+          "title": "La porta di Pina",
+          "sv": "Pinas dörr",
+          "nota": "Ancora = igen, eller fortfarande. «Guarda ancora» = tittar igen.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Nina stänger bageriet och går med hunden till Pinas gula hus. Pina öppnar, tittar och tittar igen: det är hennes hund Fiocco, som skäller av glädje.",
+          "sentences": [
+            {
+              "it": "Alle dieci Nina chiude la panetteria.",
+              "sv": "Klockan tio stänger Nina bageriet."
+            },
+            {
+              "it": "Nina e Biscotto camminano per il paese.",
+              "sv": "Nina och Biscotto går genom byn."
+            },
+            {
+              "it": "La casa di Pina è grande e gialla.",
+              "sv": "Pinas hus är stort och gult."
+            },
+            {
+              "it": "Nina bussa alla porta.",
+              "sv": "Nina knackar på dörren."
+            },
+            {
+              "it": "Pina apre e guarda il cane.",
+              "sv": "Pina öppnar och tittar på hunden."
+            },
+            {
+              "it": "Poi guarda ancora, e ancora.",
+              "sv": "Sedan tittar hon igen, och igen."
+            },
+            {
+              "it": "«Fiocco! Il mio Fiocco!»",
+              "sv": "”Fiocco! Min Fiocco!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Il cane salta e abbaia di gioia.",
+              "sv": "Hunden hoppar och skäller av glädje."
+            }
+          ],
+          "question": {
+            "sv": "Vad heter hunden egentligen?",
+            "options": ["Biscotto", "Bruno", "Fiocco"],
+            "answer": 2
+          }
+        },
+        {
+          "id": "cane-di-nessuno-02-3",
+          "chapter": 2,
+          "part": 3,
+          "title": "Troppo tranquilla",
+          "sv": "Alldeles för lugnt",
+          "nota": "Verb på -ano = de: tornano, camminano. Ändelsen räcker — «de» behöver inte stå.",
+          "level": 2,
+          "narrator": "m",
+          "scene": "Pina kramar Fiocco: han rymmer varje morgon, och hon ser dåligt. Hon tackar Nina, och de går hem. På kvällen är bageriet för tyst, och Nina tänker på Biscotto.",
+          "sentences": [
+            {
+              "it": "Pina abbraccia Fiocco e ride.",
+              "sv": "Pina kramar Fiocco och skrattar."
+            },
+            {
+              "it": "«Fiocco scappa sempre. Ogni mattina!»",
+              "sv": "”Fiocco rymmer jämt. Varje morgon!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Sono vecchia, e non vedo bene.»",
+              "sv": "”Jag är gammal, och jag ser dåligt.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Grazie, Nina. Grazie mille!»",
+              "sv": "”Tack, Nina. Tusen tack!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Pina e Fiocco tornano a casa.",
+              "sv": "Pina och Fiocco går hem."
+            },
+            {
+              "it": "La sera la panetteria è tranquilla.",
+              "sv": "På kvällen är det lugnt i bageriet."
+            },
+            {
+              "it": "Troppo tranquilla.",
+              "sv": "Alldeles för lugnt."
+            },
+            {
+              "it": "Nina guarda la coperta vuota e pensa a Biscotto.",
+              "sv": "Nina tittar på den tomma filten och tänker på Biscotto."
+            }
+          ],
+          "question": {
+            "sv": "Varför kände Pina inte igen sin hund?",
+            "options": ["Hon ser dåligt", "Hon var inte hemma", "Hunden hade ett nytt namn"],
+            "answer": 0
+          }
+        },
+        {
+          "id": "cane-di-nessuno-02-4",
+          "chapter": 2,
+          "part": 4,
+          "title": "A domani",
+          "sv": "Vi ses i morgon",
+          "nota": "Davanti = framför, dietro = bakom. «Davanti alla porta» = framför dörren.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Morgonen efter står en vit hund med ett svart öra framför bageriet, och bakom den signora Pina. Fiocco älskar Ninas bröd, och det gör Pina också. Nu har bageriet två speciella kunder.",
+          "sentences": [
+            {
+              "it": "La mattina dopo, Nina apre la panetteria alle sette.",
+              "sv": "Morgonen efter öppnar Nina bageriet klockan sju."
+            },
+            {
+              "it": "Davanti alla porta c'è un cane bianco.",
+              "sv": "Framför dörren står en vit hund."
+            },
+            {
+              "it": "Ha un orecchio nero e gli occhi felici.",
+              "sv": "Den har ett svart öra och glada ögon."
+            },
+            {
+              "it": "Dietro il cane c'è la signora Pina.",
+              "sv": "Bakom hunden står signora Pina."
+            },
+            {
+              "it": "«Fiocco ama il tuo pane. Anche io!»",
+              "sv": "”Fiocco älskar ditt bröd. Det gör jag också!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Allora a domani, Biscotto!» dice Nina.",
+              "sv": "”Vi ses i morgon då, Biscotto!” säger Nina.",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Fiocco, non Biscotto!» dice Pina, e ride.",
+              "sv": "”Fiocco, inte Biscotto!” säger Pina och skrattar.",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Da oggi la panetteria ha due clienti speciali.",
+              "sv": "Från och med i dag har bageriet två speciella kunder."
+            }
+          ],
+          "question": {
+            "sv": "Vem står bakom hunden på morgonen?",
+            "options": ["Brevbäraren Bruno", "Signora Pina", "Ingen"],
+            "answer": 1
+          }
+        }
+      ],
+      "songs": []
+    }
+  ]
+}
