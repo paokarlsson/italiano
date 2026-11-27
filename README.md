@@ -17,12 +17,14 @@ delar som bygger på samma fyra pelare:
   språket på din nivå och med dina öppna ord invävda. Med en ElevenLabs-nyckel läses den
   upp. Planen, kanon och låttexterna ligger i `docs/alba-luca/` och
   `public/data/storie/alba-luca/`.
-- **La valigia blu** och **Il cane di nessuno** — två korta berättelser på de två första
-  nivåerna. I den första kommer Sofia till Bologna och tar fel blå resväska; i den andra
-  får bagaren Nina på Sicilien en smutsig hund som kund, som ingen vill kännas vid. Sju
-  sidor var, som läses varvat med grundkursen — varje sida efter grundkursens texter på
-  samma nivå — så att den som börjar har något att följa redan från början. De läses alltid
-  som de står och skrivs inte om.
+- **La valigia blu**, **Il cane di nessuno** och **Ciao, bella!** — tre korta berättelser
+  på de två första nivåerna. I den första kommer Sofia till Bologna och tar fel blå
+  resväska; i den andra får bagaren Nina på Sicilien en smutsig hund som kund, som ingen
+  vill kännas vid; i den tredje försöker Marco — guldkedja, uppknäppt skjorta,
+  solglasögon mitt i natten — ragga på en svensk ingenjör i en bar i Rimini, med varenda
+  kliché han kan, tills mamma ringer. Sju sidor var, som läses varvat med grundkursen —
+  varje sida efter grundkursens texter på samma nivå — så att den som börjar har något att
+  följa redan från början. De läses alltid som de står och skrivs inte om.
 - **Ripasso** — det som skaver. En kort repetition som appen själv plockar ihop ur det du
   slagit upp och det som går trögt i gymmet.
 - **Palestra** — gymmet. 66 mazzi och drygt tusen frågor för den som vill nöta en enskild
@@ -123,8 +125,8 @@ public/data/     app-data.json — gymmets frågor · letture.json — texterna 
   uppslag är inget fel: ordet är «öppet» tills det står i en text och läses utan hjälp,
   eller sitter i en repetition. Nästa text är den första olästa inbyggda, sedan den äldsta
   olästa i lagret; när allt är läst den inbyggda med flest öppna ord.
-- **Läsordningen** (`readingPath()` i `story.ts`) är grundkursen med _La valigia blu_ och
-  _Il cane di nessuno_ insprängda, sedan _Alba & Luca_. En följetong med `"course": true` läses varvat med
+- **Läsordningen** (`readingPath()` i `story.ts`) är grundkursen med _La valigia blu_,
+  _Il cane di nessuno_ och _Ciao, bella!_ insprängda, sedan _Alba & Luca_. En följetong med `"course": true` läses varvat med
   grundkursen: varje sida kommer efter grundkursens texter på sidans nivå. Följetongerna
   ligger i `public/data/storie/` och räknas upp i `StoryStore`. Bara en följetong med
   `canon` skrivs om åt läsaren.

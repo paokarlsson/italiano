@@ -1,0 +1,992 @@
+{
+  "id": "ciao-bella",
+  "title": "Ciao, bella!",
+  "sv": "En latin lover med guldkedja försöker ragga på en svensk ingenjör i en bar i Rimini — en kort, komisk berättelse på de två första nivåerna.",
+  "cover": "En bar vid stranden i Rimini en varm sommarkväll, med neonskylten «Paradiso», palmer och lampor. Vid disken lutar sig en solbränd italiensk man i fyrtioårsåldern fram med självsäkert leende: vit skjorta uppknäppt till naveln, guldkedja på bröstet och solglasögon fast det är natt. Vid ett bord sitter en lång, blond svensk kvinna med en bok och ett glas vatten och ser helt oberörd ut. Bakom disken en gammal, gråhårig bartender som diskar ett glas och ler i mjugg. Varm, humoristisk stämning, som en gammal italiensk komedi.",
+  "course": true,
+  "names": ["gino", "ingrid", "marco", "paradiso", "rimini", "stoccolma"],
+  "lexicon": {
+    "a mezzanotte": {
+      "p": "D4",
+      "sv": "vid midnatt",
+      "note": "a + klockslag: a mezzanotte, a mezzogiorno",
+      "deck": "D4.5"
+    },
+    "abbastanza": {
+      "p": "D4",
+      "sv": "tillräckligt, nog",
+      "note": "è abbastanza = det räcker",
+      "deck": "D4.16"
+    },
+    "accetta": {
+      "p": "D3",
+      "sv": "accepterar, tar emot",
+      "note": "accett·a — -a = han/hon (accettare)",
+      "deck": "D3.7"
+    },
+    "acqua": {
+      "p": "D4",
+      "sv": "vatten",
+      "deck": "D4.8"
+    },
+    "ah": {
+      "p": "D1",
+      "sv": "åh, aha",
+      "deck": "D1.14"
+    },
+    "all'improvviso": {
+      "p": "D1",
+      "sv": "plötsligt",
+      "note": "all' = a + l' · improvviso = oväntad",
+      "deck": "D1.9"
+    },
+    "alta": {
+      "p": "D4",
+      "sv": "lång",
+      "note": "alt·a — feminin av alto · alto = lång (om en person) och hög",
+      "deck": "D4.10"
+    },
+    "altra": {
+      "p": "D4",
+      "sv": "annan",
+      "note": "un'altra frase = en annan replik · altr·a — feminin av altro",
+      "deck": "D4.12"
+    },
+    "angelo": {
+      "p": "D2",
+      "sv": "ängel",
+      "note": "angel → angelo"
+    },
+    "aperta": {
+      "p": "D3",
+      "sv": "öppen, uppknäppt",
+      "note": "apert·a — feminin, som la camicia",
+      "deck": "D3.3"
+    },
+    "arancione": {
+      "p": "D4",
+      "sv": "orange",
+      "note": "arancia = apelsin · arancione = apelsinfärgad",
+      "deck": "D4.11"
+    },
+    "artista": {
+      "p": "D2",
+      "sv": "konstnär",
+      "note": "artist → artista · -ista är han eller hon: il barista, la turista",
+      "deck": "D2.9"
+    },
+    "barista": {
+      "p": "D2",
+      "sv": "bartender",
+      "note": "bar + -ista · il barista = han, la barista = hon",
+      "deck": "D2.9"
+    },
+    "bianca": {
+      "p": "D4",
+      "sv": "vit",
+      "note": "bianc·a — feminin av bianco, som la camicia",
+      "deck": "D4.11"
+    },
+    "bianco": {
+      "p": "D4",
+      "sv": "vit",
+      "note": "bianc·o — maskulin, som Marco",
+      "deck": "D4.11"
+    },
+    "bicchiere": {
+      "p": "D4",
+      "sv": "glas",
+      "note": "un bicchiere d'acqua = ett glas vatten",
+      "deck": "D4.7"
+    },
+    "bionda": {
+      "p": "D4",
+      "sv": "blond",
+      "note": "biond·a — feminin av biondo",
+      "deck": "D4.11"
+    },
+    "camicia": {
+      "p": "D4",
+      "sv": "skjorta",
+      "deck": "D4.7"
+    },
+    "camomilla": {
+      "p": "D4",
+      "sv": "kamomillte",
+      "note": "en kopp kamomill — det man dricker när man ska sova",
+      "deck": "D4.8"
+    },
+    "catena d'oro": {
+      "p": "D4",
+      "sv": "guldkedja",
+      "note": "catena = kedja · d'oro = av guld",
+      "deck": "D4.7"
+    },
+    "catene d'oro": {
+      "p": "D3",
+      "sv": "guldkedjor",
+      "note": "caten·e — plural av catena: -a blir -e",
+      "deck": "D3.2"
+    },
+    "chiama": {
+      "p": "D3",
+      "sv": "ropar på, ringer",
+      "note": "chiam·a — -a = han/hon (chiamare)",
+      "deck": "D3.7"
+    },
+    "chiude": {
+      "p": "D3",
+      "sv": "stänger, låser",
+      "note": "chiud·e — -e = han/hon (chiudere)",
+      "deck": "D3.8"
+    },
+    "ciao": {
+      "p": "D1",
+      "sv": "hej, hej då",
+      "deck": "D1.14"
+    },
+    "cinquanta": {
+      "p": "D4",
+      "sv": "femtio",
+      "note": "le undici e cinquanta = elva och femtio, tio i tolv"
+    },
+    "come": {
+      "p": "D1",
+      "sv": "som, precis som",
+      "note": "come ogni sabato = som varje lördag · come il mare = som havet",
+      "deck": "D1.8"
+    },
+    "corre": {
+      "p": "D3",
+      "sv": "springer",
+      "note": "corr·e — -e = han/hon (correre)",
+      "deck": "D3.8"
+    },
+    "corri": {
+      "p": "D3",
+      "sv": "springer (du)",
+      "note": "corr·i — -i = du (correre)",
+      "deck": "D3.5"
+    },
+    "d'acqua": {
+      "p": "D1",
+      "sv": "med vatten",
+      "note": "d' = di före vokal · un bicchiere d'acqua = ett glas vatten",
+      "deck": "D1.5"
+    },
+    "da sole": {
+      "p": "D1",
+      "sv": "sol-",
+      "note": "gli occhiali da sole = solglasögon · da = till, för",
+      "deck": "D1.5"
+    },
+    "dell'amore": {
+      "p": "D1",
+      "sv": "kärlekens",
+      "note": "dell' = di + l' · un artista dell'amore = en kärlekens konstnär",
+      "deck": "D1.6"
+    },
+    "diventa": {
+      "p": "D3",
+      "sv": "blir",
+      "note": "divent·a — -a = han/hon (diventare)",
+      "deck": "D3.7"
+    },
+    "elegante": {
+      "p": "D2",
+      "sv": "elegant",
+      "note": "elegant → elegante"
+    },
+    "fidanzato": {
+      "p": "D4",
+      "sv": "pojkvän",
+      "note": "fidanzata = flickvän",
+      "deck": "D4.3"
+    },
+    "frase": {
+      "p": "D2",
+      "sv": "replik, mening, fras",
+      "note": "phrase → frase"
+    },
+    "gatto": {
+      "p": "D4",
+      "sv": "katt"
+    },
+    "gentile": {
+      "p": "D2",
+      "sv": "vänlig, snäll",
+      "note": "gentle → gentile — ett av de vanligaste artighetsorden"
+    },
+    "gli occhiali": {
+      "p": "D4",
+      "sv": "glasögonen",
+      "note": "occhio = öga → occhiali = glasögon, alltid i plural",
+      "deck": "D4.7"
+    },
+    "grazie": {
+      "p": "D1",
+      "sv": "tack",
+      "deck": "D1.14"
+    },
+    "guarda": {
+      "p": "D3",
+      "sv": "tittar",
+      "note": "guard·a — -a = han/hon (guardare)",
+      "deck": "D3.7"
+    },
+    "hai": {
+      "p": "D1",
+      "sv": "har (du)",
+      "note": "avere · tu hai — h:et hörs inte",
+      "deck": "D1.2"
+    },
+    "ho sonno": {
+      "p": "D4",
+      "sv": "jag är sömnig",
+      "note": "avere sonno = vara sömnig — man har sömn, som ho fame",
+      "deck": "D4.8"
+    },
+    "i tuoi occhi": {
+      "p": "D1",
+      "sv": "dina ögon",
+      "note": "tuo → tuoi i plural · occhio → occhi",
+      "deck": "D1.3"
+    },
+    "ingegnera": {
+      "p": "D2",
+      "sv": "ingenjör (hon)",
+      "note": "engineer → ingegnere · -a = hon"
+    },
+    "interesse": {
+      "p": "D2",
+      "sv": "intresse",
+      "note": "interest → interesse"
+    },
+    "inverno": {
+      "p": "D4",
+      "sv": "vinter",
+      "deck": "D4.5"
+    },
+    "lava": {
+      "p": "D3",
+      "sv": "tvättar, diskar",
+      "note": "lav·a — -a = han/hon (lavare)",
+      "deck": "D3.7"
+    },
+    "lei": {
+      "p": "D1",
+      "sv": "ni (artigt), hon",
+      "note": "Lei è gentile = ni är vänlig — artigt tilltal, verbet som för hon",
+      "deck": "D1.3"
+    },
+    "mai": {
+      "p": "D1",
+      "sv": "aldrig",
+      "note": "non … mai = aldrig · non accetta mai = tar aldrig",
+      "deck": "D1.9"
+    },
+    "mamma": {
+      "p": "D4",
+      "sv": "mamma",
+      "deck": "D4.3"
+    },
+    "nella": {
+      "p": "D1",
+      "sv": "i",
+      "note": "in + la · nella mia testa = i mitt huvud",
+      "deck": "D1.6"
+    },
+    "no": {
+      "p": "D1",
+      "sv": "nej, va?",
+      "note": "sist i en fråga: è vero, no? = eller hur?",
+      "deck": "D1.1"
+    },
+    "non ha più": {
+      "p": "D1",
+      "sv": "har inte längre",
+      "note": "non … più = inte längre · non ha più sonno = är inte sömnig längre",
+      "deck": "D1.9"
+    },
+    "notte": {
+      "p": "D4",
+      "sv": "natt",
+      "note": "è notte = det är natt · buonanotte = god natt",
+      "deck": "D4.5"
+    },
+    "nove": {
+      "p": "D4",
+      "sv": "nio",
+      "note": "alle nove = klockan nio"
+    },
+    "ordina": {
+      "p": "D3",
+      "sv": "beställer",
+      "note": "ordin·a — -a = han/hon (ordinare)",
+      "deck": "D3.7"
+    },
+    "orologio": {
+      "p": "D4",
+      "sv": "klocka",
+      "deck": "D4.7"
+    },
+    "paga": {
+      "p": "D3",
+      "sv": "betalar",
+      "note": "pag·a — -a = han/hon (pagare)",
+      "deck": "D3.7"
+    },
+    "parla": {
+      "p": "D3",
+      "sv": "pratar",
+      "note": "parl·a — -a = han/hon (parlare)",
+      "deck": "D3.7"
+    },
+    "parola": {
+      "p": "D4",
+      "sv": "ord",
+      "note": "parola = ett ord · frase = en mening"
+    },
+    "pensa": {
+      "p": "D3",
+      "sv": "tänker",
+      "note": "pens·a — -a = han/hon (pensare)",
+      "deck": "D3.7"
+    },
+    "perché": {
+      "p": "D1",
+      "sv": "varför, för att",
+      "note": "perché? = varför? · perché … = för att …",
+      "deck": "D1.8"
+    },
+    "piano": {
+      "p": "D4",
+      "sv": "tyst, sakta",
+      "note": "ride piano = skrattar tyst · pianoforte = svagt-starkt",
+      "deck": "D4.10"
+    },
+    "pieno di": {
+      "p": "D4",
+      "sv": "full av",
+      "note": "pieno di turisti = full av turister",
+      "deck": "D4.10"
+    },
+    "più vecchia": {
+      "p": "D1",
+      "sv": "äldre",
+      "note": "più = mer · più vecchia di me = äldre än jag",
+      "deck": "D1.9"
+    },
+    "porta": {
+      "p": "D4",
+      "sv": "dörr",
+      "deck": "D4.6"
+    },
+    "prego": {
+      "p": "D1",
+      "sv": "varsågod, ingen orsak",
+      "note": "svaret på grazie",
+      "deck": "D1.14"
+    },
+    "prepara": {
+      "p": "D3",
+      "sv": "gör i ordning, lagar",
+      "note": "prepar·a — -a = han/hon (preparare)",
+      "deck": "D3.7"
+    },
+    "pronto": {
+      "p": "D4",
+      "sv": "redo, klar",
+      "note": "pront·o — maskulin · i telefon: pronto? = hallå?",
+      "deck": "D4.10"
+    },
+    "quanti anni hai": {
+      "p": "D1",
+      "sv": "hur gammal är du",
+      "note": "ordagrant: hur många år har du? · ho quarantadue anni",
+      "deck": "D1.8"
+    },
+    "quarantadue": {
+      "p": "D4",
+      "sv": "fyrtiotvå",
+      "note": "quaranta + due"
+    },
+    "ride": {
+      "p": "D3",
+      "sv": "skrattar",
+      "note": "rid·e — -e = han/hon (ridere)",
+      "deck": "D3.8"
+    },
+    "sabato": {
+      "p": "D4",
+      "sv": "lördag",
+      "deck": "D4.5"
+    },
+    "salute": {
+      "p": "D1",
+      "sv": "skål!",
+      "note": "salute = hälsa — man skålar för hälsan",
+      "deck": "D1.14"
+    },
+    "schermo": {
+      "p": "D4",
+      "sv": "skärm",
+      "deck": "D4.7"
+    },
+    "scuote": {
+      "p": "D3",
+      "sv": "skakar",
+      "note": "scuot·e — -e = han/hon (scuotere)",
+      "deck": "D3.8"
+    },
+    "sei": {
+      "p": "D1",
+      "sv": "är (du)",
+      "note": "essere · tu sei",
+      "deck": "D1.2"
+    },
+    "signora": {
+      "p": "D4",
+      "sv": "dam, fru",
+      "note": "la signora = artigt om en kvinna",
+      "deck": "D4.3"
+    },
+    "sola": {
+      "p": "D4",
+      "sv": "ensam",
+      "note": "sol·a — feminin av solo",
+      "deck": "D4.10"
+    },
+    "sole": {
+      "p": "D4",
+      "sv": "sol",
+      "note": "il sole = solen",
+      "deck": "D4.9"
+    },
+    "solo": {
+      "p": "D1",
+      "sv": "bara",
+      "deck": "D1.9"
+    },
+    "sonno": {
+      "p": "D4",
+      "sv": "sömn",
+      "note": "avere sonno = vara sömnig",
+      "deck": "D4.8"
+    },
+    "sono le undici": {
+      "p": "D4",
+      "sv": "klockan är elva",
+      "note": "klockan med essere i plural: sono le undici, sono le due",
+      "deck": "D4.5"
+    },
+    "sorride": {
+      "p": "D3",
+      "sv": "ler",
+      "note": "sorrid·e — -e = han/hon (sorridere)",
+      "deck": "D3.8"
+    },
+    "sorriso": {
+      "p": "D4",
+      "sv": "leende",
+      "note": "sorridere = le → sorriso = ett leende",
+      "deck": "D4.4"
+    },
+    "sporco": {
+      "p": "D3",
+      "sv": "smutsig, skitig",
+      "note": "sporc·o — maskulin, som il mare",
+      "deck": "D3.3"
+    },
+    "spritz": {
+      "p": "D4",
+      "sv": "spritz",
+      "note": "aperol, prosecco och lite vatten — norra Italiens aperitif",
+      "deck": "D4.8"
+    },
+    "stanca": {
+      "p": "D3",
+      "sv": "trött",
+      "note": "stanc·a — feminin av stanco",
+      "deck": "D3.3"
+    },
+    "stanco": {
+      "p": "D3",
+      "sv": "trött",
+      "note": "stanc·o — maskulin, som Gino",
+      "deck": "D3.3"
+    },
+    "sul petto": {
+      "p": "D1",
+      "sv": "på bröstet",
+      "note": "sul = su + il",
+      "deck": "D1.6"
+    },
+    "sullo schermo": {
+      "p": "D1",
+      "sv": "på skärmen",
+      "note": "sullo = su + lo — lo före s + konsonant",
+      "deck": "D1.6"
+    },
+    "suona": {
+      "p": "D3",
+      "sv": "ringer, låter",
+      "note": "suon·a — -a = han/hon (suonare)",
+      "deck": "D3.7"
+    },
+    "svedese": {
+      "p": "D4",
+      "sv": "svensk",
+      "note": "svedese — samma form för han och hon"
+    },
+    "svezia": {
+      "p": "D4",
+      "sv": "Sverige",
+      "note": "in Svezia = i Sverige · svedese = svensk"
+    },
+    "telefono": {
+      "p": "D2",
+      "sv": "telefon",
+      "note": "telephone → telefono"
+    },
+    "testa": {
+      "p": "D4",
+      "sv": "huvud",
+      "note": "scuote la testa = skakar på huvudet",
+      "deck": "D4.4"
+    },
+    "turista": {
+      "p": "D2",
+      "sv": "turist",
+      "note": "tourist → turista · -ista är han eller hon",
+      "deck": "D2.9"
+    },
+    "tutta la notte": {
+      "p": "D4",
+      "sv": "hela natten",
+      "note": "tutto = hel, all · tutta la notte = hela natten",
+      "deck": "D4.5"
+    },
+    "un'": {
+      "p": "D1",
+      "sv": "en, ett (före vokal)",
+      "note": "un' framför feminint ord på vokal: un'ingegnera, un'altra",
+      "deck": "D1.4"
+    },
+    "vecchio": {
+      "p": "D4",
+      "sv": "gammal",
+      "note": "vecchi·o — maskulin, som Gino",
+      "deck": "D4.10"
+    },
+    "verso": {
+      "p": "D1",
+      "sv": "mot",
+      "note": "verso la porta = mot dörren",
+      "deck": "D1.5"
+    }
+  },
+  "chapters": [
+    {
+      "n": 1,
+      "title": "Il re di Rimini",
+      "sv": "Kungen av Rimini",
+      "pages": [
+        {
+          "id": "ciao-bella-01-1",
+          "chapter": 1,
+          "part": 1,
+          "title": "Il re di Rimini",
+          "sv": "Kungen av Rimini",
+          "nota": "«Ha gli occhiali da sole» — på italienska har man glasögon, man bär dem inte. Avere gör mycket av jobbet: ha una camicia, ha una catena, ha quarant'anni.",
+          "level": 1,
+          "narrator": "f",
+          "scene": "Lördagskväll i Rimini. I baren Paradiso sitter Marco, som varje lördag: vit skjorta uppknäppt till naveln, guldkedja på bröstet och solglasögon fast det är kväll. Bartendern Gino är gammal och trött och har sett allt förut.",
+          "sentences": [
+            {
+              "it": "Sabato sera a Rimini.",
+              "sv": "Lördagskväll i Rimini."
+            },
+            {
+              "it": "Il bar Paradiso è pieno di turisti.",
+              "sv": "Baren Paradiso är full av turister."
+            },
+            {
+              "it": "Marco è al bar, come ogni sabato.",
+              "sv": "Marco är i baren, som varje lördag."
+            },
+            {
+              "it": "Ha una camicia bianca, molto aperta.",
+              "sv": "Han har en vit skjorta, väldigt uppknäppt."
+            },
+            {
+              "it": "Ha una catena d'oro sul petto.",
+              "sv": "Han har en guldkedja på bröstet."
+            },
+            {
+              "it": "Gino, il barista, è vecchio e stanco.",
+              "sv": "Gino, bartendern, är gammal och trött."
+            },
+            {
+              "it": "«Marco, è notte. Perché gli occhiali da sole?»",
+              "sv": "”Marco, det är natt. Varför solglasögon?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Gino, io sono il sole di Rimini.»",
+              "sv": "”Gino, jag är Riminis sol.”",
+              "speakers": ["m"]
+            }
+          ],
+          "question": {
+            "sv": "Varför har Marco solglasögon på kvällen?",
+            "options": [
+              "Han har ont i ögonen",
+              "Han tycker att han själv är solen",
+              "Det är soligt i baren"
+            ],
+            "answer": 1
+          }
+        },
+        {
+          "id": "ciao-bella-01-2",
+          "chapter": 1,
+          "part": 2,
+          "title": "Ciao, bella!",
+          "sv": "Hej, snygging!",
+          "nota": "«Un'ingegnera» — un blir un' framför ett feminint ord på vokal. Un ingegnere (han), un'ingegnera (hon).",
+          "level": 1,
+          "narrator": "m",
+          "scene": "Vid ett bord sitter en turist ensam: lång, blond och elegant, med en bok och ett glas vatten. Marco går dit direkt med sin bästa replik. Hon är inte imponerad — och hon är svensk.",
+          "sentences": [
+            {
+              "it": "Una turista è sola al tavolo.",
+              "sv": "En turist sitter ensam vid bordet."
+            },
+            {
+              "it": "È alta, bionda e molto elegante.",
+              "sv": "Hon är lång, blond och mycket elegant."
+            },
+            {
+              "it": "Ha un libro e un bicchiere d'acqua.",
+              "sv": "Hon har en bok och ett glas vatten."
+            },
+            {
+              "it": "Marco è subito pronto.",
+              "sv": "Marco är genast redo."
+            },
+            {
+              "it": "«Ciao, bella! Sei un angelo?»",
+              "sv": "”Hej, snygging! Är du en ängel?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«No. Sono un'ingegnera.»",
+              "sv": "”Nej. Jag är ingenjör.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Ah! E sei italiana?»",
+              "sv": "”Aha! Och är du italienska?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«No, sono svedese. Sono di Stoccolma.»",
+              "sv": "”Nej, jag är svensk. Jag är från Stockholm.”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vad är turisten till yrket?",
+            "options": ["Ängel", "Bartender", "Ingenjör"],
+            "answer": 2
+          }
+        },
+        {
+          "id": "ciao-bella-01-3",
+          "chapter": 1,
+          "part": 3,
+          "title": "Un gatto è abbastanza",
+          "sv": "En katt räcker",
+          "nota": "«Ho sonno» = jag är sömnig — man har sömn, precis som man har hunger (ho fame) och har törst (ho sete).",
+          "level": 1,
+          "narrator": "f",
+          "scene": "Marco vet allt om Sverige: där är det alltid vinter. Ingrid rättar honom. Har hon en pojkvän där hemma? Nej, en katt, och det räcker. Gino ler bakom disken. Marco presenterar sig som en kärlekens konstnär. Ingrid är bara sömnig.",
+          "sentences": [
+            {
+              "it": "«Svedese! In Svezia è sempre inverno, no?»",
+              "sv": "”Svensk! I Sverige är det alltid vinter, va?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«No. In Svezia abbiamo anche l'estate.»",
+              "sv": "”Nej. I Sverige har vi sommar också.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Ah sì? E hai un fidanzato in Svezia?»",
+              "sv": "”Jaså? Och har du en pojkvän i Sverige?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Ho un gatto. È abbastanza.»",
+              "sv": "”Jag har en katt. Det räcker.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Gino ha un piccolo sorriso.",
+              "sv": "Gino har ett litet leende."
+            },
+            {
+              "it": "«Io sono Marco, un artista dell'amore.»",
+              "sv": "”Jag är Marco, en kärlekens konstnär.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«E io sono Ingrid. Ho sonno.»",
+              "sv": "”Och jag är Ingrid. Jag är sömnig.”",
+              "speakers": ["f"]
+            }
+          ],
+          "question": {
+            "sv": "Vad har Ingrid hemma i Sverige?",
+            "options": ["En katt", "En pojkvän", "En hund"],
+            "answer": 0
+          }
+        }
+      ],
+      "songs": []
+    },
+    {
+      "n": 2,
+      "title": "Il piano di Marco",
+      "sv": "Marcos plan",
+      "pages": [
+        {
+          "id": "ciao-bella-02-1",
+          "chapter": 2,
+          "part": 1,
+          "title": "Uno spritz per la signora",
+          "sv": "En spritz till damen",
+          "nota": "Ordina, prende, guarda — -a och -e betyder han eller hon. -are-verben slutar på -a (ordina), -ere-verben på -e (prende).",
+          "level": 2,
+          "narrator": "m",
+          "scene": "Marco tar inte ett nej. Han beställer två spritz, en till sig och en till damen. Ingrid tar bara vatten i kväll. Så Marco tar hennes spritz också. Gino skakar på huvudet.",
+          "sentences": [
+            {
+              "it": "Marco non accetta mai un no.",
+              "sv": "Marco tar aldrig ett nej."
+            },
+            {
+              "it": "Chiama Gino e ordina due spritz.",
+              "sv": "Han ropar på Gino och beställer två spritz."
+            },
+            {
+              "it": "«Uno per me e uno per la signora.»",
+              "sv": "”En till mig och en till damen.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Ingrid guarda lo spritz arancione.",
+              "sv": "Ingrid tittar på den orange spritzen."
+            },
+            {
+              "it": "«Grazie, ma stasera prendo solo acqua.»",
+              "sv": "”Tack, men i kväll tar jag bara vatten.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Marco sorride e prende lo spritz di Ingrid.",
+              "sv": "Marco ler och tar Ingrids spritz."
+            },
+            {
+              "it": "«Allora è per me. Salute!»",
+              "sv": "”Då är den till mig. Skål!”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Gino guarda Marco e scuote la testa.",
+              "sv": "Gino tittar på Marco och skakar på huvudet."
+            }
+          ],
+          "question": {
+            "sv": "Vad gör Marco med Ingrids spritz?",
+            "options": ["Ger den till Gino", "Tar den själv", "Häller ut den"],
+            "answer": 1
+          }
+        },
+        {
+          "id": "ciao-bella-02-2",
+          "chapter": 2,
+          "part": 2,
+          "title": "La frase magica",
+          "sv": "Den magiska repliken",
+          "nota": "«Più vecchia di me» = äldre än jag. Più … di är jämförelsen: più alto di Marco = längre än Marco.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Marco letar fram sina bästa repliker. Ingrids ögon är som havet — havet i Rimini? Det är skitigt. Springer hon runt i hans huvud hela natten? Hon är trött, hon jobbar klockan åtta i morgon. Gino skrattar tyst: repliken är äldre än han själv.",
+          "sentences": [
+            {
+              "it": "Marco cerca una frase speciale.",
+              "sv": "Marco letar efter en speciell replik."
+            },
+            {
+              "it": "«Ingrid, i tuoi occhi sono come il mare.»",
+              "sv": "”Ingrid, dina ögon är som havet.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Il mare di Rimini? È molto sporco.»",
+              "sv": "”Havet i Rimini? Det är väldigt skitigt.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Marco pensa e cerca un'altra frase.",
+              "sv": "Marco tänker och letar efter en annan replik."
+            },
+            {
+              "it": "«Sei stanca? Corri nella mia testa tutta la notte.»",
+              "sv": "”Är du trött? Du springer i mitt huvud hela natten.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Sì, sono stanca. Lavoro domani alle otto.»",
+              "sv": "”Ja, jag är trött. Jag jobbar i morgon klockan åtta.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Gino ride piano e lava un bicchiere.",
+              "sv": "Gino skrattar tyst och diskar ett glas."
+            },
+            {
+              "it": "«Marco, questa frase è più vecchia di me.»",
+              "sv": "”Marco, den här repliken är äldre än jag.”",
+              "speakers": ["m"]
+            }
+          ],
+          "question": {
+            "sv": "Vad säger Ingrid om havet i Rimini?",
+            "options": ["Det är blått", "Det är kallt", "Det är skitigt"],
+            "answer": 2
+          }
+        },
+        {
+          "id": "ciao-bella-02-3",
+          "chapter": 2,
+          "part": 3,
+          "title": "Pronto, mamma?",
+          "sv": "Hallå, mamma?",
+          "nota": "«Pronto?» = hallå? i telefon — ordagrant ”redo?”. Samma ord som i «Marco è pronto».",
+          "level": 2,
+          "narrator": "m",
+          "scene": "Plötsligt ringer Marcos telefon. På skärmen står det: Mamma. Marco blir vit och svarar lydigt. Hur gammal är han? Fyrtiotvå — men vid midnatt låser mamma dörren. Klockan är tio i tolv.",
+          "sentences": [
+            {
+              "it": "All'improvviso il telefono di Marco suona.",
+              "sv": "Plötsligt ringer Marcos telefon."
+            },
+            {
+              "it": "Marco guarda lo schermo e diventa bianco.",
+              "sv": "Marco tittar på skärmen och blir vit."
+            },
+            {
+              "it": "Sullo schermo c'è una parola: «Mamma».",
+              "sv": "På skärmen står ett ord: ”Mamma”."
+            },
+            {
+              "it": "«Pronto, mamma? … Sì, mamma. … No, mamma.»",
+              "sv": "”Hallå, mamma? … Ja, mamma. … Nej, mamma.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Ingrid guarda Marco con interesse.",
+              "sv": "Ingrid tittar på Marco med intresse."
+            },
+            {
+              "it": "«Marco, quanti anni hai?»",
+              "sv": "”Marco, hur gammal är du?”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Quarantadue. Ma a mezzanotte la mamma chiude la porta.»",
+              "sv": "”Fyrtiotvå. Men vid midnatt låser mamma dörren.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "Gino guarda l'orologio: sono le undici e cinquanta.",
+              "sv": "Gino tittar på klockan: den är tio i tolv."
+            }
+          ],
+          "question": {
+            "sv": "Vem ringer till Marco?",
+            "options": ["Hans mamma", "Hans flickvän", "Gino"],
+            "answer": 0
+          },
+          "lexicon": {
+            "pronto": {
+              "p": "D1",
+              "sv": "hallå (i telefon)",
+              "note": "pronto = redo — i telefon: hallå?",
+              "deck": "D1.14"
+            }
+          }
+        },
+        {
+          "id": "ciao-bella-02-4",
+          "chapter": 2,
+          "part": 4,
+          "title": "Il bar chiude alle due",
+          "sv": "Baren stänger klockan två",
+          "nota": "«Lei è gentile» — Lei med stor bokstav är artigt tilltal: ni. Verbet står som för han eller hon: Lei è, Lei ha.",
+          "level": 2,
+          "narrator": "f",
+          "scene": "Marco betalar och springer mot dörren — men först: i morgon kväll, här? Ingrid jobbar. När han har gått gör Gino en kamomillte åt henne. Han pratar inte mycket och har inga guldkedjor. Baren stänger klockan två, säger han. Och Ingrid är inte sömnig längre.",
+          "sentences": [
+            {
+              "it": "Marco paga e corre verso la porta.",
+              "sv": "Marco betalar och springer mot dörren."
+            },
+            {
+              "it": "«Ingrid, domani sera? Qui, alle nove?»",
+              "sv": "”Ingrid, i morgon kväll? Här, klockan nio?”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "«Domani lavoro, Marco. Ciao!»",
+              "sv": "”I morgon jobbar jag, Marco. Hej då!”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "Gino prepara una camomilla per Ingrid.",
+              "sv": "Gino gör en kamomillte åt Ingrid."
+            },
+            {
+              "it": "Gino non parla molto e non ha catene d'oro.",
+              "sv": "Gino pratar inte mycket och har inga guldkedjor."
+            },
+            {
+              "it": "«Grazie. Lei è un uomo gentile.»",
+              "sv": "”Tack. Ni är en vänlig man.”",
+              "speakers": ["f"]
+            },
+            {
+              "it": "«Prego. Il bar chiude alle due.»",
+              "sv": "”Varsågod. Baren stänger klockan två.”",
+              "speakers": ["m"]
+            },
+            {
+              "it": "E Ingrid non ha più sonno.",
+              "sv": "Och Ingrid är inte sömnig längre."
+            }
+          ],
+          "question": {
+            "sv": "Hur slutar kvällen för Ingrid?",
+            "options": ["Hon går hem och sover", "Hon är inte sömnig längre", "Hon går med Marco"],
+            "answer": 1
+          }
+        }
+      ],
+      "songs": []
+    }
+  ]
+}
