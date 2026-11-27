@@ -3,6 +3,7 @@ import appData from '../../../public/data/app-data.json';
 import letture from '../../../public/data/letture.json';
 import story from '../../../public/data/storie/alba-luca.json';
 import valigia from '../../../public/data/storie/valigia-blu.json';
+import cane from '../../../public/data/storie/cane-di-nessuno.json';
 import { LettureData, StoryData, Voice } from '../models/leggi.models';
 import { Pillar } from '../models/quiz.models';
 import { checkPage, plainText } from './story-check';
@@ -11,6 +12,7 @@ import { tokenize } from './tokenize';
 
 const data = story as StoryData;
 const short = valigia as StoryData;
+const dog = cane as StoryData;
 const base = letture as LettureData;
 const pillars = appData as Pillar[];
 
@@ -154,6 +156,7 @@ describe('Alba & Luca', () => {
 describe.each([
   { name: 'Alba & Luca', data },
   { name: 'La valigia blu', data: short },
+  { name: 'Il cane di nessuno', data: dog },
 ])('$name', ({ data }) => {
   const pages = data.chapters.flatMap((c) => c.pages);
   const songs = data.chapters.flatMap((c) => c.songs);
@@ -223,7 +226,10 @@ describe.each([
   });
 });
 
-describe('La valigia blu', () => {
+describe.each([
+  { name: 'La valigia blu', story: short },
+  { name: 'Il cane di nessuno', story: dog },
+])('$name i grundkursen', ({ story: short }) => {
   const pages = short.chapters.flatMap((c) => c.pages);
 
   it('läses varvat med grundkursen och ligger på de två första nivåerna', () => {
@@ -239,7 +245,7 @@ describe('La valigia blu', () => {
     short.chapters.forEach((chapter, i) => {
       expect(chapter.n).toBe(i + 1);
       chapter.pages.forEach((page, j) => {
-        expect(page.id).toBe(`valigia-blu-${String(chapter.n).padStart(2, '0')}-${j + 1}`);
+        expect(page.id).toBe(`${short.id}-${String(chapter.n).padStart(2, '0')}-${j + 1}`);
         expect(page.chapter).toBe(chapter.n);
         expect(page.part).toBe(j + 1);
       });

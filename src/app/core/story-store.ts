@@ -5,7 +5,11 @@ import { storyItems } from './story';
 
 const STORY_KEY = 'it_companion_story_v1';
 /** Följetongerna som följer med appen, i läsordning. */
-const STORY_URLS = ['data/storie/valigia-blu.json', 'data/storie/alba-luca.json'];
+const STORY_URLS = [
+  'data/storie/valigia-blu.json',
+  'data/storie/cane-di-nessuno.json',
+  'data/storie/alba-luca.json',
+];
 
 interface StoredStory {
   /** Sidor som Claude skrivit om åt läsaren, per sid-id. */
