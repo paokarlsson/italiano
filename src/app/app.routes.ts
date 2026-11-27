@@ -1,5 +1,10 @@
 import { Routes } from '@angular/router';
-import { activeRoundGuard, deckExistsGuard, textExistsGuard } from './core/route-guards';
+import {
+  activeRoundGuard,
+  deckExistsGuard,
+  songExistsGuard,
+  textExistsGuard,
+} from './core/route-guards';
 
 export const routes: Routes = [
   {
@@ -17,6 +22,12 @@ export const routes: Routes = [
     title: 'Leggi · Italiano',
     canActivate: [textExistsGuard],
     loadComponent: () => import('./pages/leggi/leggi').then((m) => m.Leggi),
+  },
+  {
+    path: 'canzone/:songId',
+    title: 'Canzone · Italiano',
+    canActivate: [songExistsGuard],
+    loadComponent: () => import('./pages/canzone/canzone').then((m) => m.Canzone),
   },
   {
     path: 'ripasso',

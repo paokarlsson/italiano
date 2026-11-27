@@ -11,6 +11,8 @@ import { LibraryService } from '../../core/library.service';
 import { recommend } from '../../core/recommend';
 import { RIPASSO_MAX } from '../../core/ripasso';
 import { StatsService } from '../../core/stats.service';
+import { chapterLabel } from '../../core/story';
+import { StoryStore } from '../../core/story-store';
 import { SupplyService } from '../../core/supply.service';
 import { megabytes } from '../../core/utils';
 import { VoiceService } from '../../core/voice.service';
@@ -37,6 +39,7 @@ export class Home {
   protected readonly audio = inject(AudioStore);
   protected readonly voice = inject(VoiceService);
   protected readonly drive = inject(DriveService);
+  protected readonly saga = inject(StoryStore);
 
   protected readonly megabytes = megabytes;
 
@@ -48,9 +51,22 @@ export class Home {
    * nyckel — föreslår en omläsning.
    */
   protected readonly reading = computed(() => {
-    const next = this.leggi.next();
-    if (!next) return null;
+    const step = this.leggi.step();
     const total = this.leggi.texts().length;
+    if (step?.kind === 'song') {
+      const item = this.saga.item(step.song.id)!;
+      return {
+        kind: 'song' as const,
+        song: step.song,
+        label: `${this.saga.data()?.title} · ${chapterLabel(item.chapter)} · låten`,
+        total,
+      };
+    }
+    const next = step?.text;
+    if (!next) return null;
+    if (this.saga.page(next.id) && this.supply.pageComing(next.id)) {
+      return { kind: 'adapting' as const, total, label: this.label(next, false) };
+    }
     const text = (again: boolean) => ({
       kind: 'text' as const,
       text: next,
@@ -101,13 +117,70 @@ export class Home {
   protected readonly recap = computed(() => {
     const r = this.reading();
     if (r?.kind !== 'text') return null;
+    // I följetongen: scenen på sidan före, så som planen beskriver den.
+    const items = this.saga.items();
+    const at = items.findIndex((i) => i.id === r.text.id);
+    if (at >= 0) {
+      const before = items
+        .slice(0, at)
+        .reverse()
+        .find((i) => i.kind === 'page');
+      return before?.kind === 'page' ? before.page.scene : null;
+    }
     const parts = this.leggi.story();
     const i = parts.findIndex((t) => t.id === r.text.id);
     return i > 0 ? (parts[i - 1].recap ?? null) : null;
   });
 
-  /** Grundkursen fälls ihop när den är läst och berättelsen har tagit över. */
-  protected readonly basicsDone = computed(() => this.leggi.allRead() && !!this.story());
+  /**
+   * Följetongen som kapitel: det du står i öppet, med en prick per sida och låt, och de
+   * andra hopfällda. Null när den inte finns.
+   */
+  protected readonly sagaView = computed(() => {
+    const data = this.saga.data();
+    if (!data) return null;
+    const isRead = (id: string) => this.leggi.isRead(id);
+    const next = this.leggi.storyNext();
+    const chapters = data.chapters.map((chapter) => {
+      const items = [
+        ...chapter.pages.map((p) => ({
+          id: p.id,
+          link: ['/leggi', p.id],
+          label: String(p.part),
+          title: p.title,
+          read: isRead(p.id),
+        })),
+        ...chapter.songs.map((s) => ({
+          id: s.id,
+          link: ['/canzone', s.id],
+          label: '♪',
+          title: s.title,
+          read: isRead(s.id),
+        })),
+      ];
+      return {
+        n: chapter.n,
+        label: chapterLabel(chapter),
+        items,
+        done: items.every((i) => i.read),
+      };
+    });
+    const current = next ? this.saga.item(next.id)!.chapter.n : (chapters.at(-1)?.n ?? 0);
+    return {
+      title: data.title,
+      sv: data.sv,
+      chapters,
+      current: chapters.find((c) => c.n === current)!,
+      nextId: next?.id ?? null,
+      read: this.leggi.storyRead(),
+      total: this.saga.items().length,
+    };
+  });
+
+  /** Grundkursen fälls ihop när den är läst och en berättelse har tagit över. */
+  protected readonly basicsDone = computed(
+    () => this.leggi.allRead() && (!!this.story() || this.leggi.storyRead() > 0),
+  );
 
   protected readonly level = computed(() => level(this.leggi.level()));
   protected readonly levelCount = LEVELS.length;
@@ -130,6 +203,11 @@ export class Home {
   );
 
   private label(text: Lettura, again: boolean): string {
+    const item = this.saga.item(text.id);
+    if (item?.kind === 'page') {
+      const own = this.saga.adaptation(text.id) ? ' · omskriven åt dig' : '';
+      return `${again ? 'Läs om' : 'Leggi'} · ${this.saga.data()?.title} · ${chapterLabel(item.chapter)}${own}`;
+    }
     const number = this.leggi.number(text.id);
     if (number) {
       return `${again ? 'Läs om' : 'Leggi'} · text ${number} av ${this.leggi.texts().length}`;

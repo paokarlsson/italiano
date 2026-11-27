@@ -3,6 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { DataService } from './data.service';
 import { LeggiService } from './leggi.service';
 import { QuizService } from './quiz.service';
+import { StoryStore } from './story-store';
 
 /** Okänt mazzo-id i adressfältet → tillbaka till startsidan. */
 export const deckExistsGuard: CanActivateFn = (route) => {
@@ -23,5 +24,12 @@ export const activeRoundGuard: CanActivateFn = (route) => {
 export const textExistsGuard: CanActivateFn = (route) => {
   const textId = route.paramMap.get('textId');
   const exists = !!textId && !!inject(LeggiService).text(textId);
+  return exists || inject(Router).createUrlTree(['/']);
+};
+
+/** Okänd låt i följetongen → tillbaka till startsidan. */
+export const songExistsGuard: CanActivateFn = (route) => {
+  const songId = route.paramMap.get('songId');
+  const exists = !!songId && !!inject(StoryStore).song(songId);
   return exists || inject(Router).createUrlTree(['/']);
 };

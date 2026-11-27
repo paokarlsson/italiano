@@ -12,6 +12,24 @@
       <p role="status">{{ ai.status() || 'Claude skriver nästa text på din nivå.' }}</p>
       <button class="cta gold" type="button" disabled>Skrivs just nu…</button>
     </div>
+  } @else if (r.kind === 'song') {
+    <div class="read-card">
+      <div class="eyebrow">{{ r.label }}</div>
+      <h2 lang="it">{{ r.song.title }}</h2>
+      <p>{{ r.song.nota }}</p>
+      <button class="cta gold" type="button" [routerLink]="['/canzone', r.song.id]">
+        Lyssna →
+      </button>
+    </div>
+  } @else if (r.kind === 'adapting') {
+    <div class="read-card">
+      <div class="eyebrow">{{ r.label }}</div>
+      <h2 lang="it">Un momento</h2>
+      <p role="status">
+        {{ ai.status() || 'Claude skriver om nästa sida efter hur det gick nyss.' }}
+      </p>
+      <button class="cta gold" type="button" disabled>Skrivs om åt dig…</button>
+    </div>
   } @else if (r.kind === 'write') {
     <div class="read-card">
       <div class="eyebrow">Leggi · alla {{ r.total }} lästa</div>
@@ -31,6 +49,54 @@
         </details>
       }
       <button class="cta gold" type="button" [routerLink]="['/leggi', r.text.id]">Läs →</button>
+    </div>
+  }
+
+  @let a = sagaView();
+  @if (a) {
+    <div class="story saga">
+      <div class="story-head">
+        <span class="stock-label">{{ a.title }} · {{ a.read }} av {{ a.total }}</span>
+      </div>
+      <div class="saga-ch">
+        <span class="saga-title" lang="it">{{ a.current.label }}</span>
+        <div class="read-row">
+          @for (p of a.current.items; track p.id) {
+            <a
+              class="read-dot"
+              [class.done]="p.read"
+              [class.next]="p.id === a.nextId"
+              [routerLink]="p.link"
+              [attr.aria-label]="p.title"
+              [title]="p.title"
+              >{{ p.label }}</a
+            >
+          }
+        </div>
+      </div>
+      @if (a.chapters.length > 1) {
+        <details class="basics saga-all">
+          <summary><span class="stock-label">Alla kapitel</span></summary>
+          @for (c of a.chapters; track c.n) {
+            <div class="saga-ch" [class.done]="c.done">
+              <span class="saga-title" lang="it">{{ c.label }}</span>
+              <div class="read-row">
+                @for (p of c.items; track p.id) {
+                  <a
+                    class="read-dot"
+                    [class.done]="p.read"
+                    [class.next]="p.id === a.nextId"
+                    [routerLink]="p.link"
+                    [attr.aria-label]="p.title"
+                    [title]="p.title"
+                    >{{ p.label }}</a
+                  >
+                }
+              </div>
+            </div>
+          }
+        </details>
+      }
     </div>
   }
 

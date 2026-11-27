@@ -76,6 +76,65 @@ export interface LettureData {
   texts: Lettura[];
 }
 
+/**
+ * En sida i en följetong som följer med appen — Alba & Luca. En vanlig text, med sin plats
+ * i berättelsen och planen den skrevs efter: scenen och replikerna som inte får tappas.
+ * Planen följer med så att Claude kan skriva om sidan åt läsaren utan att rubba handlingen.
+ */
+export interface StoryPage extends Lettura {
+  /** Kapitel, 0 för prologen. */
+  chapter: number;
+  /** Sidan inom kapitlet, från 1. */
+  part: number;
+  level: number;
+  narrator: Voice;
+  /** Vad som händer på sidan, på svenska — sidplanens rad. */
+  scene: string;
+  /** Repliker som ska stå ordagrant i italienskan. */
+  locked?: string[];
+  /** Poster som bara gäller den här sidan — läggs över berättelsens ordlista. */
+  lexicon?: Record<string, LexEntry>;
+}
+
+/** En låtsida: refrängen rad för rad, med svenska under. Ingen fråga och ingen nivå. */
+export interface StorySong {
+  id: string;
+  chapter: number;
+  part: number;
+  title: string;
+  sv: string;
+  nota: string;
+  /** Länk till låten, när den finns. */
+  spotify?: string;
+  lines: { it: string; sv: string }[];
+}
+
+export interface StoryChapter {
+  /** 0 för prologen. */
+  n: number;
+  title: string;
+  sv: string;
+  pages: StoryPage[];
+  /** Låtsidorna efter kapitlets sista sida, i ordning. */
+  songs: StorySong[];
+}
+
+export interface StoryData {
+  id: string;
+  title: string;
+  /** En rad om berättelsen. */
+  sv: string;
+  names: string[];
+  /** Berättelsens ordlista — läggs över appens. */
+  lexicon: Record<string, LexEntry>;
+  chapters: StoryChapter[];
+}
+
+/** En plats i följetongen: en sida att läsa eller en låt att lyssna på. */
+export type StoryItem =
+  | { kind: 'page'; id: string; chapter: StoryChapter; page: StoryPage }
+  | { kind: 'song'; id: string; chapter: StoryChapter; song: StorySong };
+
 /** En bit av en mening: ett ord eller en fast enhet («c'è», «sono andata»). */
 export interface Token {
   /** Skiljetecken före ordet. */

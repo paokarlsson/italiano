@@ -1,0 +1,40 @@
+@let i = item();
+@if (i) {
+  <app-topbar [step]="step()" [title]="i.song.title" />
+
+  <div class="stage">
+    <p class="lt-nota">{{ i.song.nota }}</p>
+    @if (i.song.spotify) {
+      <div class="lt-tools">
+        <a class="song-link" [href]="i.song.spotify" target="_blank" rel="noopener"
+          >▶ Lyssna på Spotify ↗</a
+        >
+      </div>
+    }
+
+    <div class="song-lines">
+      @for (line of i.song.lines; track $index) {
+        <p class="lt-s" lang="it">{{ line.it }}</p>
+        <p class="lt-sv">{{ line.sv }}</p>
+      }
+    </div>
+    <p class="song-mark">Autentisk text — som den sjungs, inte förenklad.</p>
+
+    <div class="result-btns">
+      @let page = afterPage();
+      @let song = afterSong();
+      @if (song) {
+        <button class="cta gold" type="button" [routerLink]="['/canzone', song.id]">
+          Låten: {{ song.title }} →
+        </button>
+      } @else if (page && supply.pageComing(page.id)) {
+        <button class="cta gold" type="button" disabled>Nästa sida skrivs om åt dig…</button>
+      } @else if (page) {
+        <button class="cta gold" type="button" [routerLink]="['/leggi', page.id]">
+          Nästa kapitel: {{ page.title }} →
+        </button>
+      }
+      <button class="cta ghost" type="button" routerLink="/">Klart för nu</button>
+    </div>
+  </div>
+}

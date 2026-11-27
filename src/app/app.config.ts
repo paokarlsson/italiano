@@ -16,6 +16,7 @@ import { LeggiService } from './core/leggi.service';
 import { LibraryService } from './core/library.service';
 import { StatsService } from './core/stats.service';
 import { StorageService } from './core/storage.service';
+import { StoryStore } from './core/story-store';
 import { SupplyService } from './core/supply.service';
 import { VoiceService } from './core/voice.service';
 
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
       const voice = inject(VoiceService);
       const drive = inject(DriveService);
       const library = inject(LibraryService);
+      const story = inject(StoryStore);
       await storage.init();
       await Promise.all([
         data.load(),
@@ -51,6 +53,7 @@ export const appConfig: ApplicationConfig = {
         voice.load(),
         drive.load(),
         library.load(),
+        story.load(),
       ]);
       // Först nu vet påfyllningen vad som finns på lager.
       supply.start();
