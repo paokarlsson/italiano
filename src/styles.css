@@ -1343,6 +1343,7 @@ textarea.export-box {
 }
 .ai-card input,
 .ai-card textarea,
+.ai-card select,
 .ai-settings select {
   width: 100%;
   background: var(--paper);
@@ -1360,6 +1361,7 @@ textarea.export-box {
 }
 .ai-card input:focus-visible,
 .ai-card textarea:focus-visible,
+.ai-card select:focus-visible,
 .ai-settings select:focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 1px;
@@ -1426,6 +1428,25 @@ textarea.export-box {
   padding: 12px 2px;
   color: var(--ink);
   text-decoration: none;
+}
+.ai-row-empty {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 2px;
+}
+.ai-row button.ai-row-more {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+.ai-row button:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 .ai-row-title {
   font-family: 'Fraunces', serif;
@@ -2117,4 +2138,7 @@ app-perche {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 10px;
+}
+.ai-card select {
+  margin-bottom: 12px;
 }

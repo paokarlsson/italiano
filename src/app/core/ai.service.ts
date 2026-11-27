@@ -1,5 +1,24 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { UserText } from '../models/leggi.models';
+import { BookChapterPlan, StoryData, UserText } from '../models/leggi.models';
+import {
+  BOOK_MAX_PAGES,
+  BOOK_MIN_PAGES,
+  BOOK_PLAN_SCHEMA,
+  BOOK_PLAN_SYSTEM,
+  BOOK_TOPIC_MAX,
+  BookRequest,
+  bookPagePrompt,
+  bookPageProblems,
+  bookPlanPrompt,
+  cleanPlan,
+  namesOn,
+  newBook,
+  pagesLeft,
+  plannedCount,
+  RawBookPlan,
+  toPage,
+  withPage,
+} from './ai-book';
 import {
   cleanDeckQuestions,
   DECK_SYSTEM,
@@ -28,6 +47,7 @@ import {
 } from './ai-text';
 import { DataService } from './data.service';
 import { LeggiService } from './leggi.service';
+import { LEVELS } from './levels';
 import { focusOf } from './profile';
 import { deckStats } from './recommend';
 import { StatsService } from './stats.service';
@@ -67,7 +87,11 @@ interface AiSettings {
 }
 
 type Effort = 'low' | 'medium';
-type Schema = typeof TEXT_SCHEMA | typeof REPAIR_SCHEMA | ReturnType<typeof deckSchema>;
+type Schema =
+  | typeof TEXT_SCHEMA
+  | typeof REPAIR_SCHEMA
+  | typeof BOOK_PLAN_SCHEMA
+  | ReturnType<typeof deckSchema>;
 /** Vad som sägs medan svaret skrivs, utifrån det som kommit så långt. */
 type Progress = (snapshot: string) => string;
 
@@ -82,6 +106,18 @@ export interface AiResult {
   missing: string[];
   /** Falskt om italienskan i en inklistrad text inte längre är ordagrant densamma. */
   faithful: boolean;
+}
+
+/** Resultatet av en bok: hur långt den kom, vad den kostade, och felet om den stannade. */
+export interface BookResult {
+  id: string;
+  cost: number;
+  /** Ord som blev utan uppslag, på alla sidor tillsammans. */
+  missing: number;
+  /** Sidor som är skrivna och sidor i planen. */
+  written: number;
+  planned: number;
+  error: AiError | null;
 }
 
 /**
@@ -289,6 +325,135 @@ export class AiService {
     } finally {
       this.series.set(false);
     }
+  }
+
+  /**
+   * Beställer en egen bok: först en plan — titel, personer och en scen per sida — sedan
+   * sidorna en i taget efter planen, på den valda nivån. Boken sparas efter varje sida, så
+   * att det som hunnit skrivas går att läsa om något går fel på vägen, och resten kan
+   * skrivas senare med continueBook(). Påfyllningen väntar under tiden.
+   */
+  async writeBook(req: BookRequest): Promise<BookResult> {
+    if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
+    if (this.busy()) throw new AiError('api', 'En beställning är redan på väg.');
+    const request: BookRequest = {
+      topic: req.topic.trim().slice(0, BOOK_TOPIC_MAX),
+      level: Math.min(LEVELS.length, Math.max(1, Math.round(req.level))),
+      pages: Math.min(BOOK_MAX_PAGES, Math.max(BOOK_MIN_PAGES, Math.round(req.pages))),
+      sequel: req.sequel ?? null,
+    };
+    this.series.set(true);
+    try {
+      const say = 'Planerar boken…';
+      this.status.set(say);
+      let planned;
+      try {
+        planned = await this.call(
+          BOOK_PLAN_SYSTEM,
+          bookPlanPrompt(request),
+          BOOK_PLAN_SCHEMA,
+          'medium',
+          () => say,
+        );
+      } catch (error) {
+        throw await describe(error);
+      } finally {
+        this.status.set('');
+      }
+      const plan = cleanPlan(planned.output as RawBookPlan, request.pages);
+      const now = Date.now();
+      const book = newBook(`bok-${now.toString(36)}`, request, plan, now);
+      this.story.saveBook(book);
+      const filled = await this.fillBook(book.id);
+      return { ...filled, cost: filled.cost + planned.cost };
+    } finally {
+      this.series.set(false);
+    }
+  }
+
+  /** Skriver de sidor i en egen bok som återstår enligt planen. */
+  async continueBook(id: string): Promise<BookResult> {
+    if (!this.hasKey()) throw new AiError('no-key', 'Ingen nyckel är inlagd.');
+    if (this.busy()) throw new AiError('api', 'En beställning är redan på väg.');
+    if (!this.story.book(id)) throw new AiError('bad-shape', 'Boken finns inte.');
+    this.series.set(true);
+    try {
+      return await this.fillBook(id);
+    } finally {
+      this.series.set(false);
+    }
+  }
+
+  /** Skriver sidorna som återstår, en i taget. Stannar vid första fel och säger det. */
+  private async fillBook(id: string): Promise<BookResult> {
+    let cost = 0;
+    let missing = 0;
+    let error: AiError | null = null;
+    for (;;) {
+      const story = this.story.book(id);
+      if (!story?.own) break;
+      const left = pagesLeft(story);
+      if (!left.length) break;
+      const total = plannedCount(story.own);
+      const label = `Sida ${total - left.length + 1} av ${total} · `;
+      try {
+        const page = await this.writeBookPage(story, left[0].chapter, left[0].part, label);
+        cost += page.cost;
+        missing += page.missing;
+      } catch (e) {
+        error = e instanceof AiError ? e : new AiError('api', 'Något gick fel. Försök igen.');
+        break;
+      }
+    }
+    const story = this.story.book(id);
+    const planned = story?.own ? plannedCount(story.own) : 0;
+    const written = story?.chapters.reduce((n, c) => n + c.pages.length, 0) ?? 0;
+    return { id, cost, missing, written, planned, error };
+  }
+
+  /**
+   * En sida i en egen bok, med ett andra försök om den första inte höll för kontrollen. Den
+   * bästa av de två läggs in även om den inte höll helt — hellre en sida med ett för långt
+   * ord än ingen sida alls.
+   */
+  private async writeBookPage(
+    story: StoryData,
+    chapter: BookChapterPlan,
+    part: number,
+    label: string,
+  ): Promise<{ cost: number; missing: number }> {
+    const level = story.own!.level;
+    const before = story.chapters
+      .flatMap((c) => c.pages)
+      .filter((p) => p.chapter < chapter.n || (p.chapter === chapter.n && p.part < part))
+      .at(-1);
+    const previous = before && {
+      title: before.title,
+      sentences: before.sentences.map((s) => s.it),
+    };
+    // Samma systemprompt för varje sida, så att den cachas genom hela boken.
+    const system = this.system(level, []);
+    let cost = 0;
+    let problems: string[] = [];
+    let best: (AiResult & { problems: string[] }) | null = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const result = await this.compose(
+        bookPagePrompt({ story, chapter, part, previous, problems }),
+        'medium',
+        { source: 'ai', level, part },
+        [],
+        `${label}${attempt ? 'Försöker igen · ' : ''}`,
+        system,
+      );
+      cost += result.cost;
+      problems = bookPageProblems(result.text, level, result.missing);
+      if (!best || problems.length < best.problems.length) best = { ...result, problems };
+      if (!problems.length) break;
+    }
+    const fresh = this.story.book(story.id) ?? story;
+    const page = toPage(best!.text, fresh, chapter, part);
+    this.story.saveBook(withPage(fresh, page, namesOn(best!.text, best!.missing)));
+    return { cost, missing: best!.missing.length };
   }
 
   /**

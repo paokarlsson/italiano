@@ -208,7 +208,7 @@
         </div>
         <p class="ai-fine">
           {{ audio.missing().length }} klipp, {{ credits(audio.missingChars()) }} tecken. Läses in
-          under <a routerLink="/suono">Ljud</a>.
+          under <a routerLink="/bibliotek">Bibliotek</a>.
         </p>
       }
 
@@ -226,7 +226,7 @@
     @if (!gemini.hasKey()) {
       <p>
         Med en egen API-nyckel från Google AI Studio ritar Gemini («Nano Banana») en framsida till
-        varje bok. Omslagen skapas under Ljud och följer med när biblioteket publiceras.
+        varje bok. Omslagen skapas under Bibliotek och följer med när biblioteket publiceras.
       </p>
       <input
         type="password"
@@ -261,7 +261,7 @@
       </label>
       <p class="ai-fine">
         Mallen står först i varje prompt och ger böckerna samma stil. Efter den kommer bokens titel
-        och bokens egen bildprompt, som du ändrar under <a routerLink="/suono">Ljud</a>.
+        och bokens egen bildprompt, som du ändrar under <a routerLink="/bibliotek">Bibliotek</a>.
         @if (gemini.customTemplate()) {
           Det här är din egen mall.
           <button class="ai-link" type="button" (click)="resetTemplate()">
@@ -286,7 +286,9 @@
     <div class="stat-section-title">Google · publicera</div>
     <div class="ai-card">
       @if (drive.connected()) {
-        <p>Inloggad. Publicera det du har läst in under <a routerLink="/suono">Ljud</a>.</p>
+        <p>
+          Inloggad. Publicera det du har läst in under <a routerLink="/bibliotek">Bibliotek</a>.
+        </p>
       } @else {
         <p>
           Logga in med Google för att lägga det du har läst in, omslagen och texterna du har läst i

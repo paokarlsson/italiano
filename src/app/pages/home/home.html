@@ -52,8 +52,7 @@
     </div>
   }
 
-  @let a = sagaView();
-  @if (a) {
+  @for (a of sagaViews(); track a.id) {
     <div class="story saga">
       @if (a.cover) {
         <img class="saga-cover" [src]="a.cover" [alt]="'Omslaget till ' + a.title" />
@@ -257,7 +256,7 @@
     </a>
   }
   @if (suono(); as l) {
-    <a routerLink="/suono">
+    <a routerLink="/bibliotek">
       <b>{{ l.title }}</b>
       <span>{{ l.text }}</span>
     </a>

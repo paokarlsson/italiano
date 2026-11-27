@@ -142,26 +142,38 @@ export class Home {
    * när ingen finns.
    */
   private readonly currentSaga = computed(() => {
-    const stories = this.saga.stories();
+    // En egen bok utan skrivna sidor har inget att visa.
+    const stories = this.saga.stories().filter((s) => this.saga.itemsOf(s).length);
     return this.leggi.storyNext()?.story ?? stories.at(-1) ?? null;
   });
 
   /**
-   * Följetongen du står i, som kapitel: det du står i öppet, med en prick per sida och låt,
-   * och de andra hopfällda. Null när ingen finns.
+   * Den senaste egna boken som inte är läst till slut — den visas bredvid följetongen du
+   * står i, så att en ny bok går att läsa direkt. Null när ingen sådan finns.
    */
-  protected readonly sagaView = computed(() => {
-    const data = this.currentSaga();
-    return data ? this.sagaOf(data) : null;
-  });
+  private readonly ownSaga = computed(
+    () =>
+      this.saga.books().find((b) => this.saga.itemsOf(b).some((i) => !this.leggi.isRead(i.id))) ??
+      null,
+  );
+
+  /**
+   * Följetongerna att visa öppna, som kapitel: den du står i och en påbörjad egen bok, med
+   * det du står i öppet, en prick per sida och låt, och de andra kapitlen hopfällda.
+   */
+  protected readonly sagaViews = computed(() =>
+    [...new Set([this.currentSaga(), this.ownSaga()])]
+      .filter((s): s is StoryData => !!s)
+      .map((s) => this.sagaOf(s)),
+  );
 
   /** De andra följetongerna som är lästa till slut — hopfällda, för den som vill läsa om. */
   protected readonly sagasDone = computed(() =>
     this.saga
       .stories()
-      .filter((s) => s !== this.currentSaga())
+      .filter((s) => s !== this.currentSaga() && s !== this.ownSaga())
       .map((s) => this.sagaOf(s))
-      .filter((s) => s.read === s.total),
+      .filter((s) => s.read === s.total && s.total > 0),
   );
 
   private sagaOf(data: StoryData) {
@@ -206,9 +218,8 @@ export class Home {
     };
   }
 
-  /** Länken till Ljud: vad som går att göra där, med de nycklar och den inloggning som finns. */
+  /** Länken till Bibliotek: vad som går att göra där, med de nycklar och den inloggning som finns. */
   protected readonly suono = computed(() => {
-    const sound = this.voice.hasKey() || this.drive.connected();
     const can = [
       this.voice.hasKey() && 'läs in',
       this.gemini.hasKey() && 'rita omslag',
@@ -216,7 +227,7 @@ export class Home {
     ].filter((x): x is string => !!x);
     if (!can.length) return null;
     const text = can.length > 1 ? `${can.slice(0, -1).join(', ')} och ${can.at(-1)}` : can[0];
-    return { title: sound ? 'Ljud' : 'Omslag', text };
+    return { title: 'Bibliotek', text };
   });
 
   /** Grundkursen fälls ihop när den är läst och en berättelse har tagit över. */

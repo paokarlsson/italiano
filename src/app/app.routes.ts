@@ -45,10 +45,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/settings/settings').then((m) => m.Settings),
   },
   {
-    path: 'suono',
-    title: 'Ljud · Italiano',
+    path: 'bibliotek',
+    title: 'Bibliotek · Italiano',
     loadComponent: () => import('./pages/suono/suono').then((m) => m.Suono),
   },
+  // Sidan hette Ljud och låg under /suono — gamla länkar och bokmärken hamnar rätt.
+  { path: 'suono', redirectTo: 'bibliotek' },
   {
     path: 'deck/:deckId',
     canActivate: [deckExistsGuard],

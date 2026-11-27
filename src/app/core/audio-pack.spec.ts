@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { UserText } from '../models/leggi.models';
+import { StoryData, UserText } from '../models/leggi.models';
 import {
+  bookPacks,
   clipText,
   coverPacks,
   decodePack,
@@ -132,5 +133,21 @@ describe('paketformatet', () => {
     expect(packs.map((p) => p.covers?.map((c) => c.book))).toEqual([['a'], ['b', 'c']]);
     expect(packs.every((p) => p.voice === '' && !p.clips.length)).toBe(true);
     expect(coverPacks([])).toEqual([]);
+  });
+
+  it('packar egna böcker i huvudet och läser tillbaka dem', () => {
+    const book = { id: 'bok-1', title: 'Libro', chapters: [] } as unknown as StoryData;
+    const pack = decodePack(encodePack({ voice: '', clips: [], texts: [], books: [book] }));
+    expect(pack.books).toEqual([book]);
+    expect(decodePack(encodePack({ voice: '', clips: [], texts: [] })).books).toBeUndefined();
+  });
+
+  it('delar böckerna i paket som ryms i en uppladdning', () => {
+    const book = (id: string, n: number) =>
+      ({ id, title: 'x'.repeat(n), chapters: [] }) as unknown as StoryData;
+    const packs = bookPacks([book('a', 600), book('b', 600), book('c', 100)], 1000);
+    expect(packs.map((p) => p.books?.map((b) => b.id))).toEqual([['a'], ['b', 'c']]);
+    expect(packs.every((p) => p.voice === '' && !p.clips.length && !p.texts.length)).toBe(true);
+    expect(bookPacks([])).toEqual([]);
   });
 });

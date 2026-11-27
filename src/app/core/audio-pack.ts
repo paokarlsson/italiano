@@ -1,4 +1,4 @@
-import { UserText, Voice } from '../models/leggi.models';
+import { StoryData, UserText, Voice } from '../models/leggi.models';
 
 /**
  * Paketformatet för det som delas ut: ljudklipp, texter och bokomslag i en enda fil, så att
@@ -9,7 +9,7 @@ import { UserText, Voice } from '../models/leggi.models';
  *   omslagen i följd
  *
  * Omslagen ligger sist, så att en äldre app som bara känner till klippen läser dem som förut
- * och lämnar resten.
+ * och lämnar resten. Egna böcker står i huvudet, under `books`, som en äldre app inte läser.
  */
 
 const MAGIC = [0x49, 0x54, 0x50, 0x4b]; // «ITPK»
@@ -28,6 +28,8 @@ export interface PackHeader {
   texts: UserText[];
   /** Omslagen i den ordning de ligger efter klippen: bokens id, bildtyp och längd i byte. */
   covers?: [book: string, mime: string, bytes: number][];
+  /** Egna böcker som följer med paketet, hela. */
+  books?: StoryData[];
 }
 
 /** Ett bokomslag: bilden till en följetong, med boken som nyckel. */
@@ -47,6 +49,7 @@ export interface Pack {
   clips: Clip[];
   texts: UserText[];
   covers?: Cover[];
+  books?: StoryData[];
 }
 
 /**
@@ -80,6 +83,7 @@ export function encodePack(pack: Pack): Uint8Array {
   };
   const covers = pack.covers ?? [];
   if (covers.length) header.covers = covers.map((c) => [c.book, c.mime, c.bytes.byteLength]);
+  if (pack.books?.length) header.books = pack.books;
   const head = new TextEncoder().encode(JSON.stringify(header));
   const blobs = [...pack.clips, ...covers].map((x) => x.bytes);
   const body = blobs.reduce((n, b) => n + b.byteLength, 0);
@@ -137,6 +141,7 @@ export function decodePack(file: Uint8Array): Pack {
   }
   const pack: Pack = { voice: String(header.voice ?? ''), clips, texts: header.texts ?? [] };
   if (covers.length) pack.covers = covers;
+  if (Array.isArray(header.books) && header.books.length) pack.books = header.books;
   return pack;
 }
 
@@ -159,6 +164,28 @@ export function coverPacks(covers: readonly Cover[], maxBytes = PACK_MAX_BYTES):
     size += cost;
   }
   if (current.length) packs.push({ voice: '', clips: [], texts: [], covers: current });
+  return packs;
+}
+
+/**
+ * Delar upp böckerna i paket utan klipp, som vart och ett ryms i en uppladdning. En bok som
+ * ensam är större än gränsen får ett eget paket.
+ */
+export function bookPacks(books: readonly StoryData[], maxBytes = PACK_MAX_BYTES): Pack[] {
+  const packs: Pack[] = [];
+  let current: StoryData[] = [];
+  let size = 0;
+  for (const book of books) {
+    const cost = new TextEncoder().encode(JSON.stringify(book)).byteLength;
+    if (current.length && size + cost > maxBytes) {
+      packs.push({ voice: '', clips: [], texts: [], books: current });
+      current = [];
+      size = 0;
+    }
+    current.push(book);
+    size += cost;
+  }
+  if (current.length) packs.push({ voice: '', clips: [], texts: [], books: current });
   return packs;
 }
 
