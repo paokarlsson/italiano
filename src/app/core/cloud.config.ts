@@ -7,9 +7,9 @@
  */
 export const CLOUD = {
   /** OAuth-klientens ID. Behövs bara för den som publicerar. */
-  clientId: '',
+  clientId: '362862021691-l0icf27ituqm8uvb9i4bc5fs296l0ie3.apps.googleusercontent.com',
   /** API-nyckel för att läsa den publika mappen utan inloggning. */
-  apiKey: '',
+  apiKey: 'AIzaSyAqtjaam_uqnq91UixDd0vBqUVSXl0DI8o',
   /** Id för den publika mappen. Appen skapar mappen och visar id:t första gången. */
   folderId: '',
 };
