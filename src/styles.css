@@ -1711,3 +1711,101 @@ app-perche {
 .ai-card.ai-auto .ai-check {
   margin-top: 8px;
 }
+
+/* --- Ljud: uppspelning i läsvyn --- */
+.lt-s.playing {
+  background: linear-gradient(transparent 62%, var(--gold-soft) 62%);
+}
+.lt-g-sound {
+  display: flex;
+  gap: 8px;
+  margin-top: 9px;
+}
+.lt-g-sound button {
+  background: none;
+  border: 1.5px solid var(--line);
+  border-radius: 99px;
+  padding: 4px 11px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+}
+.lt-g-sound button.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.lt-g-sound button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* --- Startsidan: biblioteket att hämta --- */
+.lib-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 14px 16px 16px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-left: 5px solid var(--verde);
+  border-radius: 14px;
+}
+.lib-card .rec-label {
+  color: var(--verde);
+}
+.lib-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.lib-card .cta {
+  margin-top: 6px;
+}
+.lib-error {
+  font-size: 13px;
+  color: var(--brick);
+}
+
+/* --- Ljudsidan --- */
+.su-field {
+  display: block;
+  margin-top: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.su-field select {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+.ai-card code {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
+}
+.ai-card p.su-id {
+  background: var(--paper);
+  border: 1.5px dashed var(--line);
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+.ai-card p.ai-error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+}

@@ -29,6 +29,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/testi/testi').then((m) => m.Testi),
   },
   {
+    path: 'suono',
+    title: 'Ljud · Italiano',
+    loadComponent: () => import('./pages/suono/suono').then((m) => m.Suono),
+  },
+  {
     path: 'deck/:deckId',
     canActivate: [deckExistsGuard],
     loadComponent: () => import('./pages/intro/intro').then((m) => m.Intro),

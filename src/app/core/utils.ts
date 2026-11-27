@@ -22,6 +22,12 @@ export function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+/** En storlek i byte som megabyte med en decimal — «9,2 MB». */
+export function megabytes(bytes: number): string {
+  const mb = bytes / (1024 * 1024);
+  return `${(mb < 0.1 && bytes > 0 ? 0.1 : mb).toFixed(1).replace('.', ',')} MB`;
+}
+
 export function trendStr(last5: readonly boolean[]): string {
   return last5.map((b) => (b ? '✓' : '✗')).join(' ');
 }

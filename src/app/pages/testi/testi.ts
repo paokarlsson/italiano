@@ -95,8 +95,9 @@ export class Testi {
   }
 
   protected sourceLabel(text: UserText): string {
-    if (text.source !== 'ai') return 'din text';
-    return `skriven åt dig · nivå ${text.level}${text.part && text.part > 1 ? ` · del ${text.part}` : ''}`;
+    if (text.source === 'paste') return 'din text';
+    const from = text.source === 'shared' ? 'ur biblioteket' : 'skriven åt dig';
+    return `${from} · nivå ${text.level}${text.part && text.part > 1 ? ` · del ${text.part}` : ''}`;
   }
 
   /** Öppnar den nya texten och säger det som är värt att veta om den. */

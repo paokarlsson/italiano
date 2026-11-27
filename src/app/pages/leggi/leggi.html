@@ -7,7 +7,7 @@
     <p class="lt-nota">{{ t.nota }}</p>
 
     <div class="lt-tools">
-      @if (voice()) {
+      @if (canListen()) {
         <button type="button" [class.on]="speaking()" (click)="toggleSpeech()">
           {{ speaking() ? '■ Tyst' : '▶ Lyssna' }}
         </button>
@@ -32,7 +32,7 @@
 
     <div class="lt-text" [class.skel]="skeleton()">
       @for (sentence of tokens(); track $index; let i = $index) {
-        <p class="lt-s" lang="it">
+        <p class="lt-s" lang="it" [class.playing]="audio.playing() === t.sentences[i].it">
           @for (tok of sentence; track $index) {
             @if (tok.pre) {
               <span>{{ tok.pre }}</span>
@@ -72,6 +72,25 @@
         </div>
         @if (g.note) {
           <div class="lt-g-note">{{ g.note }}</div>
+        }
+        @let snd = sound();
+        @if (snd?.word || snd?.sentence) {
+          <div class="lt-g-sound">
+            @if (snd?.word; as word) {
+              <button type="button" [class.on]="audio.playing() === word" (click)="say(word)">
+                ▶ ordet
+              </button>
+            }
+            @if (snd?.sentence; as sentence) {
+              <button
+                type="button"
+                [class.on]="audio.playing() === sentence"
+                (click)="say(sentence)"
+              >
+                ▶ meningen
+              </button>
+            }
+          </div>
         }
         @let w = why();
         @if (w) {
