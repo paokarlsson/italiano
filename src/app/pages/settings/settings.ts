@@ -6,9 +6,16 @@ import { AudioService } from '../../core/audio.service';
 import { DataService } from '../../core/data.service';
 import { STOCK_TARGET, SupplyService } from '../../core/supply.service';
 import { ToastService } from '../../core/toast.service';
-import { VoiceError, VoiceService } from '../../core/voice.service';
+import { Permission, VoiceError, VoiceService } from '../../core/voice.service';
 import { Voice } from '../../models/leggi.models';
 import { Topbar } from '../../shared/topbar';
+
+/** Vad appen använder varje behörighet till. */
+const PERMISSION_USE: Record<Permission, string> = {
+  voices_read: 'röstlistan, så att Samanta och Daniele kan väljas',
+  models_read: 'modellerna och priset per tecken',
+  user_read: 'kontots krediter den här perioden',
+};
 
 /** Krediter som heltal med mellanrum: «12 480». */
 const credits = (n: number) => Math.round(n).toLocaleString('sv-SE');
@@ -53,6 +60,11 @@ export class Settings {
     const at = this.voice.account()?.resets;
     return at ? new Date(at).toLocaleDateString('sv-SE', { day: 'numeric', month: 'long' }) : '';
   });
+  /** Behörigheterna nyckeln saknar, med vad de används till. */
+  protected readonly missing = computed(() =>
+    this.voice.missing().map((p) => ({ id: p, use: PERMISSION_USE[p] })),
+  );
+
   /** Sant när den valda rösten inte finns bland kontots röster. */
   protected readonly missingVoice = computed(
     () =>
@@ -113,6 +125,12 @@ export class Settings {
     if (confirm('Ta bort ElevenLabs-nyckeln från den här webbläsaren? Ljudet ligger kvar.')) {
       this.voice.clearKey();
     }
+  }
+
+  /** Sätter en röst från ett inklistrat röst-ID — när röstlistan inte går att läsa. */
+  protected setVoiceId(role: Voice, event: Event): void {
+    const id = this.valueOf(event).trim();
+    if (id && id !== this.voice.voiceId(role)) this.voice.setVoice(role, id);
   }
 
   protected refreshVoices(): Promise<void> {

@@ -1860,3 +1860,30 @@ app-perche {
   line-height: 1.45;
   color: var(--ink-soft);
 }
+.set-note {
+  margin-bottom: 6px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1.5px dashed var(--line);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.set-note ul {
+  margin: 6px 0;
+  padding-left: 18px;
+}
+.su-field input {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}

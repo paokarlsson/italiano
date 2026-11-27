@@ -3,7 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { VoiceService } from './voice.service';
 
 /** ElevenLabs i minnet: rösterna, modellerna, kontot och inläsningen. */
-function fakeApi(opts: { voices?: string[]; subscription?: number } = {}) {
+function fakeApi(
+  opts: { voices?: string[]; subscription?: number; only?: 'tts'; invalid?: boolean } = {},
+) {
   const calls: { url: string; body?: unknown }[] = [];
   const json = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -12,6 +14,25 @@ function fakeApi(opts: { voices?: string[]; subscription?: number } = {}) {
     vi.fn(async (url: string, init: RequestInit = {}) => {
       calls.push({ url, body: init.body ? JSON.parse(String(init.body)) : undefined });
       const path = new URL(url).pathname;
+      if (opts.invalid) {
+        return json({ detail: { status: 'invalid_api_key', message: 'Invalid API key' } }, 401);
+      }
+      const need = {
+        '/v1/voices': 'voices_read',
+        '/v1/models': 'models_read',
+        '/v1/user/subscription': 'user_read',
+      }[path];
+      if (opts.only === 'tts' && need) {
+        return json(
+          {
+            detail: {
+              status: 'missing_permissions',
+              message: `The API key you used is missing the permission ${need} to execute this operation.`,
+            },
+          },
+          401,
+        );
+      }
       if (path === '/v1/voices') {
         return json({
           voices: (opts.voices ?? ['Rachel', 'Samanta – Italian', 'Daniele']).map((name, i) => ({
@@ -96,6 +117,35 @@ describe('VoiceService', () => {
     expect(voice.characters()).toBe(16);
     expect(voice.credits()).toBe(8);
     expect(voice.guessed()).toBe(false);
+  });
+
+  it('sparar en nyckel som bara får läsa in tal, och säger vad den inte får läsa', async () => {
+    const calls = fakeApi({ only: 'tts' });
+    await voice.saveKey('sk_tts');
+    expect(voice.hasKey()).toBe(true);
+    expect(voice.missing()).toEqual(['voices_read', 'models_read', 'user_read']);
+    // Utan röstlista väljs rösterna för hand; modellerna är de kända.
+    expect(voice.voices()).toEqual([]);
+    expect(voice.modelOptions()[0].id).toBe('eleven_multilingual_v2');
+    expect(voice.modelId()).toBe('eleven_multilingual_v2');
+    expect(voice.ready()).toBe(false);
+    voice.setVoice('f', 'samanta-id');
+    voice.setVoice('m', 'daniele-id');
+    expect(voice.ready()).toBe(true);
+
+    await voice.speak('Ciao!', 'f');
+    const tts = calls.filter((c) => c.url.includes('/text-to-speech/'));
+    // Multilingual v2 tar inte emot språket — det skickas inte.
+    expect(tts[0].body).toEqual({ text: 'Ciao!', model_id: 'eleven_multilingual_v2' });
+    expect(voice.guessed()).toBe(true);
+  });
+
+  it('underkänner en nyckel som ElevenLabs inte godkänner, och säger varför', async () => {
+    fakeApi({ invalid: true });
+    await expect(voice.saveKey('sk_fel')).rejects.toThrow(
+      'ElevenLabs godkände inte nyckeln. ElevenLabs säger: «Invalid API key»',
+    );
+    expect(voice.hasKey()).toBe(false);
   });
 
   it('räknar en kredit per tecken, och säger det, när priset inte är känt', async () => {
