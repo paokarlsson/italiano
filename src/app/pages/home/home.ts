@@ -218,9 +218,8 @@ export class Home {
     };
   }
 
-  /** Länken till Ljud: vad som går att göra där, med de nycklar och den inloggning som finns. */
+  /** Länken till Bibliotek: vad som går att göra där, med de nycklar och den inloggning som finns. */
   protected readonly suono = computed(() => {
-    const sound = this.voice.hasKey() || this.drive.connected();
     const can = [
       this.voice.hasKey() && 'läs in',
       this.gemini.hasKey() && 'rita omslag',
@@ -228,7 +227,7 @@ export class Home {
     ].filter((x): x is string => !!x);
     if (!can.length) return null;
     const text = can.length > 1 ? `${can.slice(0, -1).join(', ')} och ${can.at(-1)}` : can[0];
-    return { title: sound ? 'Ljud' : 'Omslag', text };
+    return { title: 'Bibliotek', text };
   });
 
   /** Grundkursen fälls ihop när den är läst och en berättelse har tagit över. */

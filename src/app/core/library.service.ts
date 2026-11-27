@@ -189,7 +189,7 @@ export class LibraryService {
 
   /**
    * Läser av mappen och hämtar det som är nytt, utan att någon behöver trycka. Hoppar över
-   * hämtningen när webbläsaren ber om att spara data — då finns knappen kvar under Ljud.
+   * hämtningen när webbläsaren ber om att spara data — då finns knappen kvar under Bibliotek.
    */
   async sync(): Promise<void> {
     if (this.working()) return;

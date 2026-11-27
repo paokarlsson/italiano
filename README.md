@@ -47,7 +47,7 @@ delar som bygger på samma fyra pelare:
   tidigare boken tas bort.
   Finns en Gemini-nyckel ritas omslaget när boken är klar. En bok som är skriven klart
   publiceras i biblioteket när du väljer det, med en knapp per bok under _Dina böcker_ —
-  en i taget, med sitt omslag, och aldrig med resten under Ljud. En besökare får den bland
+  en i taget, med sitt omslag, och aldrig med resten under Bibliotek. En besökare får den bland
   sina böcker, märkt «ur biblioteket».
 - **Ljud och bibliotek** — valfritt. Varje mening och varje ord kan ha ett inläst klipp,
   med en kvinnlig och en manlig röst efter vem som talar. Den som har en egen
@@ -60,8 +60,8 @@ delar som bygger på samma fyra pelare:
   bokens titel och bokens egen bildprompt. Omslagen publiceras i biblioteket som ljudet.
 
 Det som kräver en nyckel eller en inloggning syns bara när den finns. Utan Claude-nyckel
-finns ingen länk till Fler texter, utan ElevenLabs-nyckel eller Google-inloggning ingen
-länk till Ljud. Inställningar syns alltid — det är där nycklarna läggs in.
+finns ingen länk till Fler texter, utan ElevenLabs- eller Gemini-nyckel eller
+Google-inloggning ingen länk till Bibliotek. Inställningar syns alltid — det är där nycklarna läggs in.
 
 - **Påfyllning** — med nyckeln inlagd ligger det alltid två olästa texter färdiga, och ett
   mazzo som är genomgånget utan att sitta får nya frågor. Ingenting behöver beställas.
@@ -108,8 +108,8 @@ samma commit inte körs två gånger.
 | Leggi       | `/leggi/:textId`       | En text, uppslag per ord, en fråga om innehållet                |
 | Canzone     | `/canzone/:songId`     | Låten efter ett kapitel i följetongen: refrängen it/sv          |
 | Ripasso     | `/ripasso`             | Högst sex frågor, valda efter uppslag och svaga punkter         |
-| Fler texter | `/testi`               | Ny text eller nästa del, egen text, dina texter                 |
-| Ljud        | `/suono`               | Hämta biblioteket, läs in med egen röst, publicera              |
+| Fler texter | `/testi`               | Ny text, ny bok eller uppföljare, egen text, dina texter        |
+| Bibliotek   | `/bibliotek`           | Hämta, läs in med egen röst, rita omslag, publicera             |
 | Inställn.   | `/installningar`       | Nycklar, modell, röster, påfyllning och vad allt har kostat     |
 | Intro       | `/deck/:deckId`        | Exempelfråga ur mazzot och val av rundans längd (6/8/12)        |
 | Runda       | `/deck/:deckId/quiz`   | Flerval, sant/falskt och para ihop, med direkt facit            |
@@ -325,13 +325,13 @@ ordlistorna (`AudioService.wanted`); en form som slutar på apostrof, som «l'»
   uppstart, och igen när sidan kommer tillbaka i förgrunden efter tio minuter, och hämtar
   det som är nytt utan att någon trycker. Under tiden står en rad på startsidan; går det
   fel står felet där med en knapp för att försöka igen. Ber webbläsaren om att spara data
-  hämtas inget automatiskt, och knappen finns under Ljud i stället. Klippen
+  hämtas inget automatiskt, och knappen finns under Bibliotek i stället. Klippen
   hamnar i ljudlagret, texterna bland de egna som «ur biblioteket», och de räknas in i
   lagret av olästa texter. Ett paket har en röst, så en publicering ger minst ett paket per
   röst.
 - **Publicera.** Inloggningen med Google ligger under Inställningar och visas bara när det
   finns något att publicera, när mappen inte är skapad, eller när man redan är inloggad.
-  Inloggad laddar Ljud upp ett nytt paket med klippen som
+  Inloggad laddar Bibliotek upp ett nytt paket med klippen som
   lästs in sedan sist och texterna från Claude som har lästs. En text som tagits bort, eller
   inte lästs, följer inte med. Bara den som skapade mappen kan skriva i den.
 
@@ -349,13 +349,13 @@ Gemini får tre delar i följd (`coverPrompt()` i `core/cover.ts`):
    Standardmallen står i `DEFAULT_TEMPLATE` och går att skriva om under Inställningar; en
    egen mall sparas i webbläsaren och kan återställas.
 2. **Titeln**, som mallen ber om att få tryckt på omslaget.
-3. **Bokens bildprompt** — den ur JSON-filen, eller en egen som skrivs under Ljud.
+3. **Bokens bildprompt** — den ur JSON-filen, eller en egen som skrivs under Bibliotek.
 
 - **Nyckeln** kommer från Google AI Studio och läggs in under Inställningar, där också
   modellen väljs: Nano Banana 2.1 är förvald, Nano Banana 2 Lite är billigast och Nano
   Banana Pro dyrast. `GeminiService` anropar `generateContent` direkt från webbläsaren,
   med bilden i formatet 3:4.
-- **Rita** gör man under Ljud, en bok i taget. Ett nytt omslag ersätter det gamla. Hela
+- **Rita** gör man under Bibliotek, en bok i taget. Ett nytt omslag ersätter det gamla. Hela
   prompten som skickas går att fälla ut under varje bok.
 - **Lagras** gör omslagen i webbläsaren (`CoverStore`, IndexedDB) och visas på startsidan
   bredvid följetongen man står i.
@@ -412,8 +412,8 @@ inloggningen behöver bara fungera för den som publicerar.
    besökare biblioteket.
 
 Därefter: lägg in ElevenLabs-nyckeln under Inställningar och välj röster och modell. Tryck
-sedan **Läs in allt som saknas** under Ljud. Logga in med Google under Inställningar och
-tryck **Publicera** under Ljud. Inloggningen gäller i ungefär en timme och bara tills sidan
+sedan **Läs in allt som saknas** under Bibliotek. Logga in med Google under Inställningar och
+tryck **Publicera** under Bibliotek. Inloggningen gäller i ungefär en timme och bara tills sidan
 laddas om; efter det loggar du in igen när du ska publicera.
 
 Lägg inget annat i mappen än det appen lägger dit, och inget du inte vill dela — allt i den

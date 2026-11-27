@@ -16,7 +16,7 @@ import { VoiceService } from '../../core/voice.service';
 import { Topbar } from '../../shared/topbar';
 
 /**
- * Ljud och bibliotek: hämta det som delas ut, läs in med egen röst, rita bokomslag med
+ * Bibliotek — ljud, omslag och det som delas: hämta det som delas ut, läs in med egen röst, rita bokomslag med
  * Gemini, publicera.
  */
 @Component({
